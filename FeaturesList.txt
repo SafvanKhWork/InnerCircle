@@ -1,0 +1,48 @@
+[REST API Features]
+
+>>Authetication
+
+-Regitration 
+	(Name, Username<unique>, Email<unique>, Password, Verify_password)
+-LogIn 
+	(Username/Email, Password)
+-LogOut
+
+>>Profile
+
+-Add/Edit Profile Picture
+-Edit Name
+-Edit Username
+-Change Password
+
+>>Friends
+
+-Add/Remove Friends
+-Search for User (Username)
+
+>>Discover/Post
+
+-Create Catagories (TypeName <unique> )
+-Post Product to Sell/Rent 
+	(Product_name, product_id<unique>, Type <if_Exist>, Product_description, Product_images<max-3, min-1>, Price)
+-Send Buy/Rent Request
+-Like/Comment on Product
+-Recommend Product (Username_of_Friend)
+-Filter By Type (<if_Exist>)
+-View Recent Products
+-View Populer Products
+-View Recommended Products
+-View Buy/Rent Requests
+-View Borrowed Products
+-View Rented Products
+-View Sold Products
+-View Bought Products
+-Accept Buy/Rent Request 
+
+>>Search 
+
+-Search Product
+
+[Abstract]
+
+Creating the App to Buy, Sell or Rent Products from Other Users or Reccommand Products to Friends. This App will allow User to browse the Products that their Friends are Selling/Renting Out based on Popularity, Recommandation and Recent Product. User an also keep track of products they have rented out, borrowed, sold or bought. Users can also filter Available Products based on their Catagory.
