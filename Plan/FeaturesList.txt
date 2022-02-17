@@ -3,7 +3,7 @@
 >>Authetication
 
 -Regitration 
-	(Name, Username<unique>, Email<unique>, Password, Verify_password)
+	(Name, Username<unique>, Email<unique>, Password)
 -LogIn 
 	(Username/Email, Password)
 -LogOut

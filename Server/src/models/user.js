@@ -23,6 +23,13 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
+    },
     password: {
       type: String,
       required: true,
@@ -34,14 +41,15 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-    age: {
-      type: Number,
-      default: 0,
-      validate(value) {
-        if (value < 0) {
-          throw new Error("Age must be a postive number");
-        }
-      },
+    circle:{
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Circle",
+    },
+    recommandation: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: "Recommandation",
     },
     tokens: [
       {

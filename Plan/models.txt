@@ -1,0 +1,49 @@
+Users {
+    name: String,
+    username: uniqueString,
+    email: uniqueString,
+    password: String,
+
+    //virtualRefrences
+
+    
+    circle: virtualRefrenceID,
+    recommandation: virtualRefrenceID,
+}
+
+Circle {
+    userID: virtualRefrenceID,
+    circle: array,
+    request: array,
+}
+
+Recommandation {
+    userID: virtualRefrenceID,
+    recommandation: array,
+}
+
+Type {
+    productType: uniqueString
+}
+
+ 
+
+Product {
+    productName: uniqueString,
+    productType: virtualRefrenceID,
+    productDescription: String,
+    price: number,
+    likes: {
+        count: number,
+        users: Array[...username]
+    },
+    comments: [{
+        user: virtualRefrenceID,
+        message: String
+        }],
+    bids: [{
+        user: virtualRefrenceID,
+        price: number
+        }],
+    owner: virtualRefrenceID
+}
