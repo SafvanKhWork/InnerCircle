@@ -37,6 +37,7 @@
 -View Rented Products
 -View Sold Products
 -View Bought Products
+-View Circle [friendlist]
 -Accept Buy/Rent Request 
 
 >>Search 
