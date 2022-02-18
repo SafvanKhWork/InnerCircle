@@ -1,0 +1,19 @@
+/sign-in
+
+/login
+
+/logout
+
+/me
+
+/me/update
+
+/me/passwd 
+
+/:username/add-friend
+
+/search/:tag        ??
+
+/catagory/new
+
+/post
