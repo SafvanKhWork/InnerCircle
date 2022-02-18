@@ -29,6 +29,7 @@
 -Like/Comment on Product
 -Recommend Product (Username_of_Friend)
 -Filter By Type (<if_Exist>)
+-View Products by OwnerId
 -View Recent Products
 -View Populer Products
 -View Recommended Products

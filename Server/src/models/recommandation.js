@@ -1,18 +1,21 @@
 const mongoose = require("mongoose");
 
-const recommandationSchema = new mongoose.Schema(
+const recommandationSchema = new mongoose.Schema({
+  list: [
     {
-        list: [{
-          //pending
-        }],
-      }
-);
-recommandationSchema.virtual("products", {
-  ref: "Recommandation",
-  localField: "_id",
-  foreignField: "recommandation",
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "Product",
+      },
+      recommandedby: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+      },
+    },
+  ],
 });
 
-const Type = mongoose.model("Type", recommandationSchema);
+const Type = mongoose.model("Recommandation", recommandationSchema);
 
 module.exports = Type;
