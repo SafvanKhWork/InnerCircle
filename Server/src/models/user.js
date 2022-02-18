@@ -41,6 +41,13 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
+    postHistory: [
+      {
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+        },
+      },
+    ],
     circleId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
