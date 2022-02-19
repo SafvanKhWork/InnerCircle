@@ -1,3 +1,0 @@
-language = "bash"
-run = ""
-curl $REPLIT_DB_URL -d 'key=value'
