@@ -1,11 +1,13 @@
 const express = require("express");
-// const multer = require("multer");
+const multer = require("multer");
 const path = require("path");
 
 //
+
 require("./db/mongoose");
 
 //
+
 const userRouter = require("./routers/user");
 const productRouter = require("./routers/product");
 const typeRouter = require("./routers/type");
@@ -17,7 +19,7 @@ const Product = require("./models/product");
 const User = require("./models/user");
 const Type = require("./models/type");
 const Circle = require("./models/circle");
-const Recommendation = require("./models/recommendation");
+const Recommendation = require("./models/recommandation");
 
 //
 
@@ -29,8 +31,11 @@ app.listen(port, () => {
 });
 
 app.use(express.json());
-app.use(userRouter);
-app.use(productRouter);
-app.use(typeRouter);
-app.use(circleRouter);
-app.use(recommandationRouter);
+
+//
+
+// app.use(userRouter);
+// app.use(productRouter);
+// app.use(typeRouter);
+// app.use(circleRouter);
+// app.use(recommandationRouter);
