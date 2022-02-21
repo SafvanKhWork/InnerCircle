@@ -7,7 +7,7 @@ const Recommendation = require("./models/recommandation");
 
 // Product.findOne({ name: "pizza" })
 //   .populate("owner") // only works if we pushed refs to person.eventsAttended
-//   .exec(function (err, person) {
+//   .exec(function (err, username) {
 //     if (err) return handleError(err);
-//     console.log(person);
+//     console.log(username);
 //   });
