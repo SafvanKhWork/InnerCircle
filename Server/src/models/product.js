@@ -29,6 +29,7 @@ const productSchema = new mongoose.Schema(
           _id: {
             type: mongoose.Schema.Types.ObjectId,
             required: true,
+            ref: "User",
           },
         },
       ],

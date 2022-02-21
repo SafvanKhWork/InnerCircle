@@ -50,12 +50,12 @@ const userSchema = new mongoose.Schema(
     ],
     circleId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+
       ref: "Circle",
     },
     recommandationId: {
       type: mongoose.Schema.Types.ObjectId,
-      required: true,
+
       ref: "Recommandation",
     },
     tokens: [
@@ -71,6 +71,12 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// userSchema.virtual("owner", {
+//   ref: "Product",
+//   localField: "_id",
+//   foreignField: "owner",
+// });
 
 userSchema.methods.toJSON = function () {
   const user = this;
