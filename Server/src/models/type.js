@@ -8,11 +8,6 @@ const typeSchema = new mongoose.Schema({
     unique: true,
   },
 });
-typeSchema.virtual("products", {
-  ref: "Product",
-  localField: "name",
-  foreignField: "catagory",
-});
 
 const Type = mongoose.model("Type", typeSchema);
 

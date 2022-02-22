@@ -1,18 +1,8 @@
 const express = require("express");
-const multer = require("multer");
-const path = require("path");
 
 //
 
 require("./db/mongoose");
-
-//
-
-const userRouter = require("./routers/user");
-const productRouter = require("./routers/product");
-const typeRouter = require("./routers/type");
-const circleRouter = require("./routers/circle");
-const recommandationRouter = require("./routers/recommendation");
 
 //
 const Product = require("./models/product");
@@ -31,11 +21,3 @@ app.listen(port, () => {
 });
 
 app.use(express.json());
-
-//
-
-// app.use(userRouter);
-// app.use(productRouter);
-// app.use(typeRouter);
-// app.use(circleRouter);
-// app.use(recommandationRouter);
