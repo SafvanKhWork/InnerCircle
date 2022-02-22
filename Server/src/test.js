@@ -5,9 +5,45 @@ const Type = require("./models/type");
 const Circle = require("./models/circle");
 const Recommendation = require("./models/recommandation");
 
-// Product.findOne({ name: "pizza" })
-//   .populate("owner") // only works if we pushed refs to person.eventsAttended
-//   .exec(function (err, username) {
-//     if (err) return handleError(err);
-//     console.log(username);
-//   });
+// const user1 = new User({
+//   name: "zack wolves",
+//   email: "zack111w@jungle.com",
+//   username: "zackwo77lves",
+//   password: "wolves221",
+// });
+
+// const product1 = new Product({
+//   name: "Corn Pizza",
+//   catagory: "food",
+//   description: "Bread, Cheese & Toppings",
+//   price: 250,
+//   like: {
+//     users: [
+//       {
+//         _id: user1,
+//       },
+//     ],
+//     likes: 1,
+//   },
+//   bids: [
+//     {
+//       user: user1,
+//       price: 300,
+//     },
+//   ],
+//   comment: [
+//     {
+//       _id: user1,
+//       name: "zack",
+//       value: "Tasty",
+//     },
+//   ],
+//   owner: user1,
+// });
+
+// user1.save();
+// product1.save();
+(async () => {
+  const product = await Product.find({}).populate("owner");
+  console.log(product);
+})();
