@@ -6,6 +6,10 @@ const productSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+    },
+    model: {
+      type: String,
+      required: true,
       trim: true,
       unique: true,
     },
@@ -14,6 +18,10 @@ const productSchema = new mongoose.Schema(
       required: true,
       trim: true,
       ref: "Type",
+    },
+    preview: {
+      data: Buffer,
+      contentType: String,
     },
     description: {
       type: String,
