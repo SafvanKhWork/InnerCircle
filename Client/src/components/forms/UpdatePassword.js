@@ -33,7 +33,7 @@ function Copyright(props) {
   );
 }
 
-export default function SignIn(props) {
+export default function UpdatePassword(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -57,7 +57,7 @@ export default function SignIn(props) {
           }}
         >
           <Typography component="h1" variant="h5">
-            SignIn
+            Update Password
           </Typography>
           <Box
             component="form"
@@ -69,58 +69,31 @@ export default function SignIn(props) {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
               autoComplete="current-password"
             />
-            <Grid container>
-              <Grid item xs>
-                <Link
-                  component="button"
-                  variant="body2"
-                  onClick={() => {
-                    props.status.setHasPasswd(false);
-                  }}
-                >
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="repassword"
+              label="Re-Password"
+              type="password"
+              id="repassword"
+              autoComplete="current-password"
             />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign In
+              Update
             </Button>
-            <Stack spacing={1}>
-              <Button
-                onClick={() => {
-                  props.status.setIsUser(!props.status.isUser);
-                }}
-                variant="outlined"
-                fullWidth
-              >
-                {"Don't have an account? Sign Up"}
-              </Button>
-            </Stack>
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />

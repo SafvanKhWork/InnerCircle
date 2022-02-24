@@ -1,17 +1,55 @@
 import * as React from "react";
-import Avatar from "@mui/material/Avatar";
+// import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
+// import FormControlLabel from "@mui/material/FormControlLabel";
+// import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
+import { styled } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+// import Input from "@mui/material/Input";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Stack from "@mui/material/Stack";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import PhotoCamera from "@mui/icons-material/PhotoCamera";
+
+const Input = styled("input")({
+  display: "none",
+});
+
+function stringToColor(string) {
+  let hash = 0;
+  let i;
+
+  /* eslint-disable no-bitwise */
+  for (i = 0; i < string.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+
+  let color = "#";
+
+  for (i = 0; i < 3; i += 1) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += `00${value.toString(16)}`.substr(-2);
+  }
+  /* eslint-enable no-bitwise */
+
+  return color;
+}
+
+function stringAvatar(name) {
+  return {
+    sx: {
+      bgcolor: stringToColor(name),
+    },
+    children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+  };
+}
 
 function Copyright(props) {
   return (
@@ -23,15 +61,36 @@ function Copyright(props) {
     >
       {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
+        InnerCircle
       </Link>{" "}
       {new Date().getFullYear()}
       {"."}
     </Typography>
   );
 }
+//
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: "#2962ff",
+//     },
+//     secondary: {
+//       main: "#f50057",
+//     },
+//   },
+// });
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: "#f50057",
+    },
+    secondary: {
+      main: "#2962ff",
+    },
+  },
+});
 
-const theme = createTheme();
+export { theme };
 
 export default function SignUp(props) {
   const handleSubmit = (event) => {
@@ -56,11 +115,8 @@ export default function SignUp(props) {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            SignUp
           </Typography>
           <Box
             component="form"
@@ -68,7 +124,21 @@ export default function SignUp(props) {
             onSubmit={handleSubmit}
             sx={{ mt: 3 }}
           >
-            <Grid container spacing={2}>
+            <Grid container spacing={1}>
+              <Grid item align={"center"} xs={12}>
+                <label htmlFor="icon-button-file">
+                  <Input accept="image/*" id="icon-button-file" type="file" />
+                  <IconButton
+                    color="primary"
+                    aria-label="upload picture"
+                    component="span"
+                  >
+                    <Avatar {...stringAvatar("Un Known")} />
+                  </IconButton>
+                </label>
+                {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
+              </Grid>
+              <Grid item xs={12}></Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
@@ -80,6 +150,7 @@ export default function SignUp(props) {
                   autoFocus
                 />
               </Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
@@ -90,6 +161,16 @@ export default function SignUp(props) {
                   autoComplete="family-name"
                 />
               </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                />
+              </Grid>
+
               <Grid item xs={12}>
                 <TextField
                   required
@@ -112,35 +193,37 @@ export default function SignUp(props) {
                 />
               </Grid>
               <Grid item xs={12}>
-                <FormControlLabel
-                  control={
-                    <Checkbox value="allowExtraEmails" color="primary" />
-                  }
-                  label="I want to receive inspiration, marketing promotions and updates via email."
+                <TextField
+                  required
+                  fullWidth
+                  name="repassword"
+                  label="Re-Password"
+                  type="repassword"
+                  id="repassword"
+                  autoComplete="new-password"
                 />
               </Grid>
             </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Button
-                  href="#"
-                  onClick={() => {
-                    props.status.setIsUser(!props.status.isUser);
-                  }}
-                  variant="text"
-                >
-                  Already have an account? Sign in
-                </Button>
-              </Grid>
-            </Grid>
+
+            <Stack spacing={1}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 2 }}
+              >
+                Sign Up
+              </Button>
+              <Button
+                onClick={() => {
+                  props.status.setIsUser(!props.status.isUser);
+                }}
+                variant="outlined"
+                fullWidth
+              >
+                {`Already have an account? Sign in`}
+              </Button>
+            </Stack>
           </Box>
         </Box>
         <Copyright sx={{ mt: 5 }} />

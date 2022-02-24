@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -33,15 +34,14 @@ function Copyright(props) {
   );
 }
 
-export default function SignIn(props) {
+const VerifyEmail = (props) => {
+  const [isSent, setIsSent] = useState(false);
+  // const [isValid, setIsValid] = useState(false);
+  let isValid = false;
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    console.log(data);
   };
 
   return (
@@ -57,7 +57,7 @@ export default function SignIn(props) {
           }}
         >
           <Typography component="h1" variant="h5">
-            SignIn
+            Verify Email
           </Typography>
           <Box
             component="form"
@@ -65,66 +65,57 @@ export default function SignIn(props) {
             noValidate
             sx={{ mt: 1 }}
           >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Grid container>
-              <Grid item xs>
-                <Link
-                  component="button"
-                  variant="body2"
+            {isSent ? (
+              <Stack spacing={1}>
+                <TextField required fullWidth name="otp" label="OTP" id="otp" />
+                <Button
+                  fullWidth
                   onClick={() => {
-                    props.status.setHasPasswd(false);
+                    {
+                      //Compare Sent OTP & entered OTP
+                      // isValid = true;
+                    }
+                    if (isValid) {
+                      props.status.setHasPasswd(true);
+                    }
+                    if (!isValid) {
+                      setIsSent(false);
+                    }
                   }}
+                  variant="outlined"
+                  fullWidth
                 >
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Stack spacing={1}>
-              <Button
-                onClick={() => {
-                  props.status.setIsUser(!props.status.isUser);
-                }}
-                variant="outlined"
-                fullWidth
-              >
-                {"Don't have an account? Sign Up"}
-              </Button>
-            </Stack>
+                  {"Verify OTP"}
+                </Button>
+              </Stack>
+            ) : (
+              <Stack spacing={1}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+                <Button
+                  fullWidth
+                  onClick={() => {
+                    setIsSent(true);
+                  }}
+                  variant="outlined"
+                  fullWidth
+                >
+                  {"Send OTP"}
+                </Button>
+              </Stack>
+            )}
           </Box>
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default VerifyEmail;
