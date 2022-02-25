@@ -1,23 +1,12 @@
-import SignIn from "./components/forms/SignIn";
-import SignUp from "./components/forms/SignUp";
-import VerifyEmail from "./components/forms/VerifyEmail";
-
 import { useState, Fragment } from "react";
+import Header from "./components/Header";
+import CurrentPage from "./components/pages/Authentication";
 
 function App() {
-  const [isUser, setIsUser] = useState(false);
-  const [hasPasswd, setHasPasswd] = useState(true);
   return (
     <Fragment>
-      {isUser ? (
-        hasPasswd ? (
-          <SignIn status={{ isUser, setIsUser, setHasPasswd }} />
-        ) : (
-          <VerifyEmail status={{ hasPasswd, setHasPasswd }} />
-        )
-      ) : (
-        <SignUp status={{ isUser, setIsUser }} />
-      )}
+      <Header />
+      <CurrentPage />
     </Fragment>
   );
 }

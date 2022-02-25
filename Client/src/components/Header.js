@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ThemeProvider } from "@mui/material/styles";
-import { theme } from "../forms/SignUp";
+import { theme } from "./forms/SignUp";
 import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
