@@ -3,9 +3,17 @@ import UpdatePassword from "../forms/UpdatePassword";
 import { Fragment, useState } from "react";
 
 const ForgotPassword = (props) => {
-  const [isSent, setIsSent] = useState(true);
-  const [isValidOTP, setIsValidOTP] = useState(true);
-  return <Fragment> true </Fragment>;
+  const [isValidOTP, setIsValidOTP] = useState(false);
+  const status = {
+    isValidOTP,
+    setIsValidOTP,
+  };
+  return (
+    <Fragment>
+      {!isValidOTP ? <VerifyEmail status={status} /> : ""}
+      {isValidOTP ? <UpdatePassword status={status} /> : ""}
+    </Fragment>
+  );
 };
 
 export default ForgotPassword;

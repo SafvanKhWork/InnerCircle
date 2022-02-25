@@ -73,10 +73,10 @@ const VerifyEmail = (props) => {
                   onClick={() => {
                     {
                       //Compare Sent OTP & entered OTP
-                      // isValid = true;
+                      isValid = true;
                     }
                     if (isValid) {
-                      props.status.setHasPasswd(true);
+                      props.status.setIsValidOTP(true);
                     }
                     if (!isValid) {
                       setIsSent(false);

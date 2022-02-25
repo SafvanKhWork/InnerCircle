@@ -16,9 +16,9 @@ const Authentication = (props) => {
   };
   return (
     <Fragment>
-      {isUser && hasPasswd ? <SignIn /> : ""}
-      {!isUser ? <SignUp /> : ""}
-      {isUser && hasPasswd ? <SignIn /> : ""}
+      {isUser && hasPasswd ? <SignIn status={status} /> : ""}
+      {!isUser ? <SignUp status={status} /> : ""}
+      {isUser && !hasPasswd ? <ForgotPassword status={status} /> : ""}
     </Fragment>
   );
 };
