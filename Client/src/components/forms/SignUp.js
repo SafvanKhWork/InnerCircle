@@ -1,4 +1,5 @@
 import * as React from "react";
+import theme from "../UI/Theme";
 // import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,7 +13,7 @@ import Box from "@mui/material/Box";
 // import Input from "@mui/material/Input";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
@@ -68,29 +69,6 @@ function Copyright(props) {
     </Typography>
   );
 }
-//
-// const theme = createTheme({
-//   palette: {
-//     primary: {
-//       main: "#2962ff",
-//     },
-//     secondary: {
-//       main: "#f50057",
-//     },
-//   },
-// });
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: "#f50057",
-    },
-    secondary: {
-      main: "#2962ff",
-    },
-  },
-});
-
-export { theme };
 
 export default function SignUp(props) {
   const handleSubmit = (event) => {
