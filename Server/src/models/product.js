@@ -19,7 +19,7 @@ const productSchema = new mongoose.Schema(
       trim: true,
       ref: "Type",
     },
-    preview: {
+    image: {
       data: Buffer,
       contentType: String,
     },
@@ -30,6 +30,11 @@ const productSchema = new mongoose.Schema(
     },
     price: {
       type: Number,
+      required: true,
+    },
+    quantity: {
+      type: Number,
+      default: 1,
       required: true,
     },
     like: {
@@ -53,15 +58,13 @@ const productSchema = new mongoose.Schema(
           ref: "User",
           required: true,
         },
-        price: {
+        bid: {
           type: Number,
           required: true,
         },
       },
     ],
-    comment: [
-      { _id: mongoose.Schema.Types.ObjectId, name: String, value: String },
-    ],
+    comments: [{ _id: mongoose.Schema.Types.ObjectId, value: String }],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

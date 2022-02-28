@@ -1,5 +1,5 @@
-import VerifyEmail from "../forms/VerifyEmail";
-import UpdatePassword from "../forms/UpdatePassword";
+import VerifyEmail from "./pages/VerifyEmail";
+import UpdatePassword from "./pages/UpdatePassword";
 import { Fragment, useState } from "react";
 
 const ForgotPassword = (props) => {

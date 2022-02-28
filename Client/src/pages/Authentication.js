@@ -1,6 +1,6 @@
-import SignIn from "../forms/SignIn";
-import SignUp from "../forms/SignUp";
-import ForgotPassword from "./ForgotPassword";
+import SignIn from "../components/Auth/pages/SignIn";
+import SignUp from "../components/Auth/pages/SignUp";
+import ForgotPassword from "../components/Auth/ForgotPassword";
 
 import { useState, Fragment } from "react";
 

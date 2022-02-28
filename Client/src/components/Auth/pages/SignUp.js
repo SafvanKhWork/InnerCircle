@@ -1,5 +1,5 @@
 import * as React from "react";
-import theme from "../UI/Theme";
+import theme from "../../UI/Theme";
 // import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -43,7 +43,7 @@ function stringToColor(string) {
   return color;
 }
 
-function stringAvatar(name) {
+export function stringAvatar(name) {
   return {
     sx: {
       bgcolor: stringToColor(name),

@@ -11,7 +11,9 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
+import { stringAvatar } from "./Auth/pages/SignUp";
 import MenuIcon from "@mui/icons-material/Menu";
 
 export default function Header() {
@@ -24,7 +26,7 @@ export default function Header() {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}
+            sx={{ mr: 1 }}
           >
             <MenuIcon />
           </IconButton>
@@ -38,7 +40,18 @@ export default function Header() {
           >
             InnerCircle
           </Typography>
-          <Button color="inherit">SignOut</Button>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 1 }}
+          >
+            <Avatar
+              {...stringAvatar("Un Known")}
+              sx={{ width: 36, height: 36 }}
+            />
+          </IconButton>
         </Toolbar>
       </AppBar>
     </ThemeProvider>
