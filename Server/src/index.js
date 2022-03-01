@@ -7,7 +7,7 @@ require("./db/mongoose");
 //
 const Product = require("./models/product");
 const User = require("./models/user");
-const Type = require("./models/type");
+const Catagory = require("./models/catagory");
 const Circle = require("./models/circle");
 const Recommendation = require("./models/recommandation");
 

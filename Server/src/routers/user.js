@@ -41,7 +41,7 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
-router.post("/users/logout/forced", auth, async (req, res) => {
+router.post("/users/logout/all", auth, async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
@@ -79,6 +79,53 @@ router.delete("/users/me", auth, async (req, res) => {
   try {
     await req.user.remove();
     res.send(req.user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+router.get("/user/:id", async (req, res) => {
+  const _id = req.params.id;
+
+  try {
+    const user = await User.findOne({ _id });
+
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.get("/user/:uname", async (req, res) => {
+  const username = req.params.uname;
+
+  try {
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.get("/user/:name", async (req, res) => {
+  const name = req.params.name;
+
+  try {
+    const user = await User.find({ name });
+
+    if (user.length) {
+      return res.status(404).send();
+    }
+
+    res.send(user);
   } catch (e) {
     res.status(500).send();
   }
