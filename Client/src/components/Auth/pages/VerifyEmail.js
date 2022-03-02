@@ -1,20 +1,15 @@
 import * as React from "react";
 import { useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../UI/Theme";
-import Grid from "@mui/material/Grid";
 
 function Copyright(props) {
   return (
@@ -37,7 +32,7 @@ function Copyright(props) {
 const VerifyEmail = (props) => {
   const [isSent, setIsSent] = useState(false);
   const email = "test@id.io";
-  // const [isValid, setIsValid] = useState(false);
+
   let isValid = false;
   const handleSubmit = (event) => {
     event.preventDefault();

@@ -116,7 +116,7 @@ export default function SignUp(props) {
                 </label>
                 {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
               </Grid>
-              <Grid item xs={12}></Grid>
+
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
@@ -189,6 +189,7 @@ export default function SignUp(props) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2 }}
+                onClick={() => {}}
               >
                 Sign Up
               </Button>

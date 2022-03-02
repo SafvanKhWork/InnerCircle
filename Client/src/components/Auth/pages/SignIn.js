@@ -107,6 +107,9 @@ export default function SignIn(props) {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              onClick={() => {
+                props.status.setIsLoggedIn(true);
+              }}
             >
               Sign In
             </Button>

@@ -12,8 +12,8 @@ router.get("/circle/add/:id", async (req, res) => {
       _id,
     });
     (async () => {
-      circle = await Produ; ///////////ct.find({}).populate("owner");
-      console.log(product);
+      circle = await Circle.find({}).populate("_id");
+      console.log(circle);
     })();
 
     if (!user) {
