@@ -16,14 +16,57 @@ import { ThemeProvider } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Image from "../img.jpg";
 
+import Menu from "@mui/material/Menu";
+
 const drawerWidth = 240;
 
 const ResponsiveAppBar = (props) => {
-  console.log(props);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const pages = ["Discover", "Catagories", "Recommended"];
+  const pages = [
+    "Discover",
+    <div>
+      <Button
+        id="demo-positioned-button"
+        aria-controls={open ? "demo-positioned-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        Dashboard
+      </Button>
+      <Menu
+        id="demo-positioned-menu"
+        aria-labelledby="demo-positioned-button"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "left",
+        }}
+      >
+        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={handleClose}>My account</MenuItem>
+        <MenuItem onClick={handleClose}>Logout</MenuItem>
+      </Menu>
+    </div>,
+    "Recommended",
+  ];
+  const catagory = ["blue", "green", "yellow"];
   const settings = [
     "Profile",
     "Post",
@@ -38,7 +81,7 @@ const ResponsiveAppBar = (props) => {
       Logout
     </Button>,
   ];
-
+  const [menu, setMenu] = React.useState(pages);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -106,8 +149,13 @@ const ResponsiveAppBar = (props) => {
                 open={Boolean(anchorElNav)}
                 onClose={handleCloseNavMenu}
               >
-                {pages.map((page) => (
-                  <MenuItem key={Math.random()} onClick={handleCloseNavMenu}>
+                {menu.map((page) => (
+                  <MenuItem
+                    key={Math.random()}
+                    onClick={() => {
+                      setMenu(catagory);
+                    }}
+                  >
                     <Typography textAlign="center">{page}</Typography>
                   </MenuItem>
                 ))}
@@ -125,10 +173,12 @@ const ResponsiveAppBar = (props) => {
               INNER CIRCLE
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {pages.map((page) => (
+              {menu.map((page) => (
                 <Button
                   key={page}
-                  onClick={handleCloseNavMenu}
+                  onClick={() => {
+                    setMenu(catagory);
+                  }}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {page}
