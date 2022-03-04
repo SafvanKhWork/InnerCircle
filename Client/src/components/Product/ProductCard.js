@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Image from "../../img.jpg";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { styled } from "@mui/material/styles";
 import Collapse from "@mui/material/Collapse";
@@ -26,6 +26,59 @@ import { MenuItem } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import theme from "../UI/Theme";
 import Bids from "./Bids";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import SpokeIcon from "@mui/icons-material/Spoke";
+import CommentIcon from "@mui/icons-material/Comment";
+import Comments from "./Comments";
+import Menu from "@mui/material/Menu";
+
+const users = [
+  { name: "safvan" },
+  { name: "lukman" },
+  { name: "test1" },
+  { name: "subhan" },
+
+  { name: "test4" },
+];
+
+const comments = [
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+  {
+    user: "tester",
+    message: "Lorem Ipsum zoom",
+  },
+];
 
 const bids = [
   {
@@ -88,11 +141,22 @@ const ExpandMore = styled((props) => {
 export default function ProductCard(props) {
   const [expandedDesc, setExpandedDesc] = React.useState(false);
   const [expandedBid, setExpandedBid] = React.useState(false);
+  const [expandedComment, setExpandedComment] = React.useState(false);
   const [currency, setCurrency] = React.useState("EUR");
   const [isEmpty, setIsEmpty] = React.useState(true);
 
+  const [anchorRe, setAnchorRe] = React.useState(null);
+  const open = Boolean(anchorRe);
+
   const handleChange = (event) => {
     setCurrency(event.target.value);
+  };
+
+  const handleOpenRe = (event) => {
+    setAnchorRe(event.currentTarget);
+  };
+  const handleCloseRe = () => {
+    setAnchorRe(null);
   };
 
   //One State Behind
@@ -110,9 +174,13 @@ export default function ProductCard(props) {
     setExpandedDesc(!expandedDesc);
   };
   const handleExpandBid = () => {
+    setExpandedComment(false);
     setExpandedBid(!expandedBid);
   };
-
+  const handleExpandComment = () => {
+    setExpandedBid(false);
+    setExpandedComment(!expandedComment);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ minWidth: 2 }}>
@@ -157,18 +225,73 @@ export default function ProductCard(props) {
                 ""
               )}
             </CardContent>
-            <CardActions disableSpacing>
-              <IconButton aria-label="add to favorites">
-                <FavoriteIcon />
+            <CardActions p={1} disableSpacing>
+              <IconButton aria-label="like">
+                <FavoriteIcon color="red" />
               </IconButton>
-              <IconButton aria-label="share">
+              <IconButton p={1} aria-label="like">
+                <ExpandMore
+                  expand={expandedComment}
+                  onClick={handleExpandComment}
+                  aria-expandedComment={expandedComment}
+                  aria-label="show more"
+                >
+                  <CommentIcon />
+                </ExpandMore>
+              </IconButton>
+              <IconButton
+                p={1}
+                aria-label="reco"
+                aria-controls={open ? "reme" : undefined}
+                aria-haspopup="true"
+                aria-expanded={open ? "true" : undefined}
+                onClick={handleOpenRe}
+                id="reco"
+              >
+                <SpokeIcon />
+              </IconButton>
+              <Menu
+                id="demo-positioned-menu"
+                aria-labelledby="demo-positioned-button"
+                anchorEl={anchorRe}
+                p={1}
+                m={1}
+                open={open}
+                onClose={handleCloseRe}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "left",
+                }}
+              >
+                {users.map((user) => {
+                  return (
+                    <Stack
+                      px={2}
+                      py={1}
+                      spacing={1}
+                      justifyContent="left"
+                      alignItems="center"
+                      direction="row"
+                    >
+                      <Avatar src={Image} sx={{ width: 24, height: 24 }} />
+                      <Typography variant="h6">{user.name}</Typography>
+                      <Divider />
+                    </Stack>
+                  );
+                })}
+              </Menu>
+              <IconButton p={1} aria-label="bid">
                 <ExpandMore
                   expand={expandedBid}
                   onClick={handleExpandBid}
                   aria-expandedBid={expandedBid}
                   aria-label="show more"
                 >
-                  <AttachMoneyIcon />
+                  <MonetizationOnIcon />
                 </ExpandMore>
               </IconButton>
 
@@ -239,6 +362,9 @@ export default function ProductCard(props) {
                 </Stack>
               </Box> */}
               <Bids bids={bids} />
+            </Collapse>
+            <Collapse in={expandedComment} timeout="auto" unmountOnExit>
+              <Comments comments={comments} />
             </Collapse>
           </React.Fragment>
         </Card>
