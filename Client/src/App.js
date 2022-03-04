@@ -14,7 +14,7 @@ function App() {
     // <Fragment>
     //   {isLoggedIn ? <Header status={status} /> : ""}
     //   {!isLoggedIn ? <HeaderUnverified /> : ""}
-    //   <Box pt={12} m={1}>
+    //   <Box pt={isLoggedIn ? 12 : 2} m={1}>
     //     {!isLoggedIn ? <Auth status={status} /> : ""}
     //     {isLoggedIn ? <Home products={products} /> : ""}
     //   </Box>

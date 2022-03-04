@@ -10,7 +10,7 @@ import data from "../data";
 const StyledAvatar = styled(Avatar)({
   position: "absolute",
   zIndex: 1,
-  top: window.innerWidth < 400 ? 216 : 232,
+  top: window.innerWidth < 400 ? 84 : 92,
   left: 0,
   right: 0,
   margin: "0 auto",
@@ -24,33 +24,20 @@ const Profile = (props) => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box
-        mx={width < 800 ? (width < 400 ? 0 : 6) : 16}
-        my={width < 400 ? 0 : 2}
-        mt={16}
-        p={width < 400 ? 0 : 2}
-      >
-        <Card variant="outlined" style={{ backgroundColor: "#daf7f7" }}>
-          <CardMedia component="img" height="164" image={Image} />
-          <CardContent>
-            <Box>
-              <StyledAvatar
-                src={Image}
-                style={{
-                  border: "5px solid #daf7f7",
-                }}
-                sx={{ width: 128, height: 128 }}
-              />
-            </Box>
-            <Box mt={32}>
-              <Products
-                s={width < 900 ? 12 : width < 1150 ? 5 : 4}
-                products={data}
-              />
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
+      <CardContent>
+        <Box>
+          <StyledAvatar
+            src={Image}
+            style={{
+              border: "5px solid #daf7f7",
+            }}
+            sx={{ width: 128, height: 128 }}
+          />
+        </Box>
+        <Box mt={32}>
+          <Products products={data} />
+        </Box>
+      </CardContent>
     </ThemeProvider>
   );
 };

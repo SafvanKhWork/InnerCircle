@@ -25,6 +25,35 @@ import { TextField } from "@mui/material";
 import { MenuItem } from "@mui/material";
 import Stack from "@mui/material/Stack";
 import theme from "../UI/Theme";
+import Bids from "./Bids";
+
+const bids = [
+  {
+    name: "zack",
+    bid: 180,
+    time: "time",
+  },
+  {
+    name: "zack",
+    bid: 180,
+    time: "time",
+  },
+  {
+    name: "zack",
+    bid: 180,
+    time: "time",
+  },
+  {
+    name: "zack",
+    bid: 180,
+    time: "time",
+  },
+  {
+    name: "zack",
+    bid: 180,
+    time: "time",
+  },
+];
 const currencies = [
   {
     value: "USD",
@@ -157,7 +186,7 @@ export default function ProductCard(props) {
               )}
             </CardActions>
             <Collapse in={expandedBid} timeout="auto" unmountOnExit>
-              <Box p={1} justifyContent="center">
+              {/* <Box p={1} justifyContent="center">
                 <Stack
                   justifyContent="center"
                   alignItems="center"
@@ -205,9 +234,11 @@ export default function ProductCard(props) {
                     ) : (
                       <Button variant="outlined">Bid</Button>
                     )}
+                    
                   </item>
                 </Stack>
-              </Box>
+              </Box> */}
+              <Bids bids={bids} />
             </Collapse>
           </React.Fragment>
         </Card>
