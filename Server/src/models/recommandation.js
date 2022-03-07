@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const recommandationSchema = new mongoose.Schema({
   list: [
     {
-      productId: {
+      product: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: "Product",

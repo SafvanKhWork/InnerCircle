@@ -2,10 +2,9 @@ const express = require("express");
 const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
-const { ObjectID } = require("mongodb");
+const Recommandation = require("../models/recommandation");
 
 const auth = require("../middleware/auth");
-const { findByIdAndUpdate } = require("../models/product");
 
 const router = new express.Router();
 
@@ -63,12 +62,44 @@ router.get("/products/recent", async (req, res) => {
   }
 });
 
+//Recommand the Product
+router.patch("/:productid/:username", async (req, res) => {
+  let visited = false;
+  try {
+    const product = await Product.find({ _id: req.params.productid });
+    const user = await User.findOne({ username: req.params.username });
+    if (!product || !user) {
+      throw new Error("Some Thing Went Wrong!");
+    }
+    const recommandation = user.recommandation;
+
+    recommandation.forEach((element) => {
+      if (String(element.product) === String(product._id)) {
+        element.recommandedby.push(user.username);
+        element.recommandedby = [...new Set(element.recommandedby)];
+        visited = true;
+      }
+    });
+    if (!visited) {
+      recommandation.push({
+        product: product._id,
+        recommandedby: [user.username],
+      });
+    }
+    user.save();
+    res.send(user);
+  } catch (e) {
+    console.log(e);
+  }
+});
+
 //get all product with given type
 
 router.get("/products/:catagory", async (req, res) => {
   try {
     const catagory = req.params.type;
     const product = await Product.find({ catagory });
+
     res.send(product);
   } catch (e) {
     res.status(500).send();

@@ -85,16 +85,26 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    circleId: {
+    circle: {
       type: mongoose.Schema.Types.ObjectId,
 
       ref: "Circle",
     },
-    recommandationId: {
-      type: mongoose.Schema.Types.ObjectId,
-
-      ref: "Recommandation",
-    },
+    recommandation: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "Product",
+        },
+        recommandedby: [
+          {
+            type: String,
+            required: true,
+          },
+        ],
+      },
+    ],
     tokens: [
       {
         token: {
