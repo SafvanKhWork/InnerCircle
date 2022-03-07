@@ -11,7 +11,6 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      unique: true,
     },
     catagory: {
       type: String,
@@ -40,11 +39,9 @@ const productSchema = new mongoose.Schema(
     like: {
       users: [
         {
-          _id: {
-            type: mongoose.Schema.Types.ObjectId,
-            required: true,
-            ref: "User",
-          },
+          type: mongoose.Schema.Types.ObjectId,
+          required: true,
+          ref: "User",
         },
       ],
       likes: {

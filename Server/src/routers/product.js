@@ -2,20 +2,23 @@ const express = require("express");
 const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
+const { ObjectID } = require("mongodb");
+
 const auth = require("../middleware/auth");
+const { findByIdAndUpdate } = require("../models/product");
 
 const router = new express.Router();
 
 //add new product
 
-router.post("/product", auth, async (req, res) => {
+router.post("/product/new", auth, async (req, res) => {
   const product = new Product({
     ...req.body,
     owner: req.user._id,
   });
 
   try {
-    Catagory.exists({ name: req.body.pType }, function (e, doc) {
+    Catagory.exists({ name: req.body.name }, function (e, doc) {
       if (e) {
         throw new Error(e);
       }
@@ -72,7 +75,7 @@ router.get("/products/:catagory", async (req, res) => {
   }
 });
 
-//Get
+//get all product with same modal number
 router.get("/products/:model", async (req, res) => {
   try {
     const model = req.params.type;
@@ -132,7 +135,7 @@ router.patch("/products/:id", auth, async (req, res) => {
   }
 });
 
-//Like
+//Like the product
 router.patch("/like/:id", auth, async (req, res) => {
   const _id = req.params.id;
   try {
@@ -147,8 +150,7 @@ router.patch("/like/:id", auth, async (req, res) => {
     const lk = product.like.users;
 
     const ur = req.user;
-    // console.log(!lk.some(el => el._id !== ur._id))
-    if (lk.includes((el) => el._id === req.user._id)) {
+    if (lk.includes(req.user._id)) {
       throw new Error("Already Liked!");
     }
     lk.push({ _id: ur._id });
@@ -161,7 +163,47 @@ router.patch("/like/:id", auth, async (req, res) => {
   }
 });
 
-//Comment
+// Bid on product
+
+router.patch("/bid/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  let altered = false;
+  try {
+    const product = await Product.findOne({
+      _id,
+    });
+
+    if (!product) {
+      return res.status(404).send();
+    }
+
+    const bids = product.bids;
+
+    const bid = {
+      user: req.user._id,
+      bid: req.body.bid,
+    };
+
+    bids.forEach((el, index) => {
+      console.log();
+      if (String(el.user) === String(bid.user)) {
+        el.bid = bid.bid;
+        altered = true;
+      }
+    });
+    if (!altered) {
+      product.bids.push(bid);
+    }
+
+    await product.save();
+
+    res.send(product);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+//Comment on product
 
 router.patch("/comment/:id", auth, async (req, res) => {
   const _id = req.params.id;
@@ -169,7 +211,9 @@ router.patch("/comment/:id", auth, async (req, res) => {
     const product = await Product.findOne({
       _id,
     });
-
+    if (!product) {
+      return res.status(404).send();
+    }
     const cm = product.comment;
     const ur = req.user;
     cm.push({
@@ -191,10 +235,63 @@ router.get("/comments/:id", async (req, res) => {
   const _id = req.params.id;
   try {
     const product = await Product.findOne({ _id });
+    if (!product) {
+      return res.status(404).send();
+    }
     res.send(product.comment);
   } catch (e) {
     res.status(500).send();
   }
+});
+
+//Item Transaction
+
+router.patch("/products/sell/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  console.log(req.user);
+  // try {
+  const product = await Product.findOne({
+    _id,
+  });
+
+  const soldBy = req.user;
+  const soldTo = await User.findOne({
+    _id: req.body.soldTo,
+  });
+
+  if (!product || !soldTo || !soldBy) {
+    return res.status(404).send();
+  }
+  soldTo.history.push({
+    act: "bought",
+    itemID: product._id,
+    description: product.description,
+    name: product.name,
+    value: req.body.value,
+    model: product.model,
+    catagory: product.catagory,
+    image: product.image,
+    user2: product.owner,
+  });
+  soldBy.history.push({
+    act: "sold",
+    itemID: product._id,
+    description: product.description,
+    name: product.name,
+    value: req.body.value,
+    model: product.model,
+    catagory: product.catagory,
+    image: product.image,
+    user2: soldTo._id,
+  });
+
+  await soldTo.save();
+  await soldBy.save();
+  await Product.findOneAndDelete({
+    _id: product._id,
+  });
+  res.send(soldBy.history);
+  // } catch (e) {}
 });
 
 //Delete the product with given id
@@ -209,7 +306,6 @@ router.delete("/products/:id", auth, async (req, res) => {
     if (!product) {
       res.status(404).send();
     }
-
     res.send(product);
   } catch (e) {
     res.status(500).send();

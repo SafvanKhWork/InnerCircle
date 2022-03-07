@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
+const Recommandation = require("../models/recommandation");
 const auth = require("../middleware/auth");
 const router = new express.Router();
 
@@ -15,7 +16,7 @@ router.post("/user/register", async (req, res) => {
   }
 });
 
-router.post("/users/login", async (req, res) => {
+router.post("/user/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
       req.body.email,
@@ -51,7 +52,7 @@ router.post("/users/logout/all", auth, async (req, res) => {
   }
 });
 
-router.get("/users/me", auth, async (req, res) => {
+router.get("/user/me", auth, async (req, res) => {
   res.send(req.user);
 });
 

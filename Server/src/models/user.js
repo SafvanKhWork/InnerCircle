@@ -45,10 +45,43 @@ const userSchema = new mongoose.Schema(
         }
       },
     },
-    postHistory: [
+    history: [
       {
-        id: {
+        act: { type: String },
+        itemID: {
           type: mongoose.Schema.Types.ObjectId,
+
+          ref: "Product",
+        },
+        description: {
+          type: String,
+
+          trim: true,
+        },
+        name: {
+          type: String,
+        },
+        value: {
+          type: Number,
+        },
+        model: {
+          type: String,
+
+          trim: true,
+        },
+        catagory: {
+          type: String,
+
+          trim: true,
+          ref: "Catagory",
+        },
+        image: {
+          data: Buffer,
+          contentType: String,
+        },
+        user2: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
         },
       },
     ],
