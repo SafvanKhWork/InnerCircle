@@ -73,7 +73,15 @@ const userSchema = new mongoose.Schema(
           type: String,
 
           trim: true,
-          ref: "Catagory",
+        },
+        from: {
+          type: Date,
+        },
+        to: {
+          type: Date,
+        },
+        duration: {
+          type: Number,
         },
         image: {
           data: Buffer,
@@ -85,17 +93,23 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
-    circle: {
-      type: mongoose.Schema.Types.ObjectId,
-
-      ref: "Circle",
-    },
+    friendRequest: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
+    circle: [
+      {
+        type: String,
+        required: true,
+      },
+    ],
     recommandation: [
       {
         product: {
-          type: mongoose.Schema.Types.ObjectId,
+          type: String,
           required: true,
-          ref: "Product",
         },
         recommandedby: [
           {

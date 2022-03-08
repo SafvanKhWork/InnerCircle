@@ -1,9 +1,10 @@
 const express = require("express");
 const User = require("../models/user");
-const Recommandation = require("../models/recommandation");
+
 const auth = require("../middleware/auth");
 const router = new express.Router();
 
+//Register new user
 router.post("/user/register", async (req, res) => {
   const user = new User(req.body);
 
@@ -16,6 +17,7 @@ router.post("/user/register", async (req, res) => {
   }
 });
 
+//Login User
 router.post("/user/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
@@ -29,6 +31,7 @@ router.post("/user/login", async (req, res) => {
   }
 });
 
+//Logout User
 router.post("/users/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
@@ -42,6 +45,7 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
+//Hard Logout
 router.post("/users/logout/all", auth, async (req, res) => {
   try {
     req.user.tokens = [];
@@ -52,10 +56,12 @@ router.post("/users/logout/all", auth, async (req, res) => {
   }
 });
 
+//Get User Profile
 router.get("/user/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
+//Update User Profile
 router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age", "avatar"];
@@ -76,6 +82,7 @@ router.patch("/users/me", auth, async (req, res) => {
   }
 });
 
+//Delete User
 router.delete("/users/me", auth, async (req, res) => {
   try {
     await req.user.remove();
@@ -84,7 +91,9 @@ router.delete("/users/me", auth, async (req, res) => {
     res.status(500).send();
   }
 });
-router.get("/user/:id", async (req, res) => {
+
+//Get User by ID
+router.get("/user/id/:id", async (req, res) => {
   const _id = req.params.id;
 
   try {
@@ -100,6 +109,7 @@ router.get("/user/:id", async (req, res) => {
   }
 });
 
+//Get User By Username
 router.get("/user/:uname", async (req, res) => {
   const username = req.params.uname;
 
@@ -116,7 +126,8 @@ router.get("/user/:uname", async (req, res) => {
   }
 });
 
-router.get("/user/:name", async (req, res) => {
+//
+router.get("/search/user/:name", async (req, res) => {
   const name = req.params.name;
 
   try {

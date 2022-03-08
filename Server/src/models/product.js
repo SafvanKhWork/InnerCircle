@@ -7,6 +7,12 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    product_name: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     model: {
       type: String,
       required: true,

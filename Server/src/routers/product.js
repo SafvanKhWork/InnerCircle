@@ -2,9 +2,9 @@ const express = require("express");
 const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
-const Recommandation = require("../models/recommandation");
 
 const auth = require("../middleware/auth");
+const { ObjectID } = require("mongodb");
 
 const router = new express.Router();
 
@@ -63,39 +63,45 @@ router.get("/products/recent", async (req, res) => {
 });
 
 //Recommand the Product
-router.patch("/:productid/:username", async (req, res) => {
+router.patch("/recommand", auth, async (req, res) => {
   let visited = false;
   try {
-    const product = await Product.find({ _id: req.params.productid });
-    const user = await User.findOne({ username: req.params.username });
+    const product = await Product.findById(req.body.product);
+    const user = await User.findById(req.body.user);
+
     if (!product || !user) {
+      console.log(product, user);
       throw new Error("Some Thing Went Wrong!");
     }
     const recommandation = user.recommandation;
 
     recommandation.forEach((element) => {
       if (String(element.product) === String(product._id)) {
-        element.recommandedby.push(user.username);
+        element.recommandedby.push(req.user._id);
         element.recommandedby = [...new Set(element.recommandedby)];
         visited = true;
       }
     });
+
     if (!visited) {
-      recommandation.push({
-        product: product._id,
-        recommandedby: [user.username],
-      });
+      const obj = {};
+      obj["product"] = product.product_name;
+      obj["recommandedby"] = [];
+
+      obj.recommandedby.push(req.user.username);
+      recommandation.push(obj);
     }
     user.save();
-    res.send(user);
+    console.log(user);
+    res.status(201).send(user);
   } catch (e) {
-    console.log(e);
+    res.status(400).send(e.message);
   }
 });
 
 //get all product with given type
 
-router.get("/products/:catagory", async (req, res) => {
+router.get("/products/catagory/:catagory", async (req, res) => {
   try {
     const catagory = req.params.type;
     const product = await Product.find({ catagory });
@@ -107,7 +113,7 @@ router.get("/products/:catagory", async (req, res) => {
 });
 
 //get all product with same modal number
-router.get("/products/:model", async (req, res) => {
+router.get("/products/model/:model", async (req, res) => {
   try {
     const model = req.params.type;
     const product = await Product.find({ model });
@@ -116,14 +122,31 @@ router.get("/products/:model", async (req, res) => {
     res.status(500).send();
   }
 });
+// get products by id
 
-//Get product by given id
-
-router.get("/products/:id", async (req, res) => {
+router.get("/products/id/:id", async (req, res) => {
   const _id = req.params.id;
 
   try {
     const product = await Product.findOne({ _id });
+
+    if (!product) {
+      return res.status(404).send();
+    }
+
+    res.send(product);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Get product by given product_name
+
+router.get("/products/:product", async (req, res) => {
+  const product_name = req.params.product;
+
+  try {
+    const product = await Product.findOne({ product_name });
 
     if (!product) {
       return res.status(404).send();
