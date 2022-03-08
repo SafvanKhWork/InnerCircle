@@ -40,5 +40,25 @@ theme[1] = createTheme({
     },
   },
 });
+
+theme[2] = createTheme({
+  palette: {
+    type: "light",
+    primary: {
+      main: "#efef04",
+    },
+    secondary: {
+      main: "#5ee6e6",
+    },
+    info: {
+      main: "#567c96",
+    },
+    background: {
+      default: "#000000",
+      paper: "#797979",
+    },
+    divider: "#dce775",
+  },
+});
 let currTheme = theme[1];
 export default currTheme;

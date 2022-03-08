@@ -11,18 +11,18 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const status = { isLoggedIn, setIsLoggedIn };
   return (
-    // <Fragment>
-    //   {isLoggedIn ? <Header status={status} /> : ""}
-    //   {!isLoggedIn ? <HeaderUnverified /> : ""}
-    //   <Box pt={isLoggedIn ? 12 : 2} m={1}>
-    //     {!isLoggedIn ? <Auth status={status} /> : ""}
-    //     {isLoggedIn ? <Home products={products} /> : ""}
-    //   </Box>
-    // </Fragment>
     <Fragment>
-      <Header status={status} />
-      <Profile />
+      {isLoggedIn ? <Header status={status} /> : <HeaderUnverified />}
+
+      <Box pt={isLoggedIn ? 12 : 2} m={1}>
+        {!isLoggedIn ? <Auth status={status} /> : ""}
+        {isLoggedIn ? <Home products={products} /> : ""}
+      </Box>
     </Fragment>
+    // <Fragment>
+    //   <Header status={status} />
+    //   <Profile />
+    // </Fragment>
   );
 }
 
