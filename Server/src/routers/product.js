@@ -103,7 +103,7 @@ router.patch("/recommand", auth, async (req, res) => {
 
 router.get("/products/catagory/:catagory", async (req, res) => {
   try {
-    const catagory = req.params.type;
+    const catagory = req.params.catagory;
     const product = await Product.find({ catagory });
 
     res.send(product);
@@ -111,6 +111,20 @@ router.get("/products/catagory/:catagory", async (req, res) => {
     res.status(500).send();
   }
 });
+
+//Get By OwnerId
+router.get("/products/owner/:user", async (req, res) => {
+  try {
+    const _id = req.params.user;
+    const product = await Product.find({ _id });
+    res.send(product);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Get Recommandedproduct
+//Pending
 
 //get all product with same modal number
 router.get("/products/model/:model", async (req, res) => {

@@ -1,6 +1,5 @@
 const express = require("express");
 const User = require("../models/user");
-
 const auth = require("../middleware/auth");
 const router = new express.Router();
 
@@ -98,12 +97,51 @@ router.get("/user/id/:id", async (req, res) => {
 
   try {
     const user = await User.findOne({ _id });
-
     if (!user) {
       return res.status(404).send();
     }
-
     res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Add Friend
+router.post("/user/:uname/add", auth, async (req, res) => {
+  const username = req.params.uname;
+
+  try {
+    const user = await User.findOne({ username });
+    if (!user) {
+      return res.status(404).send();
+    }
+    user.friendRequest.push(req.user.username);
+    user.friendRequest = [...new Set(user.friendRequest)];
+    user.save();
+    res.status(200).send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Accept friendRequest
+router.patch("/user/:uname/add", auth, async (req, res) => {
+  const username = req.params.uname;
+
+  try {
+    const user = await User.findOne({ username });
+    const atIndex = user.friendRequest.indexOf(username);
+    if (!user) {
+      return res.status(404).send();
+    }
+    user.circle.push(req.user.username);
+    user.circle = [...new Set(user.circle)];
+
+    if (atIndex !== -1) {
+      user.friendRequest.splice(atIndex, 1);
+    }
+    user.save();
+    res.status(200).send(user);
   } catch (e) {
     res.status(500).send();
   }
@@ -115,28 +153,24 @@ router.get("/user/:uname", async (req, res) => {
 
   try {
     const user = await User.findOne({ username });
-
     if (!user) {
       return res.status(404).send();
     }
-
     res.send(user);
   } catch (e) {
     res.status(500).send();
   }
 });
 
-//
+// Search by Name
 router.get("/search/user/:name", async (req, res) => {
   const name = req.params.name;
 
   try {
     const user = await User.find({ name });
-
     if (user.length) {
       return res.status(404).send();
     }
-
     res.send(user);
   } catch (e) {
     res.status(500).send();
