@@ -1,4 +1,6 @@
 .replit 
+.env
+
 Database
 node_modules
 

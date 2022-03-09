@@ -1,16 +1,104 @@
 const express = require("express");
+const gravatar = require("gravatar");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
 const router = new express.Router();
+const nodemailer = require("nodemailer");
+const dotenv = require("dotenv");
+
+let otp = undefined;
+let un_email = null;
+let ver_email = null;
+const timers = [];
 
 //Register new user
 router.post("/user/register", async (req, res) => {
-  const user = new User(req.body);
-
   try {
+    let data = req.body;
+
+    let avatar = gravatar
+      .url(data.email, {
+        s: 400,
+        r: "pg",
+        d: "mm",
+      })
+      .slice(2);
+    data = { ...data, avatar };
+    const user = new User(data);
     await user.save();
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+//send otp on Email
+router.post("/email", auth, async (req, res) => {
+  try {
+    const email = req.param.email;
+    const code = [
+      Math.round(Math.random() * 10) + 1,
+      Math.round(Math.random() * 10) + 1,
+      Math.round(Math.random() * 10) + 1,
+      Math.round(Math.random() * 10) + 1,
+      Math.round(Math.random() * 10) + 1,
+      Math.round(Math.random() * 10) + 1,
+    ].join("");
+
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "",
+        pass: "",
+      },
+    });
+
+    let mail = {
+      from: "",
+      to: "",
+      subject: "",
+      text: "",
+    };
+    transporter.sendMail(mail, (error, data) => {
+      if (data) {
+        otp = code;
+        un_email = email;
+      }
+    });
+    setTimeout(() => {
+      otp = undefined;
+    }, 5 * 60 * 100);
+    res.send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//match the otp
+router.post("/verify", auth, async (req, res) => {
+  try {
+    const code = req.body.code;
+    if (code === otp) {
+      ver_email = un_email;
+    }
+    if (code !== otp) {
+      otp = undefined;
+    }
+    res.send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+router.patch("/user/passwd", async (req, res) => {
+  try {
+    const new_passwd = req.body.password;
+    const user = ver_email ? User.findOne({ email: ver_email }) : undefined;
+    if (user && new_passwd) {
+      user.password = new_passwd;
+    }
+    await user.save();
+    res.send(req.user);
   } catch (e) {
     res.status(400).send(e);
   }
