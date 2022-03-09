@@ -76,5 +76,5 @@ theme[2] = createTheme({
     },
   },
 });
-let currTheme = theme[2];
+let currTheme = theme[1];
 export default currTheme;

@@ -309,7 +309,7 @@ export default function ProductCard(props) {
               )}
             </CardActions>
             <Collapse in={expandedBid} timeout="auto" unmountOnExit>
-              {/* <Box p={1} justifyContent="center">
+              <Box p={1} justifyContent="center">
                 <Stack
                   justifyContent="center"
                   alignItems="center"
@@ -357,11 +357,10 @@ export default function ProductCard(props) {
                     ) : (
                       <Button variant="outlined">Bid</Button>
                     )}
-                    
                   </item>
                 </Stack>
-              </Box> */}
-              <Bids bids={bids} />
+              </Box>
+              {/* <Bids bids={bids} /> */}
             </Collapse>
             <Collapse in={expandedComment} timeout="auto" unmountOnExit>
               <Comments comments={comments} />

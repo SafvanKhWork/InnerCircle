@@ -19,13 +19,13 @@ const Products = (props) => {
     setIsLandscape(window.matchMedia("(orientation: landscape").matches);
     setWidth(window.innerWidth);
   });
-  let s = props.s ? props.s : width < 900 ? 5 : width < 1150 ? 4 : 3;
+  let s = props.s ? props.s : width < 700 ? 12 : width < 1150 ? 6 : 4;
   if (isLandscape) {
     return (
       <Grid
         container
-        mt={!width < 900 ? 56 : 0}
-        px={!width < 900 ? 48 : 0}
+        mt={width > 1150 ? 16 : 0}
+        px={width > 1150 ? 26 : width > 700 ? 10 : 0}
         justifyContent="center"
         spacing={1}
       >
