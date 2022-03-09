@@ -45,20 +45,36 @@ theme[2] = createTheme({
   palette: {
     type: "light",
     primary: {
-      main: "#efef04",
+      main: "#ffff00",
+      contrastText: "rgba(0,0,0,0.87)",
     },
     secondary: {
-      main: "#5ee6e6",
+      main: "#40c4ff",
+      contrastText: "#000000",
     },
     info: {
-      main: "#567c96",
+      main: "#64b5f6",
     },
     background: {
+      paper: "#5a5a5a",
       default: "#000000",
-      paper: "#797979",
     },
-    divider: "#dce775",
+    error: {
+      main: "#e57373",
+    },
+    warning: {
+      main: "#ffb74d",
+    },
+    success: {
+      main: "#81c784",
+    },
+    text: {
+      primary: "#ffffff",
+      secondary: "rgba(255,255,255,0.5)",
+      disabled: "rgba(255,255,255,0.4)",
+      hint: "rgba(255,255,255,0.4)",
+    },
   },
 });
-let currTheme = theme[1];
+let currTheme = theme[2];
 export default currTheme;

@@ -19,7 +19,7 @@ const Catagory = require("./models/catagory");
 //
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3005;
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);

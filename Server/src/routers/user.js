@@ -124,6 +124,21 @@ router.post("/user/:uname/add", auth, async (req, res) => {
   }
 });
 
+//Get CIRCLE
+router.get("/circle", auth, async (req, res) => {
+  try {
+    const user = req.user;
+    const circle = user.circle.map((friend) => {
+      const ob1 = User.findOne({ username: friend });
+      return ob1;
+    });
+
+    res.status(200).send(circle);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
+
 //Accept friendRequest
 router.patch("/user/:uname/add", auth, async (req, res) => {
   const username = req.params.uname;

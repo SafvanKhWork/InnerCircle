@@ -1,15 +1,13 @@
 const express = require("express");
+const router = new express.Router();
+const { ObjectID } = require("mongodb");
+
 const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
-
 const auth = require("../middleware/auth");
-const { ObjectID } = require("mongodb");
-
-const router = new express.Router();
 
 //add new product
-
 router.post("/product/new", auth, async (req, res) => {
   const product = new Product({
     ...req.body,
@@ -17,7 +15,7 @@ router.post("/product/new", auth, async (req, res) => {
   });
 
   try {
-    Catagory.exists({ name: req.body.name }, function (e, doc) {
+    Catagory.exists({ name: req.body.name }, function (e) {
       if (e) {
         throw new Error(e);
       }
@@ -30,7 +28,6 @@ router.post("/product/new", auth, async (req, res) => {
 });
 
 //get all products
-
 router.get("/products", async (req, res) => {
   try {
     const product = await Product.find({});
@@ -41,7 +38,6 @@ router.get("/products", async (req, res) => {
 });
 
 //get most liked products
-
 router.get("/products/popular", async (req, res) => {
   try {
     const product = await Product.find({}).sort({ likes: -1 });
@@ -52,7 +48,6 @@ router.get("/products/popular", async (req, res) => {
 });
 
 //get recent products
-
 router.get("/products/recent", async (req, res) => {
   try {
     const product = await Product.find({}).sort({ createdAt: -1 });
@@ -76,8 +71,8 @@ router.patch("/recommand", auth, async (req, res) => {
     const recommandation = user.recommandation;
 
     recommandation.forEach((element) => {
-      if (String(element.product) === String(product._id)) {
-        element.recommandedby.push(req.user._id);
+      if (String(element.product) === String(product.product_name)) {
+        element.recommandedby.push(req.user.username);
         element.recommandedby = [...new Set(element.recommandedby)];
         visited = true;
       }
@@ -100,7 +95,6 @@ router.patch("/recommand", auth, async (req, res) => {
 });
 
 //get all product with given type
-
 router.get("/products/catagory/:catagory", async (req, res) => {
   try {
     const catagory = req.params.catagory;
@@ -123,8 +117,23 @@ router.get("/products/owner/:user", async (req, res) => {
   }
 });
 
-//Get Recommandedproduct
-//Pending
+//Get Recommanded product
+router.get("/recommanded", auth, async (req, res) => {
+  try {
+    const user = req.user;
+    const recc = user.recommandation.map((item) => {
+      const ob1 = {
+        product: item.product,
+        recommandedby: item.recommandedby,
+      };
+      return ob1;
+    });
+
+    res.status(200).send(recc);
+  } catch (e) {
+    res.status(500).send(e.message);
+  }
+});
 
 //get all product with same modal number
 router.get("/products/model/:model", async (req, res) => {
@@ -136,8 +145,8 @@ router.get("/products/model/:model", async (req, res) => {
     res.status(500).send();
   }
 });
-// get products by id
 
+// get products by id
 router.get("/products/id/:id", async (req, res) => {
   const _id = req.params.id;
 
@@ -155,7 +164,6 @@ router.get("/products/id/:id", async (req, res) => {
 });
 
 //Get product by given product_name
-
 router.get("/products/:product", async (req, res) => {
   const product_name = req.params.product;
 
@@ -173,7 +181,6 @@ router.get("/products/:product", async (req, res) => {
 });
 
 //Update the product with given id
-
 router.patch("/products/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["description", "name"];
@@ -184,7 +191,6 @@ router.patch("/products/:id", auth, async (req, res) => {
   if (!isValidOperation) {
     return res.status(400).send({ Error: "Invalid updates!" });
   }
-
   try {
     const product = await Product.findOne({
       _id: req.params.id,
@@ -232,7 +238,6 @@ router.patch("/like/:id", auth, async (req, res) => {
 });
 
 // Bid on product
-
 router.patch("/bid/:id", auth, async (req, res) => {
   const _id = req.params.id;
   let altered = false;
@@ -272,7 +277,6 @@ router.patch("/bid/:id", auth, async (req, res) => {
 });
 
 //Comment on product
-
 router.patch("/comment/:id", auth, async (req, res) => {
   const _id = req.params.id;
   try {
@@ -298,7 +302,6 @@ router.patch("/comment/:id", auth, async (req, res) => {
 });
 
 //View Comments
-
 router.get("/comments/:id", async (req, res) => {
   const _id = req.params.id;
   try {
@@ -312,58 +315,118 @@ router.get("/comments/:id", async (req, res) => {
   }
 });
 
-//Item Transaction
-
-router.patch("/products/sell/:id", auth, async (req, res) => {
+//Item sold
+router.patch("/products/sold/:id", auth, async (req, res) => {
   const _id = req.params.id;
   console.log(req.user);
-  // try {
-  const product = await Product.findOne({
-    _id,
-  });
+  try {
+    const product = await Product.findOne({
+      _id,
+    });
 
-  const soldBy = req.user;
-  const soldTo = await User.findOne({
-    _id: req.body.soldTo,
-  });
+    const soldBy = req.user;
+    const soldTo = await User.findOne({
+      _id: req.body.soldTo,
+    });
 
-  if (!product || !soldTo || !soldBy) {
-    return res.status(404).send();
+    if (!product || !soldTo || !soldBy) {
+      return res.status(404).send();
+    }
+    soldTo.history.push({
+      act: "bought",
+      itemID: product._id,
+      description: product.description,
+      name: product.name,
+      value: req.body.value,
+      model: product.model,
+      catagory: product.catagory,
+      image: product.image,
+      user2: product.owner,
+    });
+    soldBy.history.push({
+      act: "sold",
+      itemID: product._id,
+      description: product.description,
+      name: product.name,
+      value: req.body.value,
+      model: product.model,
+      catagory: product.catagory,
+      image: product.image,
+      user2: soldTo._id,
+    });
+
+    await soldTo.save();
+    await soldBy.save();
+    await Product.findOneAndDelete({
+      _id: product._id,
+    });
+    res.send(soldBy.history);
+  } catch (e) {
+    res.status(400).send(e);
   }
-  soldTo.history.push({
-    act: "bought",
-    itemID: product._id,
-    description: product.description,
-    name: product.name,
-    value: req.body.value,
-    model: product.model,
-    catagory: product.catagory,
-    image: product.image,
-    user2: product.owner,
-  });
-  soldBy.history.push({
-    act: "sold",
-    itemID: product._id,
-    description: product.description,
-    name: product.name,
-    value: req.body.value,
-    model: product.model,
-    catagory: product.catagory,
-    image: product.image,
-    user2: soldTo._id,
-  });
+});
 
-  await soldTo.save();
-  await soldBy.save();
-  await Product.findOneAndDelete({
-    _id: product._id,
-  });
-  res.send(soldBy.history);
-  // } catch (e) {}
+//Item rented
+router.patch("/products/rented/:id", auth, async (req, res) => {
+  const _id = req.params.id;
+  console.log(req.user);
+  try {
+    const product = await Product.findOne({
+      _id,
+    });
+
+    const rentedBy = req.user;
+    const rentedTo = await User.findOne({
+      _id: req.body.soldTo,
+    });
+
+    if (!product || !rentedTo || !rentedBy) {
+      return res.status(404).send();
+    }
+    const duration = String(req.body.duration) * 24 * 60 * 60 * 100;
+    const from = String(new Date().getTime());
+    const to = String(Number(from) + Number(duration));
+    rentedTo.history.push({
+      act: "borrowed",
+      itemID: product._id,
+      description: product.description,
+      name: product.name,
+      value: req.body.value,
+      model: product.model,
+      from: from,
+      to: to,
+      duration: duration,
+      catagory: product.catagory,
+      image: product.image,
+      user2: product.owner,
+    });
+    rentedBy.history.push({
+      act: "rented",
+      itemID: product._id,
+      description: product.description,
+      name: product.name,
+      value: req.body.value,
+      from: from,
+      to: to,
+      duration: duration,
+      model: product.model,
+      catagory: product.catagory,
+      image: product.image,
+      user2: rentedTo._id,
+    });
+
+    await rentedTo.save();
+    await rentedBy.save();
+    await Product.findOneAndDelete({
+      _id: product._id,
+    });
+    res.send(rentedBy.history);
+  } catch (e) {
+    res.status(400).send(e);
+  }
 });
 
 //Delete the product with given id
-
 router.delete("/products/:id", auth, async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({
