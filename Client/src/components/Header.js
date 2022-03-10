@@ -10,13 +10,28 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import Drawer from "@mui/material/Drawer";
-import { Divider, ListItem } from "@mui/material";
+import { Divider, ListItem, ListItemText } from "@mui/material";
 import theme from "../components/UI/Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Image from "../img.jpg";
 
 import Menu from "@mui/material/Menu";
+import { Link } from "react-router-dom";
+
+// function ListItemLink(props) {
+//   const { primary, to } = props;
+
+//   const CustomLink = (props) => <Link to={to} {...props} />;
+
+//   return (
+//     <li>
+//       <ListItem button component={CustomLink}>
+//         <ListItemText primary={primary} />
+//       </ListItem>
+//     </li>
+//   );
+// }
 
 const drawerWidth = 240;
 
@@ -184,9 +199,8 @@ const ResponsiveAppBar = (props) => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <ListItem button key={setting} onClick={handleCloseUserMenu}>
-                    <Divider />
-                    {setting}
+                  <ListItem>
+                    <Link to="/profile">{setting}</Link>
                   </ListItem>
                 ))}
               </Drawer>

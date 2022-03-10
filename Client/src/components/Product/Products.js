@@ -19,13 +19,13 @@ const Products = (props) => {
     setIsLandscape(window.matchMedia("(orientation: landscape").matches);
     setWidth(window.innerWidth);
   });
-  let s = props.s ? props.s : width < 700 ? 12 : width < 1150 ? 6 : 4;
+  let s = props.s ? props.s : width < 700 ? 6 : width < 1150 ? 6 : 4;
   if (isLandscape) {
     return (
       <Grid
         container
         mt={width > 1150 ? 16 : 0}
-        px={width > 1150 ? 26 : width > 700 ? 10 : 0}
+        px={width > 1150 ? 26 : width > 850 ? 12 : 0}
         justifyContent="center"
         spacing={1}
       >
@@ -46,7 +46,7 @@ const Products = (props) => {
   }
   if (!isLandscape) {
     return (
-      <Stack spacing={1}>
+      <Stack spacing={2}>
         {products.map((product, i) => {
           return (
             <ProductCard
