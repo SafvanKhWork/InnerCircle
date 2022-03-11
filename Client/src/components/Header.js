@@ -15,23 +15,10 @@ import theme from "../components/UI/Theme";
 import { ThemeProvider } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import Image from "../img.jpg";
-
+import SearchBar from "./Product/Search.backup";
 import Menu from "@mui/material/Menu";
 import { Link } from "react-router-dom";
-
-// function ListItemLink(props) {
-//   const { primary, to } = props;
-
-//   const CustomLink = (props) => <Link to={to} {...props} />;
-
-//   return (
-//     <li>
-//       <ListItem button component={CustomLink}>
-//         <ListItemText primary={primary} />
-//       </ListItem>
-//     </li>
-//   );
-// }
+import SearchBox from "./Product/Search";
 
 const drawerWidth = 240;
 
@@ -105,7 +92,7 @@ const ResponsiveAppBar = (props) => {
                 onClick={handleOpenNavMenu}
                 color="inherit"
               >
-                <MenuIcon />
+                <MenuIcon sx={{ color: "white" }} />
               </IconButton>
               <Drawer
                 sx={{
@@ -155,17 +142,7 @@ const ResponsiveAppBar = (props) => {
               INNER CIRCLE
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              {menu.map((page) => (
-                <Button
-                  key={page}
-                  onClick={() => {
-                    setMenu(catagory);
-                  }}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {page}
-                </Button>
-              ))}
+              <SearchBar />
             </Box>
 
             <Box sx={{ flexGrow: 0 }}>

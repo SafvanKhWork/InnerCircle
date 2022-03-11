@@ -11,7 +11,7 @@ import products from "./data";
 import Product from "./components/Product/ProductPage";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const status = {
     isLoggedIn,
     setIsLoggedIn,

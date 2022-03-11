@@ -14,17 +14,42 @@ import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
 import { TextField } from "@mui/material";
 import { ThemeProvider } from "@mui/material";
-import ThumbDownIcon from "@mui/icons-material/ThumbDown";
-import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Fragment } from "react";
 import Image from "../../img.jpg";
 import theme from "../UI/Theme";
 
+let changed = false;
+
 const Comments = (props) => {
-  const [amount, setAmount] = useState(0);
-  let start = -3 - amount;
-  let end = amount > 0 ? 0 - amount : undefined;
-  let comments = props.comments.slice(start, end);
+  const [page, setPage] = useState(0);
+
+  const size = props.size || 3;
+
+  let start = -size - page;
+  let end = page > 0 ? 0 - page : undefined;
+  let forward = false;
+  let back = true;
+
+  let comments = props.comments.slice(start, end).reverse();
+
+  if (changed) {
+    forward = end < 0;
+    back = 0 - start < props.comments.length;
+    if (!back) {
+      back = false;
+      forward = true;
+    } else if (!forward) {
+      back = true;
+      forward = false;
+    } else {
+      back = forward = true;
+    }
+  }
+
+  changed = false;
+
   return (
     <ThemeProvider theme={theme}>
       <Box p={1} justifyContent="center">
@@ -43,7 +68,7 @@ const Comments = (props) => {
           </Stack>
         </Box>
 
-        {comments.map((comment) => {
+        {comments.map((comment, i) => {
           return (
             <Box p={1}>
               <Stack
@@ -53,18 +78,17 @@ const Comments = (props) => {
                 direction="row"
               >
                 {
-                  <Fragment>
+                  <Fragment key={i}>
                     <Grid container justifyContent="center" alignItems="center">
-                      <Grid item pl={1} pr={1}>
+                      <Grid item key={`${i}1`} pl={1} pr={1}>
                         {<Avatar src={Image} sx={{ width: 34, height: 34 }} />}
                       </Grid>
-                      <Grid item xs={true}>
-                        <Typography variant="title">{comment.user}$</Typography>
+                      <Grid item xs={true} key={`${i}2`}>
+                        <Typography variant="title">{comment.user}</Typography>
                         <Typography color="text.secondary" variant="body2">
                           {comment.message}
                         </Typography>
                       </Grid>
-                      <Grid item></Grid>
                     </Grid>
                     <Divider />
                   </Fragment>
@@ -74,18 +98,39 @@ const Comments = (props) => {
           );
         })}
         <Box mt={1} px={2}>
-          <Button
-            onClick={() => {
-              if (0 - start < props.comments.length) {
-                setAmount(amount + 2);
-              }
-            }}
-            fullWidth
-            variant="text"
-            size="small"
-          >
-            Load More Comments
-          </Button>
+          <Grid container justifyContent={"center"} spacing={1}>
+            <Grid item xs={12} sm={6}>
+              <Button
+                disabled={!back ? true : false}
+                onClick={() => {
+                  if (back) {
+                    changed = true;
+                    setPage(page + 2);
+                  }
+                }}
+                fullWidth
+                size="small"
+              >
+                <ArrowBackIcon />
+              </Button>
+            </Grid>
+
+            <Grid item xs={12} sm={6}>
+              <Button
+                disabled={!forward ? true : false}
+                onClick={() => {
+                  if (forward) {
+                    changed = true;
+                    setPage(page - 2);
+                  }
+                }}
+                fullWidth
+                size="small"
+              >
+                <ArrowForwardIcon />
+              </Button>
+            </Grid>
+          </Grid>
         </Box>
       </Box>
     </ThemeProvider>

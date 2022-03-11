@@ -32,18 +32,10 @@ import SpokeIcon from "@mui/icons-material/Spoke";
 import CommentIcon from "@mui/icons-material/Comment";
 import Comments from "./Comments";
 import Menu from "@mui/material/Menu";
-import SearchBar from "./Search.backup";
+import SearchBar from "./Search";
+import NewBid from "./NewBid";
 
 const sign = {};
-
-const users = [
-  { name: "safvan" },
-  { name: "lukman" },
-  { name: "test1" },
-  { name: "subhan" },
-
-  { name: "test4" },
-];
 
 const comments = [
   {
@@ -86,48 +78,29 @@ const comments = [
 
 const bids = [
   {
-    name: "zack",
-    bid: 180,
+    name: "zack1",
+    bid: 1800,
     time: "time",
   },
   {
     name: "zack",
-    bid: 180,
+    bid: 18,
     time: "time",
   },
   {
     name: "zack",
-    bid: 180,
+    bid: 190,
     time: "time",
   },
   {
     name: "zack",
-    bid: 180,
+    bid: 1,
     time: "time",
   },
   {
     name: "zack",
-    bid: 180,
+    bid: 186,
     time: "time",
-  },
-];
-const currencies = [
-  {
-    value: "USD",
-    label: "$",
-  },
-  {
-    value: "EUR",
-    label: "€",
-  },
-
-  {
-    value: "BTC",
-    label: "฿",
-  },
-  {
-    value: "JPY",
-    label: "¥",
   },
 ];
 
@@ -147,22 +120,9 @@ export default function ProductCard(props) {
   const [expandedBid, setExpandedBid] = React.useState(false);
   const [expandedRecc, setExpandedRecc] = React.useState(false);
   const [expandedComment, setExpandedComment] = React.useState(false);
-  const [currency, setCurrency] = React.useState("EUR");
-  const [isEmpty, setIsEmpty] = React.useState(true);
+
   const [liked, setLiked] = React.useState(false);
-  const [anchorRe, setAnchorRe] = React.useState(null);
-  const open = Boolean(anchorRe);
 
-  const handleChange = (event) => {
-    setCurrency(event.target.value);
-  };
-
-  const handleOpenRe = (event) => {
-    setAnchorRe(event.currentTarget);
-  };
-  const handleCloseRe = () => {
-    setAnchorRe(null);
-  };
   //
 
   const handleClickSave = (e) => {
@@ -177,13 +137,6 @@ export default function ProductCard(props) {
   };
 
   //
-  const handleChangeAdd = (e) => {
-    setIsEmpty(!e.target.value || e.target.value < 1);
-    props.status.setAmounts((amount) => ({
-      ...amount,
-      ...{ [e.target.id]: e.target.value },
-    }));
-  };
 
   //
   const handleExpandDesc = () => {
@@ -191,8 +144,8 @@ export default function ProductCard(props) {
   };
   const handleExpandBid = () => {
     setExpandedComment(false);
-    setExpandedBid(!expandedBid);
     setExpandedRecc(false);
+    setExpandedBid(!expandedBid);
   };
   const handleExpandComment = () => {
     setExpandedBid(false);
@@ -271,21 +224,6 @@ export default function ProductCard(props) {
                     )}
                   </ExpandMore>
                 </IconButton>
-                <IconButton p={1} id="recc">
-                  <ExpandMore
-                    expand={expandedRecc}
-                    onClick={handleExpandRecc}
-                    aria-expandedComment={expandedRecc}
-                    aria-label="show more"
-                  >
-                    {expandedRecc ? (
-                      <ShareIcon sx={{ color: yellow[700] }} />
-                    ) : (
-                      <ShareIcon />
-                    )}
-                  </ExpandMore>
-                </IconButton>
-
                 <IconButton p={1} aria-label="bid">
                   <ExpandMore
                     expand={expandedBid}
@@ -297,6 +235,20 @@ export default function ProductCard(props) {
                       <MonetizationOnIcon sx={{ color: green[500] }} />
                     ) : (
                       <MonetizationOnIcon />
+                    )}
+                  </ExpandMore>
+                </IconButton>
+                <IconButton p={1} id="recc">
+                  <ExpandMore
+                    expand={expandedRecc}
+                    onClick={handleExpandRecc}
+                    aria-expandedComment={expandedRecc}
+                    aria-label="show more"
+                  >
+                    {expandedRecc ? (
+                      <ShareIcon sx={{ color: yellow[700] }} />
+                    ) : (
+                      <ShareIcon />
                     )}
                   </ExpandMore>
                 </IconButton>
@@ -314,70 +266,20 @@ export default function ProductCard(props) {
                   </ExpandMore>
                 )}
               </CardActions>
-              <Collapse in={expandedBid} timeout="auto" unmountOnExit>
-                <Box p={1} justifyContent="center">
-                  <Stack
-                    justifyContent="center"
-                    alignItems="center"
-                    direction="row"
-                    spacing={1}
-                  >
-                    <item>
-                      <TextField
-                        size="small"
-                        select
-                        value={currency}
-                        onChange={handleChange}
-                        id="curr"
-                        label="Cur"
-                        type="number"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      >
-                        {currencies.map((option) => (
-                          <MenuItem key={option.value} value={option.value}>
-                            {option.label}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </item>
-                    <item>
-                      <TextField
-                        size="small"
-                        maxRows="1"
-                        id={`amount${props.index}`}
-                        onChange={handleChangeAdd}
-                        label="Amount"
-                        type="number"
-                        InputLabelProps={{
-                          shrink: true,
-                        }}
-                      />
-                    </item>
-                    <item>
-                      {isEmpty ? (
-                        <Button size="medium" disabled variant="text">
-                          Bid
-                        </Button>
-                      ) : (
-                        <Button size="medium" variant="text">
-                          Bid
-                        </Button>
-                      )}
-                    </item>
-                  </Stack>
-                </Box>
-                {/* <Bids bids={bids} /> */}
-              </Collapse>
-              <Collapse in={expandedRecc} timeout="auto" unmountOnExit>
-                <Box justifyContent="center" p={1}>
-                  <SearchBar />
-                </Box>
-              </Collapse>
-              <Collapse in={expandedComment} timeout="auto" unmountOnExit>
-                <Comments comments={comments} />
-              </Collapse>
+              <Stack direction={"column-reverse"}>
+                <Collapse in={expandedBid} timeout="auto" unmountOnExit>
+                  <NewBid />
+                  <Bids bids={bids} />
+                </Collapse>
+                <Collapse in={expandedRecc} timeout="auto" unmountOnExit>
+                  <Box justifyContent="center" p={1}>
+                    <SearchBar />
+                  </Box>
+                </Collapse>
+                <Collapse in={expandedComment} timeout="auto" unmountOnExit>
+                  <Comments comments={comments} />
+                </Collapse>
+              </Stack>
             </React.Fragment>
           </Card>
         </Paper>
