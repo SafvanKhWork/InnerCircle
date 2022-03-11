@@ -9,6 +9,7 @@ import {
   Grid,
   Button,
 } from "@mui/material";
+
 import {} from "@mui/material/colors";
 import SendIcon from "@mui/icons-material/Send";
 import { useState } from "react";
@@ -53,7 +54,7 @@ const Comments = (props) => {
   return (
     <ThemeProvider theme={theme}>
       <Box p={1} justifyContent="center">
-        <Box px={2}>
+        <Box>
           <Stack spacing={1} direction="row">
             <TextField
               fullWidth
@@ -80,13 +81,19 @@ const Comments = (props) => {
                 {
                   <Fragment key={i}>
                     <Grid container justifyContent="center" alignItems="center">
-                      <Grid item key={`${i}1`} pl={1} pr={1}>
+                      {/* <Grid item key={`${i}1`} pl={1} pr={1}>
                         {<Avatar src={Image} sx={{ width: 34, height: 34 }} />}
-                      </Grid>
+                      </Grid> */}
                       <Grid item xs={true} key={`${i}2`}>
-                        <Typography variant="title">{comment.user}</Typography>
-                        <Typography color="text.secondary" variant="body2">
+                        <Typography fontFamily={"monospace"} variant="title">
                           {comment.message}
+                        </Typography>
+                        <Typography
+                          fontFamily={"sans-serif"}
+                          color="text.secondary"
+                          variant="body2"
+                        >
+                          {comment.user}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -112,6 +119,7 @@ const Comments = (props) => {
                 size="small"
               >
                 <ArrowBackIcon />
+                Previous
               </Button>
             </Grid>
 
@@ -127,6 +135,7 @@ const Comments = (props) => {
                 fullWidth
                 size="small"
               >
+                Next
                 <ArrowForwardIcon />
               </Button>
             </Grid>

@@ -25,7 +25,7 @@ const Products = (props) => {
       <Grid
         container
         mt={width > 1150 ? 16 : 0}
-        px={width > 1150 ? 26 : width > 850 ? 12 : 0}
+        px={width > 1225 ? 18 : width > 850 ? 12 : 0}
         justifyContent="center"
         spacing={1}
       >

@@ -8,6 +8,7 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import Typography from "@mui/material/Typography";
 import Image from "../../img.jpg";
 import FavoriteIcon from "@mui/icons-material/Favorite";

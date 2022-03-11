@@ -69,9 +69,9 @@ const Bids = (props) => {
                 {
                   <Fragment key={i}>
                     <Grid container justifyContent="center" alignItems="center">
-                      <Grid item key={`${i}3`} pl={1} pr={1}>
-                        {<Avatar src={Image} sx={{ width: 34, height: 34 }} />}
-                      </Grid>
+                      {/* <Grid item key={`${i}3`} pl={1} pr={1}> */}
+                      {/* {<Avatar src={Image} sx={{ width: 34, height: 34 }} />}
+                      </Grid> */}
                       <Grid key={`${i}4`} item xs={true}>
                         <Typography fontFamily={"sans-serif"} variant="title">
                           {bid.name}
@@ -120,6 +120,7 @@ const Bids = (props) => {
                 size="small"
               >
                 <ArrowBackIcon />
+                Previous
               </Button>
             </Grid>
 
@@ -135,6 +136,7 @@ const Bids = (props) => {
                 fullWidth
                 size="small"
               >
+                Next
                 <ArrowForwardIcon />
               </Button>
             </Grid>
