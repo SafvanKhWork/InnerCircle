@@ -16,6 +16,7 @@
     "mobile-detect": "^1.4.5",
     "react": "^17.0.2",
     "react-burger-menu": "^3.0.6",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^17.0.2",
     "react-router": "^6.2.1",
     "react-router-dom": "^6.2.2",

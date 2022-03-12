@@ -20,6 +20,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Fragment } from "react";
 import Image from "../../img.jpg";
 import theme from "../UI/Theme";
+import { Scrollbars } from "react-custom-scrollbars";
 
 let changed = false;
 
@@ -50,7 +51,80 @@ const Comments = (props) => {
   }
 
   changed = false;
+  if (props.desk) {
+    let comments = props.comments;
+    return (
+      <ThemeProvider theme={theme}>
+        <Box p={1} justifyContent="center">
+          <Scrollbars
+            style={{ height: 430 }}
+            autoHide
+            autoHideTimeout={0}
+            autoHideDuration={200}
+          >
+            {comments.map((comment, i) => {
+              return (
+                <Box p={1}>
+                  <Stack
+                    spacing={1}
+                    justifyContent="center"
+                    alignItems="center"
+                    direction="row"
+                  >
+                    {
+                      <Fragment key={i}>
+                        <Grid
+                          container
+                          justifyContent="center"
+                          alignItems="center"
+                        >
+                          {/* <Grid item key={`${i}1`} pl={1} pr={1}>
+                        {<Avatar src={Image} sx={{ width: 34, height: 34 }} />}
+                      </Grid> */}
+                          <Grid item xs={true} key={`${i}2`}>
+                            <Typography
+                              fontFamily={"monospace"}
+                              variant="title"
+                            >
+                              {comment.message}
+                            </Typography>
+                            <Typography
+                              fontFamily={"sans-serif"}
+                              color="text.secondary"
+                              variant="body2"
+                            >
+                              {comment.user}
+                            </Typography>
+                          </Grid>
+                        </Grid>
+                        <Divider />
+                      </Fragment>
+                    }
+                  </Stack>
+                </Box>
+              );
+            })}
+          </Scrollbars>
+          <Box mt={2}>
+            <Stack spacing={1} direction="row">
+              <TextField
+                fullWidth
+                id="comment"
+                label="comment"
+                defaultValue=""
+                size="small"
+              />
+              <Button variant="outlined" size="small">
+                Add
+              </Button>
+            </Stack>
+          </Box>
+        </Box>
+      </ThemeProvider>
+    );
+  }
 
+  //Mobile
   return (
     <ThemeProvider theme={theme}>
       <Box p={1} justifyContent="center">

@@ -6,10 +6,31 @@ import { Stack, Grid, Button } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { Typography } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
+import { Scrollbars } from "react-custom-scrollbars";
+import DoneIcon from "@mui/icons-material/Done";
+import ResultItem from "./ResultItem";
 
 import Users from "../../data";
 
 const users = [
+  { name: "safvan khalifa", username: "khsafvan" },
+  { name: "lukman", username: "khlukman" },
+  { name: "test1", username: "khtest" },
+  { name: "subhan", username: "khsubhan" },
+
+  { name: "test4", username: "4tester" },
+  { name: "safvan khalifa", username: "khsafvan" },
+  { name: "lukman", username: "khlukman" },
+  { name: "test1", username: "khtest" },
+  { name: "subhan", username: "khsubhan" },
+
+  { name: "test4", username: "4tester" },
+  { name: "safvan khalifa", username: "khsafvan" },
+  { name: "lukman", username: "khlukman" },
+  { name: "test1", username: "khtest" },
+  { name: "subhan", username: "khsubhan" },
+
+  { name: "test4", username: "4tester" },
   { name: "safvan khalifa", username: "khsafvan" },
   { name: "lukman", username: "khlukman" },
   { name: "test1", username: "khtest" },
@@ -56,7 +77,14 @@ const finder = (isubstring, data) => {
 
 export default function SearchBox(props) {
   const [searchQuery, setSearchQuery] = useState("");
-  const matches = finder(searchQuery, users);
+
+  let matches = finder(searchQuery, users);
+  if (searchQuery.trim() === "" && props.show) {
+    matches = users;
+  }
+  const results = matches.map((user) => {
+    return <ResultItem user={user} />;
+  });
   return (
     <Stack spacing={1}>
       <SearchBar
@@ -64,35 +92,18 @@ export default function SearchBox(props) {
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
       />
-      {matches.map((user, i) => {
-        return (
-          <Stack
-            px={2}
-            py={1}
-            spacing={1}
-            justifyContent="left"
-            alignItems="center"
-            direction="row"
-          >
-            <Grid container justifyContent="center" alignItems="center">
-              <Grid item key={`${i}3`} pl={1} pr={1}>
-                {<Avatar src={Image} sx={{ width: 34, height: 34 }} />}
-              </Grid>
-              <Grid key={`${i}4`} item xs={true}>
-                <Typography fontFamily={"sans-serif"} variant="title">
-                  {user.name}
-                </Typography>
-                <Typography color="text.secondary" variant="body2">
-                  {user.username}
-                </Typography>
-              </Grid>
-            </Grid>
-            <IconButton variant="text">
-              <SendIcon sx={{ color: "primary" }} />
-            </IconButton>
-          </Stack>
-        );
-      })}
+      {props.show ? (
+        <Scrollbars
+          style={{ height: 430 }}
+          autoHide
+          autoHideTimeout={0}
+          autoHideDuration={200}
+        >
+          {results}
+        </Scrollbars>
+      ) : (
+        results
+      )}
     </Stack>
   );
 }
