@@ -18,7 +18,7 @@ import { ThemeProvider } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Fragment } from "react";
-import Image from "../../img.jpg";
+
 import theme from "../UI/Theme";
 import { Scrollbars } from "react-custom-scrollbars";
 
@@ -55,7 +55,7 @@ const Comments = (props) => {
     let comments = props.comments;
     return (
       <ThemeProvider theme={theme}>
-        <Box p={1} justifyContent="center">
+        <Box p={1} justifyContent="space-between">
           <Scrollbars
             style={{ height: 430 }}
             autoHide

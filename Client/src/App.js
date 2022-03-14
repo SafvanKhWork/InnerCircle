@@ -17,7 +17,7 @@ function App() {
     setIsLoggedIn,
   };
   return (
-    <Fragment>
+    <Box>
       <Router>
         {isLoggedIn ? <Header status={status} /> : <HeaderUnverified />}
 
@@ -36,7 +36,7 @@ function App() {
           </Routes>
         </Box>
       </Router>
-    </Fragment>
+    </Box>
   );
 }
 

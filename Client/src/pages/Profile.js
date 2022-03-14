@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ThemeProvider } from "@mui/material";
 import Products from "../components/Product/Products";
 import theme from "../components/UI/Theme";
-import Image from "../img.jpg";
+import Image from "../img/img.jpg";
 import data from "../data";
 
 const StyledAvatar = styled(Avatar)({

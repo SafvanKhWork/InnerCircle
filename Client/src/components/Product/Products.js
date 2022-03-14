@@ -22,13 +22,7 @@ const Products = (props) => {
   let s = props.s ? props.s : width < 700 ? 6 : width < 1150 ? 6 : 4;
   if (isLandscape) {
     return (
-      <Grid
-        container
-        mt={width > 1150 ? 16 : 0}
-        px={width > 1225 ? 18 : width > 850 ? 12 : 0}
-        justifyContent="center"
-        spacing={1}
-      >
+      <Grid container justifyContent="center" spacing={1}>
         {products.map((product, i) => {
           return (
             <Grid item lg={s} xs={s}>

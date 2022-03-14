@@ -10,7 +10,7 @@ import CardActions from "@mui/material/CardActions";
 import Button from "@mui/material/Button";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import Typography from "@mui/material/Typography";
-import Image from "../../img.jpg";
+import Image from "../../img/img.jpg";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { ThemeProvider, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid";
@@ -35,8 +35,26 @@ import Comments from "./Comments";
 import Menu from "@mui/material/Menu";
 import SearchBar from "./Search";
 import NewBid from "./NewBid";
+import Carousel from "react-material-ui-carousel";
+import Vmag from "../../img/vimg.jpg";
 
-const sign = {};
+function Item(props) {
+  return (
+    <Box maxHeight={200} minHeight={200}>
+      {/* <img
+        sx={{ flex: 1, height: "100%", width: "100%", resizeMode: "contain" }}
+        src={props.children}
+      /> */}
+      <CardMedia
+        //need to resize image
+        component="img"
+        src={props.children}
+      />
+    </Box>
+  );
+}
+
+const handleToCart = {};
 
 const comments = [
   {
@@ -121,14 +139,16 @@ export default function ProductCard(props) {
   const [expandedBid, setExpandedBid] = React.useState(false);
   const [expandedRecc, setExpandedRecc] = React.useState(false);
   const [expandedComment, setExpandedComment] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(false);
 
   const [liked, setLiked] = React.useState(false);
 
+  const images = [Image, Vmag, Image];
   //
 
   const handleClickSave = (e) => {
     if (e.target.value) {
-      sign[e.target.label] = e.target.value;
+      handleToCart[e.target.label] = e.target.value;
     }
   };
   //
@@ -178,12 +198,27 @@ export default function ProductCard(props) {
                 title="Username"
                 subheader="Created At"
               />
-              <CardMedia
-                component="img"
-                height="164"
-                image={Image}
-                alt={props.product.name}
-              />
+              <Box maxHeight={200} minHeight={200}>
+                <div
+                  onMouseEnter={() => setIsFocused(true)}
+                  onMouseLeave={() => setIsFocused(false)}
+                >
+                  <Carousel
+                    indicators={false}
+                    autoPlay={isFocused}
+                    interval={3000}
+                    stopAutoPlayOnHover={false}
+                    navButtonsAlwaysInvisible
+                    cycleNavigation={true}
+                    duration={1000}
+                    animation="fade"
+                  >
+                    {images.map((img, i) => (
+                      <Item key={i}>{img}</Item>
+                    ))}
+                  </Carousel>
+                </div>
+              </Box>
               <CardContent>
                 <Typography variant="h5" component="div">
                   {props.product.name}
