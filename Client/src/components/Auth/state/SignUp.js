@@ -1,23 +1,21 @@
 import * as React from "react";
-import theme from "../../UI/Theme";
-// import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-// import FormControlLabel from "@mui/material/FormControlLabel";
-// import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-// import Input from "@mui/material/Input";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
-import { ThemeProvider } from "@mui/material/styles";
-import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
-import PhotoCamera from "@mui/icons-material/PhotoCamera";
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Grid,
+  Box,
+  Typography,
+  Container,
+  Stack,
+  Avatar,
+  IconButton,
+} from "@mui/material";
+import { ThemeProvider, styled } from "@mui/material/styles";
+
+//
+import theme from "../../../theme";
 
 const Input = styled("input")({
   display: "none",
@@ -61,7 +59,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="https://github.com/SafvanKhWork/InnerCircle">
         InnerCircle
       </Link>{" "}
       {new Date().getFullYear()}

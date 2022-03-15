@@ -1,31 +1,48 @@
-import { Card, CardActions, Collapse } from "@mui/material";
-import { Box, Paper } from "@mui/material";
-import { Grid, Container } from "@mui/material";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import { useState } from "react";
-import { CardMedia, CardContent, Typography, Tab, Tabs } from "@mui/material";
-import { ThemeProvider } from "@mui/material";
-import theme from "../UI/Theme";
-import Image from "../../img/img.jpg";
-import Vmag from "../../img/vimg.jpg";
-import CommentIcon from "@mui/icons-material/Comment";
+import {
+  Card,
+  Box,
+  CardActions,
+  Collapse,
+  Paper,
+  Grid,
+  Container,
+  CardMedia,
+  CardContent,
+  Typography,
+  Tab,
+  Tabs,
+  ThemeProvider,
+  CardHeader,
+  Avatar,
+  Stack,
+  IconButton,
+  PagesOutlined,
+} from "@mui/material";
+
+import {
+  MonetizationOn,
+  Favorite,
+  Comment,
+  AddComment,
+  Recommend,
+  MoreVert,
+  Share,
+} from "@mui/icons-material";
+
 import { red, green, blue, yellow } from "@mui/material/colors";
-import Bids from "./Bids";
-import AddCommentIcon from "@mui/icons-material/AddComment";
-import RecommendIcon from "@mui/icons-material/Recommend";
-import { CardHeader } from "@mui/material";
-import { Avatar, Stack } from "@mui/material";
-import { IconButton } from "@mui/material";
-import MoreVert from "@mui/icons-material/MoreVert";
-import ShareIcon from "@mui/icons-material/Share";
-import NewBid from "./NewBid";
-import Search from "./Search";
-import { Scrollbars, NextIcon, PrevIcon } from "react-custom-scrollbars";
-import SearchBar from "./Search";
-import Comment from "./Comments";
-import { PagesOutlined } from "@mui/icons-material";
+import { Scrollbars } from "react-custom-scrollbars";
 import Carousel from "react-material-ui-carousel";
+
+//
+import theme from "../../../theme";
+import Image from "../../../img/img.jpg";
+import Vmag from "../../../img/vimg.jpg";
+import Bids from "../Details/Bids/Bids";
+import NewBid from "../Details/Bids/NewBid";
+import Search from "../../Search/Search";
+import SearchBar from "../../Search/Search";
+import Comments from "../Details/Comments/Comments";
 
 function Item(props) {
   return (
@@ -111,72 +128,6 @@ const bids = [
     time: "time",
   },
 ];
-const comments = [
-  {
-    user: "1",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "2tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "3tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "4tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "5tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "6tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "7tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "8tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "9tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "3tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "4tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "5tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "6tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "7tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "8tester",
-    message: "Lorem Ipsum zoom",
-  },
-  {
-    user: "9tester",
-    message: "Lorem Ipsum zoom",
-  },
-];
 
 const ProductPage = (props) => {
   const [recc, setRecc] = useState(false);
@@ -220,7 +171,7 @@ const ProductPage = (props) => {
                   <SearchBar />
                    */}
                   <Collapse in={!recc}>
-                    <Comment comments={comments} size={12} desk={true} />
+                    <Comments size={12} desk={true} />
                   </Collapse>
                   <Collapse in={recc}>
                     <Box pt={2}>
@@ -270,9 +221,9 @@ const ProductPage = (props) => {
                     onClick={() => setLiked(!liked)}
                   >
                     {liked ? (
-                      <FavoriteIcon sx={{ color: red[500] }} />
+                      <Favorite sx={{ color: red[500] }} />
                     ) : (
-                      <FavoriteIcon />
+                      <Favorite />
                     )}
                   </IconButton>
                   <IconButton
@@ -280,12 +231,9 @@ const ProductPage = (props) => {
                     aria-label="settings"
                   >
                     {!recc ? (
-                      <CommentIcon
-                        sx={{ color: "#2196f3" }}
-                        fontSize="medium"
-                      />
+                      <Comment sx={{ color: "#2196f3" }} fontSize="medium" />
                     ) : (
-                      <CommentIcon fontSize="medium" />
+                      <Comment fontSize="medium" />
                     )}
                   </IconButton>
                   <IconButton
@@ -294,9 +242,9 @@ const ProductPage = (props) => {
                     aria-label="bid"
                   >
                     {expandedBids ? (
-                      <MonetizationOnIcon sx={{ color: green[500] }} />
+                      <MonetizationOn sx={{ color: green[500] }} />
                     ) : (
-                      <MonetizationOnIcon />
+                      <MonetizationOn />
                     )}
                   </IconButton>
                   <IconButton
@@ -304,9 +252,9 @@ const ProductPage = (props) => {
                     aria-label="settings"
                   >
                     {!recc ? (
-                      <ShareIcon fontSize="medium" />
+                      <Share fontSize="medium" />
                     ) : (
-                      <ShareIcon sx={{ color: "#fbc02d" }} fontSize="medium" />
+                      <Share sx={{ color: "#fbc02d" }} fontSize="medium" />
                     )}
                   </IconButton>
                 </CardActions>

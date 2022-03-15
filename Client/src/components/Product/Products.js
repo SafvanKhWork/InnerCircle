@@ -1,15 +1,13 @@
-import Grid from "@mui/material/Grid";
+import { Grid, Stack } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
-import Stack from "@mui/material/Stack";
 
-// import
+//
 
-import ProductCard from "./ProductCard";
+import ProductCard from "./Views/ProductCard";
 
 const Products = (props) => {
   const products = props.products;
   const [amounts, setAmounts] = useState({});
-
   const [isLandscape, setIsLandscape] = useState(
     window.matchMedia("(orientation: landscape").matches
   );

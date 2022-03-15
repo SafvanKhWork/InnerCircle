@@ -8,18 +8,13 @@ import {
   ButtonGroup,
   Card,
   Collapse,
+  Avatar,
 } from "@mui/material";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { green, red } from "@mui/material/colors";
-import { IconButton } from "@mui/material";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CancelIcon from "@mui/icons-material/Cancel";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Scrollbars } from "react-custom-scrollbars";
-import { Avatar } from "@mui/material";
-import { Fragment } from "react";
-import Image from "../../img/img.jpg";
+
+//
+import Image from "../../../../img/img.jpg";
 
 const Bid = (props) => {
   const [opt, setOpt] = useState(false);
@@ -36,7 +31,12 @@ const Bid = (props) => {
     >
       <Stack spacing={1} justifyContent="space-between" direction="row">
         {
-          <Stack spacing={1} direction="row">
+          <Stack
+            display={"flex"}
+            alignContent={"flex-start"}
+            spacing={1}
+            direction="row"
+          >
             <Avatar src={Image} sx={{ width: 34, height: 34 }} />
 
             <Stack>

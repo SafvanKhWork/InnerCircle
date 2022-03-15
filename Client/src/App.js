@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
 import { Fragment, useState } from "react";
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
-import HeaderUnverified from "./components/HeaderUnverified";
-import Home from "./pages/Home";
-import Authentication from "./pages/Authentication";
-import Profile from "./pages/Profile";
+
+//
+import Header from "./components/UI/Header";
+import Home from "./components/Home/Home";
+import Authentication from "./components/Auth/Authentication";
+import Profile from "./components/User/Profile";
 import products from "./data";
-import Product from "./components/Product/ProductPage";
+import Product from "./components/Product/Views/ProductPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,7 +19,7 @@ function App() {
   return (
     <Box>
       <Router>
-        {isLoggedIn ? <Header status={status} /> : <HeaderUnverified />}
+        {isLoggedIn ? <Header status={status} /> : ""}
 
         <Box pt={isLoggedIn ? 12 : 2} m={1}>
           <Routes>

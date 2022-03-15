@@ -1,25 +1,28 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import Drawer from "@mui/material/Drawer";
-import { Divider, ListItem, ListItemText } from "@mui/material";
-import theme from "../components/UI/Theme";
-import { ThemeProvider } from "@mui/material/styles";
-import MenuItem from "@mui/material/MenuItem";
-import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
-import Image from "../img/img.jpg";
-import SearchBar from "./Product/Search.backup";
-import Menu from "@mui/material/Menu";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Container,
+  Avatar,
+  Button,
+  Tooltip,
+  Drawer,
+  Divider,
+  ListItem,
+  ListItemText,
+  ThemeProvider,
+  MenuItem,
+} from "@mui/material";
 import { Link } from "react-router-dom";
-import SearchBox from "./Product/Search";
+import MenuIcon from "@mui/icons-material/Menu";
+
+//
+import theme from "../../theme";
+import Image from "../../img/img.jpg";
+import SearchBar from "../Search/Search.backup";
 
 const drawerWidth = 240;
 

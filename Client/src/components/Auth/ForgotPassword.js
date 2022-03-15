@@ -1,6 +1,8 @@
-import VerifyEmail from "./pages/VerifyEmail";
-import UpdatePassword from "./pages/UpdatePassword";
 import { Fragment, useState } from "react";
+
+//
+import VerifyEmail from "./state/VerifyEmail";
+import UpdatePassword from "./state/UpdatePassword";
 
 const ForgotPassword = (props) => {
   const [isValidOTP, setIsValidOTP] = useState(false);

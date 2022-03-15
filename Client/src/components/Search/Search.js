@@ -1,15 +1,9 @@
 import { useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import TextField from "@mui/material/TextField";
-import { Stack, Grid, Button } from "@mui/material";
-import { Avatar } from "@mui/material";
-import { Typography } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
+import { Stack, Grid, Button, TextField } from "@mui/material";
 import { Scrollbars } from "react-custom-scrollbars";
-import DoneIcon from "@mui/icons-material/Done";
-import ResultItem from "./ResultItem";
 
+//
+import ResultItem from "./ResultItem";
 import Users from "../../data";
 
 const users = [

@@ -1,16 +1,13 @@
 import { useState } from "react";
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import IosShareIcon from "@mui/icons-material/IosShare";
-import AddIcon from "@mui/icons-material/Add";
-import TextField from "@mui/material/TextField";
-import { Stack, Grid, Button } from "@mui/material";
-import { Avatar } from "@mui/material";
-import { Typography } from "@mui/material";
-import SendIcon from "@mui/icons-material/Send";
-import { Scrollbars } from "react-custom-scrollbars";
-import DoneIcon from "@mui/icons-material/Done";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import {
+  Stack,
+  Grid,
+  Button,
+  IconButton,
+  Avatar,
+  Typography,
+} from "@mui/material";
+import { Done, Add } from "@mui/icons-material";
 
 const ResultItem = (props) => {
   const [isSent, setIsSent] = useState(false);
@@ -45,9 +42,9 @@ const ResultItem = (props) => {
         variant="text"
       >
         {!isSent ? (
-          <AddIcon sx={{ color: "primary" }} />
+          <Add sx={{ color: "primary" }} />
         ) : (
-          <DoneIcon sx={{ color: "#4db6ac" }} />
+          <Done sx={{ color: "#4db6ac" }} />
         )}
       </IconButton>
     </Stack>

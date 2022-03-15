@@ -1,13 +1,17 @@
 import * as React from "react";
-import Button from "@mui/material/Button";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
+import {
+  Button,
+  CssBaseline,
+  TextField,
+  Link,
+  Box,
+  Typography,
+  Container,
+} from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "../../UI/Theme";
+
+//
+import theme from "../../../theme";
 
 function Copyright(props) {
   return (
@@ -18,7 +22,7 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="https://mui.com/">
+      <Link color="inherit" href="https://github.com/SafvanKhWork/InnerCircle">
         InnerCircle
       </Link>{" "}
       {new Date().getFullYear()}
