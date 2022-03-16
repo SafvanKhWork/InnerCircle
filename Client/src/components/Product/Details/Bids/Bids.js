@@ -77,7 +77,7 @@ const Bids = (props) => {
   }
 
   return (
-    <Box pt={1} mx={1}>
+    <Box p={1} mx={1}>
       <Stack spacing={1}>
         {bids.map((bid, i) => {
           return (
@@ -87,7 +87,11 @@ const Bids = (props) => {
           );
         })}
 
-        {!props.desk ? <PageButtons start end page setPage /> : ""}
+        {!props.desk ? (
+          <PageButtons status={(start, end, page, setPage)} />
+        ) : (
+          ""
+        )}
       </Stack>
     </Box>
   );

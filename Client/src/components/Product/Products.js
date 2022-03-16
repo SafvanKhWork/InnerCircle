@@ -17,8 +17,9 @@ const Products = (props) => {
     setIsLandscape(window.matchMedia("(orientation: landscape").matches);
     setWidth(window.innerWidth);
   });
+
   let s = props.s ? props.s : width < 700 ? 6 : width < 1150 ? 6 : 4;
-  if (isLandscape) {
+  if (isLandscape && !props.infiScroll) {
     return (
       <Grid container justifyContent="center" spacing={1}>
         {products.map((product, i) => {
@@ -36,7 +37,7 @@ const Products = (props) => {
       </Grid>
     );
   }
-  if (!isLandscape) {
+  if (!isLandscape || props.infiScroll) {
     return (
       <Stack spacing={2}>
         {products.map((product, i) => {

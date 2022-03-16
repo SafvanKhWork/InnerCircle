@@ -23,7 +23,7 @@ import { green, red } from "@mui/material/colors";
 let visitOn = false;
 
 const BidButtons = (props) => {
-  const { start, end, page, setPage } = props;
+  const { start, end, page, setPage } = props.status;
   let forward = false;
   let back = true;
   if (visitOn) {

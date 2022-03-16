@@ -5,7 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 //
 import Header from "./components/UI/Header";
 import Home from "./components/Home/Home";
-import Authentication from "./components/Auth/Authentication";
+import AuthModel from "./components/Auth/AuthModel";
 import Profile from "./components/User/Profile";
 import products from "./data";
 import Product from "./components/Product/Views/ProductPage";
@@ -18,24 +18,24 @@ function App() {
   };
   return (
     <Box>
-      <Router>
-        {isLoggedIn ? <Header status={status} /> : ""}
-
-        <Box pt={isLoggedIn ? 12 : 2} m={1}>
-          <Routes>
-            {isLoggedIn ? (
+      {!isLoggedIn ? <AuthModel status={status} /> : ""}
+      {isLoggedIn ? (
+        <Router>
+          {isLoggedIn ? <Header status={status} /> : ""}
+          <Box pt={12} m={1}>
+            <Routes>
               <Route path="/">
                 <Route index element={<Home products={products} />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/product/:id" element={<Product />} />
                 <Route path="*" element={<div></div>} />
               </Route>
-            ) : (
-              <Route path="*" element={<Authentication status={status} />} />
-            )}
-          </Routes>
-        </Box>
-      </Router>
+            </Routes>
+          </Box>
+        </Router>
+      ) : (
+        ""
+      )}
     </Box>
   );
 }

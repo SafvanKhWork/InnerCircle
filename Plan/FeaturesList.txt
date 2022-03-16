@@ -10,40 +10,40 @@
 
 >>Profile
 
--Add/Edit Profile Picture
--Edit Name
--Edit Username
--Change Password
+|/-Add/Edit Profile Picture
+|-Edit Name
+|-Edit Username
+|-Change Password
 
 >>Friends
 
--Add/Remove Friends
--Search for User (Username)
+|-Add/Remove Friends
+|-Search for User (Username)
 
 >>Discover/Post
 
--Create Catagories (TypeName <unique> )
--Post Product to Sell/Rent 
+|-Create Catagories (TypeName <unique> )
+||-Post Product to Sell/Rent 
 	(Product_name, product_id<unique>, Type <if_Exist>, Product_description, Product_images<max-3, min-1>, Price)
--Send Buy/Rent Request
--Like/Comment on Product
--Recommend Product (Username_of_Friend)
--Filter By Type (<if_Exist>)
--View Products by OwnerId
--View Recent Products
--View Populer Products
--View Recommended Products
--View Buy/Rent Requests
--View Borrowed Products
--View Rented Products
--View Sold Products
--View Bought Products
--View Circle [friendlist]
--Accept Buy/Rent Request 
+||-Send Buy/Rent Request
+||-Like/Comment on Product
+||-Recommend Product (Username_of_Friend)
+|-Filter By Type (<if_Exist>)
+|-View Products by OwnerId
+|-View Recent Products
+|-View Populer Products
+|-View Recommended Products
+||-View Buy/Rent Requests
+|-View Borrowed Products
+|-View Rented Products
+|-View Sold Products
+|-View Bought Products
+|-View Circle [friendlist]
+||-Accept Buy/Rent Request 
 
 >>Search 
 
--Search Product
+||-Search Product
 
 [Abstract]
 

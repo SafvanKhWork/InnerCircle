@@ -19,24 +19,6 @@ import { ThemeProvider } from "@mui/material/styles";
 //
 import theme from "../../../theme";
 
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://github.com/SafvanKhWork/InnerCircle">
-        InnerCircle
-      </Link>
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
-
 export default function SignIn(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -53,7 +35,6 @@ export default function SignIn(props) {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -129,7 +110,6 @@ export default function SignIn(props) {
             </Stack>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );

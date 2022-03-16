@@ -94,7 +94,6 @@ export default function UpdatePassword(props) {
             </Button>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
     </ThemeProvider>
   );

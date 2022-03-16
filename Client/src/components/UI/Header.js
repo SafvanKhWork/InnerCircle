@@ -10,65 +10,19 @@ import {
   Button,
   Tooltip,
   Drawer,
-  Divider,
   ListItem,
-  ListItemText,
   ThemeProvider,
-  MenuItem,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import MenuIcon from "@mui/icons-material/Menu";
 
 //
 import theme from "../../theme";
-import Image from "../../img/img.jpg";
+import NavMenu from "./HeadItems/NavMenu";
 import SearchBar from "../Search/Search.backup";
-
-const drawerWidth = 240;
+import AccountSettings from "./HeadItems/AccountSettings";
 
 const ResponsiveAppBar = (props) => {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const pages = ["Discover", "Catagories", "Recommended"];
   const catagory = ["blue", "green", "yellow"];
-  const settings = [
-    "Profile",
-    "Post",
-    "History",
-    "Settings",
-    <Button
-      variant="text"
-      onClick={() => {
-        props.status.setIsLoggedIn(false);
-      }}
-    >
-      Logout
-    </Button>,
-  ];
-  const [menu, setMenu] = React.useState(pages);
-  const handleOpenNavMenu = (event) => {
-    setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = () => {
-    setAnchorElNav(null);
-  };
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null);
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -86,54 +40,7 @@ const ResponsiveAppBar = (props) => {
             >
               INNER CIRCLE
             </Typography>
-
-            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
-              <IconButton
-                size="large"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleOpenNavMenu}
-                color="inherit"
-              >
-                <MenuIcon sx={{ color: "white" }} />
-              </IconButton>
-              <Drawer
-                sx={{
-                  width: drawerWidth,
-                  flexShrink: 0,
-                  "& .MuiDrawer-paper": {
-                    width: drawerWidth,
-                    boxSizing: "border-box",
-                  },
-                }}
-                anchor="left"
-                id="menu-appbar"
-                anchorEl={anchorElNav}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "left",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "left",
-                }}
-                open={Boolean(anchorElNav)}
-                onClose={handleCloseNavMenu}
-              >
-                {menu.map((page) => (
-                  <MenuItem
-                    key={Math.random()}
-                    onClick={() => {
-                      setMenu(catagory);
-                    }}
-                  >
-                    <Typography textAlign="center">{page}</Typography>
-                  </MenuItem>
-                ))}
-              </Drawer>
-            </Box>
+            <NavMenu pages={pages} catagory={catagory} />
             <Typography
               variant="h6"
               noWrap
@@ -148,44 +55,7 @@ const ResponsiveAppBar = (props) => {
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <SearchBar />
             </Box>
-
-            <Box sx={{ flexGrow: 0 }}>
-              <Tooltip title="Open settings">
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar alt="Remy Sharp" src={Image} />
-                </IconButton>
-              </Tooltip>
-              <Drawer
-                sx={{
-                  width: drawerWidth,
-                  flexShrink: 0,
-                  "& .MuiDrawer-paper": {
-                    width: drawerWidth,
-                    boxSizing: "border-box",
-                  },
-                }}
-                anchor="right"
-                id="menu-appbar"
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <ListItem>
-                    <Link to="/profile">{setting}</Link>
-                  </ListItem>
-                ))}
-              </Drawer>
-            </Box>
+            <AccountSettings status={props.status} />
           </Toolbar>
         </Container>
       </AppBar>

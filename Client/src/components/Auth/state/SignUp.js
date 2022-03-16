@@ -45,27 +45,11 @@ export function stringAvatar(name) {
   return {
     sx: {
       bgcolor: stringToColor(name),
+      width: 68,
+      height: 68,
     },
     children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
   };
-}
-
-function Copyright(props) {
-  return (
-    <Typography
-      variant="body2"
-      color="text.secondary"
-      align="center"
-      {...props}
-    >
-      {"Copyright © "}
-      <Link color="inherit" href="https://github.com/SafvanKhWork/InnerCircle">
-        InnerCircle
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
 }
 
 export default function SignUp(props) {
@@ -85,7 +69,6 @@ export default function SignUp(props) {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -203,7 +186,6 @@ export default function SignUp(props) {
             </Stack>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 5 }} />
       </Container>
     </ThemeProvider>
   );
