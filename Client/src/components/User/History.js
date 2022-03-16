@@ -32,7 +32,7 @@ import {
   SpokeIcon,
   Comment,
 } from "@mui/icons-material";
-import { Image } from "../../img/img.jpg";
+import Image from "../../img/img.jpg";
 import theme from "../../theme";
 
 const History = (props) => {
@@ -46,11 +46,24 @@ const History = (props) => {
             justifyContent={"space-between"}
             direction={"row"}
           >
-            <img src={Image} style={{ borderRadius: "4px " }} />
-            <Stack></Stack>
+            <Box m={0.8}>
+              <img
+                height={72}
+                width={72}
+                src={Image}
+                style={{ borderRadius: "4px " }}
+              />
+            </Box>
+            <Stack>
+              <div>NAme</div>
+              <div>Value</div>
+              <div>Date</div>
+            </Stack>
           </Stack>
         </Card>
       </Paper>
     </ThemeProvider>
   );
 };
+
+export default History;

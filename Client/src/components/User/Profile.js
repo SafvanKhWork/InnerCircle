@@ -13,6 +13,7 @@ import {
   Tabs,
   ButtonGroup,
   Button,
+  Stack,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import Scrollbars from "react-custom-scrollbars";
@@ -22,36 +23,32 @@ import Products from "../Product/Products";
 import theme from "../../theme";
 import Image from "../../img/img.jpg";
 import data from "../../data";
+import History from "./History";
 
 const Profile = (props) => {
   const [width, setWidth] = useState(window.innerWidth);
   window.addEventListener("resize", () => {
     setWidth(window.innerWidth);
   });
-
+  const history = [1, 2, 3, 4, 5, 6, 7, 8, 9];
   return (
     <ThemeProvider theme={theme}>
       <Grid container px={1} justifyContent="center" spacing={2}>
         <Grid item lg={3} xs={3}>
-          <Paper elevation={4}>
-            <Card>
-              <Box
-                justifyContent={"space-between"}
-                minHeight={540}
-                maxHeight={540}
-                py={1}
-                px={2}
-              >
-                <Box pb={3} sx={{ width: "100%", bgcolor: "background.paper" }}>
-                  {/* <Tabs value={value} onChange={handleChange} centered> 
-                    <Tab label="Item One" />
-                    <Tab label="Item Two" />
-                    <Tab label="Item Three" />
-                  </Tabs> */}
-                </Box>
-              </Box>
-            </Card>
-          </Paper>
+          <Scrollbars
+            style={{ height: "100%" }}
+            autoHide
+            autoHideTimeout={0}
+            autoHideDuration={1000}
+          >
+            <Box p={1}>
+              <Stack spacing={2}>
+                {history.map((el) => (
+                  <History />
+                ))}
+              </Stack>
+            </Box>
+          </Scrollbars>
         </Grid>
         <Grid item lg={9} xs={9}>
           <Box px={2} pb={1}>
