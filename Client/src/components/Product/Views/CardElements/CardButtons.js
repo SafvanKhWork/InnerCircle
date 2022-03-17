@@ -136,18 +136,14 @@ const CardButtons = (props) => {
           </ExpandMoreFun>
         </IconButton>
 
-        {!props.isPotrait ? (
-          ""
-        ) : (
-          <ExpandMoreFun
-            expand={expandedDesc}
-            onClick={handleExpandDesc}
-            aria-expandedDesc={expandedDesc}
-            aria-label="show more"
-          >
-            <ExpandMore />
-          </ExpandMoreFun>
-        )}
+        <ExpandMoreFun
+          expand={expandedDesc}
+          onClick={handleExpandDesc}
+          aria-expandedDesc={expandedDesc}
+          aria-label="show more"
+        >
+          <ExpandMore />
+        </ExpandMoreFun>
       </CardActions>
     </Fragment>
   );

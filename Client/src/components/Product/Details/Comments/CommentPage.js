@@ -72,7 +72,6 @@ const CommentPage = (props) => {
               }
             }}
             fullWidth
-            size="small"
           >
             <ArrowBack />
           </Button>
@@ -86,7 +85,6 @@ const CommentPage = (props) => {
               }
             }}
             fullWidth
-            size="small"
           >
             <ArrowForward />
           </Button>

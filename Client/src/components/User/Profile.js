@@ -15,6 +15,7 @@ import {
   Button,
   Stack,
 } from "@mui/material";
+
 import { styled } from "@mui/material/styles";
 import Scrollbars from "react-custom-scrollbars";
 
@@ -25,15 +26,119 @@ import Image from "../../img/img.jpg";
 import data from "../../data";
 import History from "./History";
 
+const history = [
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "rented",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "bought",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product 12 one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "bought",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+  {
+    name: "product one",
+    value: 1234,
+    createdAt: "04-12-22",
+    status: "sold",
+  },
+];
+
 const Profile = (props) => {
   const [width, setWidth] = useState(window.innerWidth);
+  const [value, setValue] = useState("1");
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
   window.addEventListener("resize", () => {
     setWidth(window.innerWidth);
   });
-  const history = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+
   return (
     <ThemeProvider theme={theme}>
-      <Grid container px={1} justifyContent="center" spacing={2}>
+      <Grid container px={1} justifyContent="center">
         <Grid item lg={3} xs={3}>
           <Scrollbars
             style={{ height: "100%" }}
@@ -42,9 +147,9 @@ const Profile = (props) => {
             autoHideDuration={1000}
           >
             <Box p={1}>
-              <Stack spacing={2}>
+              <Stack spacing={1}>
                 {history.map((el) => (
-                  <History />
+                  <History item={el} />
                 ))}
               </Stack>
             </Box>
@@ -69,8 +174,14 @@ const Profile = (props) => {
                   />
                 </Box>
               </Box>
+              <Tabs s onChange={handleChange} aria-label="lab API tabs example">
+                <Tab label="Item One" value="1" />
+                <Tab label="Item Two" value="2" />
+                <Tab label="Item Three" value="3" />
+              </Tabs>
             </Paper>
           </Box>
+
           <Scrollbars
             style={{ height: "383px" }}
             autoHide

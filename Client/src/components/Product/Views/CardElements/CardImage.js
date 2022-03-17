@@ -42,10 +42,6 @@ import Vmag from "../../../../img/vimg.jpg";
 function Item(props) {
   return (
     <Box maxHeight={200} minHeight={200}>
-      {/* <img
-        sx={{ flex: 1, height: "100%", width: "100%", resizeMode: "contain" }}
-        src={props.children}
-      /> */}
       <CardMedia
         //need to resize image
         component="img"

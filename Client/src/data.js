@@ -229,4 +229,6 @@ const products = [
   },
 ];
 
+const backup = [...products];
+export { backup };
 export default products;

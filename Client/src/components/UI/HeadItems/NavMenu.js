@@ -47,6 +47,7 @@ const NavMenu = (props) => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
+          backgroundColor: "primary",
           "& .MuiDrawer-paper": {
             width: drawerWidth,
             boxSizing: "border-box",

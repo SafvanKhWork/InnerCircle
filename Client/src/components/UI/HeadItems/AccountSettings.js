@@ -117,7 +117,12 @@ const AccountSettings = (props) => {
                 >
                   {settings.map((setting) => (
                     <MenuItem onClick={handleClose}>
-                      <Link to="/profile">{setting}</Link>
+                      <Link
+                        style={{ color: "inherit", textDecoration: "none" }}
+                        to="/profile"
+                      >
+                        {setting}
+                      </Link>
                     </MenuItem>
                   ))}
                 </MenuList>

@@ -95,8 +95,17 @@ export default function SearchBox(props) {
         >
           {results}
         </Scrollbars>
+      ) : searchQuery ? (
+        <Scrollbars
+          style={{ height: 136 }}
+          autoHide
+          autoHideTimeout={0}
+          autoHideDuration={200}
+        >
+          {results}
+        </Scrollbars>
       ) : (
-        results
+        ""
       )}
     </Stack>
   );

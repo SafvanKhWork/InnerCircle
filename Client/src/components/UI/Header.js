@@ -19,6 +19,7 @@ import theme from "../../theme";
 import NavMenu from "./HeadItems/NavMenu";
 import SearchBar from "../Search/Search.backup";
 import AccountSettings from "./HeadItems/AccountSettings";
+import { Link } from "react-router-dom";
 
 const ResponsiveAppBar = (props) => {
   const pages = ["Discover", "Catagories", "Recommended"];
@@ -38,7 +39,9 @@ const ResponsiveAppBar = (props) => {
                 display: { xs: "none", md: "flex", color: "white" },
               }}
             >
-              INNER CIRCLE
+              <Link style={{ color: "inherit", textDecoration: "none" }} to="/">
+                InnerCircle
+              </Link>
             </Typography>
             <NavMenu pages={pages} catagory={catagory} />
             <Typography
@@ -50,7 +53,9 @@ const ResponsiveAppBar = (props) => {
                 display: { xs: "flex", md: "none", color: "white" },
               }}
             >
-              INNER CIRCLE
+              <Link style={{ color: "inherit", textDecoration: "none" }} to="/">
+                InnerCircle
+              </Link>
             </Typography>
             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
               <SearchBar />

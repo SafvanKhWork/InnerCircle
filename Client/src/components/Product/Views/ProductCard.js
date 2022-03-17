@@ -1,5 +1,6 @@
 import { useState, Fragment } from "react";
 import { Box, Card, ThemeProvider, Paper } from "@mui/material";
+import { Link } from "react-router-dom";
 
 //
 
@@ -30,10 +31,11 @@ export default function ProductCard(props) {
         <Paper elevation={4}>
           <Card variant="text">
             <CardHead />
-            <CardImage />
-            <CardInfo expandedDesc={expandedDesc} product={props.product} />
+
             {props.isPotrait ? (
               <Fragment>
+                <CardImage />
+                <CardInfo expandedDesc={expandedDesc} product={props.product} />
                 <CardButtons
                   thrower={{
                     setExpandedDesc,
@@ -47,7 +49,13 @@ export default function ProductCard(props) {
                 <CardActivity catcher={values} />
               </Fragment>
             ) : (
-              ""
+              <Link
+                style={{ color: "inherit", textDecoration: "none" }}
+                to={`/product/${props.index}`}
+              >
+                <CardImage />
+                <CardInfo expandedDesc={expandedDesc} product={props.product} />
+              </Link>
             )}
           </Card>
         </Paper>

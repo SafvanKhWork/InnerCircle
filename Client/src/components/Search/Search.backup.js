@@ -1,55 +1,65 @@
-import * as React from "react";
-import { styled, alpha } from "@mui/material/styles";
-import InputBase from "@mui/material/InputBase";
-import SearchIcon from "@mui/icons-material/Search";
+import { useState } from "react";
+import { Stack, Grid, Button, TextField } from "@mui/material";
+import { Scrollbars } from "react-custom-scrollbars";
 
-const Search = styled("div")(({ theme }) => ({
-  position: "relative",
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: alpha(theme.palette.common.white, 0.15),
-  "&:hover": {
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-  },
-  marginRight: theme.spacing(2),
-  marginLeft: 0,
-  width: "100%",
-  [theme.breakpoints.up("sm")]: {
-    width: "auto",
-  },
-}));
+//
+import ResultItem from "./ResultItem";
+import products from "../../data";
 
-const SearchIconWrapper = styled("div")(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: "100%",
-  position: "absolute",
-  pointerEvents: "none",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-}));
+const SearchBar = ({ setSearchQuery }) => (
+  <form>
+    <TextField
+      id="user-search-bar"
+      fullWidth
+      className="text"
+      onInput={(e) => {
+        setSearchQuery(e.target.value);
+      }}
+      label="Recommend To"
+      variant="outlined"
+      placeholder=""
+      size="small"
+    />
+  </form>
+);
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: "inherit",
-  "& .MuiInputBase-input": {
-    padding: theme.spacing(1, 1, 1, 0),
+const finder = (isubstring, data) => {
+  const substring = isubstring.split(" ").join("").toLowerCase();
+  if (!substring) {
+    return [];
+  }
 
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create("width"),
-    width: "100%",
-    [theme.breakpoints.up("md")]: {
-      width: "20ch",
-    },
-  },
-}));
+  const matches = data.filter((obj) => {
+    if (
+      obj.name.split(" ").join("").toLowerCase().includes(substring) ||
+      obj.username.split(" ").join("").toLowerCase().includes(substring)
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+  return matches;
+};
 
-export default function SearchBar() {
+export default function SearchBox(props) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  let matches = finder(searchQuery, products);
+  if (searchQuery.trim() === "" && props.show) {
+    matches = products;
+  }
+  const results = matches.map((user) => {
+    return <ResultItem user={user} />;
+  });
+
   return (
-    <Search>
-      <SearchIconWrapper>
-        <SearchIcon sx={{ color: "white" }} />
-      </SearchIconWrapper>
-      <StyledInputBase placeholder="" inputProps={{ "aria-label": "search" }} />
-    </Search>
+    <Stack spacing={1}>
+      <SearchBar
+        pb={2}
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+      />
+    </Stack>
   );
 }

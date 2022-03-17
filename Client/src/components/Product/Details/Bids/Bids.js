@@ -19,7 +19,6 @@ import {
 import { Scrollbars } from "react-custom-scrollbars";
 import { useState, Fragment } from "react";
 import { green, red } from "@mui/material/colors";
-import PageButtons from "./PageButtons";
 
 //
 
@@ -52,12 +51,14 @@ const bids = [
     time: "time",
   },
 ];
-
+let visitOn = false;
 const Bids = (props) => {
   const [page, setPage] = useState(0);
 
   const size = props.size || 3;
-
+  const setVisit = (value) => {
+    visitOn = value;
+  };
   let start = -size - page;
   let end = page > 0 ? 0 - page : undefined;
 
@@ -76,6 +77,24 @@ const Bids = (props) => {
     });
   }
 
+  let forward = false;
+  let back = true;
+  if (visitOn) {
+    forward = end < 0;
+    back = 0 - start < props.bids.length;
+    if (!back) {
+      back = false;
+      forward = true;
+    } else if (!forward) {
+      back = true;
+      forward = false;
+    } else {
+      back = forward = true;
+    }
+  }
+
+  setVisit(false);
+
   return (
     <Box p={1} mx={1}>
       <Stack spacing={1}>
@@ -88,7 +107,39 @@ const Bids = (props) => {
         })}
 
         {!props.desk ? (
-          <PageButtons status={(start, end, page, setPage)} />
+          <Box mt={1} px={2}>
+            <Stack
+              direction={"row"}
+              display="flex"
+              justifyContent={"space-between"}
+            >
+              <Button
+                disabled={!back ? true : false}
+                onClick={() => {
+                  if (back) {
+                    visitOn = true;
+                    setPage(page + 2);
+                  }
+                }}
+                fullWidth
+              >
+                <ArrowBack />
+              </Button>
+
+              <Button
+                disabled={!forward ? true : false}
+                onClick={() => {
+                  if (forward) {
+                    visitOn = true;
+                    setPage(page - 2);
+                  }
+                }}
+                fullWidth
+              >
+                <ArrowForward />
+              </Button>
+            </Stack>
+          </Box>
         ) : (
           ""
         )}
