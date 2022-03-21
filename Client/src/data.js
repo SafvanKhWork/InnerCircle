@@ -1,4 +1,6 @@
-const products = [
+const user = {};
+
+export const products = [
   {
     name: "test product",
     model: "TS234",
@@ -229,6 +231,11 @@ const products = [
   },
 ];
 
-const backup = [...products];
-export { backup };
+// export const feed = [];
+// export const reccomanded = [];
+// export const circle = [];
+// export const history = [];
+
+// export default { products, feed, reccomanded, circle, history };
+
 export default products;

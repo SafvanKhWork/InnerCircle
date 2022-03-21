@@ -124,14 +124,19 @@ const history = [
     status: "sold",
   },
 ];
+const active = {
+  color: "#fff",
+  background: "#4db6ac",
+};
+
+const inactive = { color: "#4db6ac" };
 
 const Profile = (props) => {
   const [width, setWidth] = useState(window.innerWidth);
+  const [rug, setRug] = useState(false);
   const [value, setValue] = useState("1");
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  const onClick = (BId) => setValue(BId);
   window.addEventListener("resize", () => {
     setWidth(window.innerWidth);
   });
@@ -140,8 +145,46 @@ const Profile = (props) => {
     <ThemeProvider theme={theme}>
       <Grid container px={1} justifyContent="center">
         <Grid item lg={3} xs={3}>
+          <Box pb={1} px={1}>
+            <Paper elevation={6}>
+              <ButtonGroup
+                onMouseEnter={(e) => {
+                  active.color = "#000";
+                  inactive.color = "#000";
+                  setRug(!rug);
+                }}
+                onMouseLeave={(e) => {
+                  active.color = "#fff";
+                  inactive.color = "#4db6ac";
+                  setRug(!rug);
+                }}
+                color="inherit"
+                fullWidth
+                variant="text"
+              >
+                <Button
+                  onClick={onClick.bind(undefined, 0)}
+                  sx={value == 0 ? active : inactive}
+                >
+                  Circle
+                </Button>
+                <Button
+                  onClick={onClick.bind(undefined, 1)}
+                  sx={value == 1 ? active : inactive}
+                >
+                  History
+                </Button>
+                <Button
+                  onClick={onClick.bind(undefined, 2)}
+                  sx={value == 2 ? active : inactive}
+                >
+                  Requests
+                </Button>
+              </ButtonGroup>
+            </Paper>
+          </Box>
           <Scrollbars
-            style={{ height: "100%" }}
+            style={{ height: "92%" }}
             autoHide
             autoHideTimeout={0}
             autoHideDuration={1000}
@@ -174,11 +217,6 @@ const Profile = (props) => {
                   />
                 </Box>
               </Box>
-              <Tabs s onChange={handleChange} aria-label="lab API tabs example">
-                <Tab label="Item One" value="1" />
-                <Tab label="Item Two" value="2" />
-                <Tab label="Item Three" value="3" />
-              </Tabs>
             </Paper>
           </Box>
 

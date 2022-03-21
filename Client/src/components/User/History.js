@@ -38,70 +38,71 @@ import theme from "../../theme";
 
 const History = (props) => {
   let color;
-
+  const borrowed = true;
+  let user2;
   const { item } = props;
   if (item.status === "sold") {
     color = "#A00101";
-  }
-  if (item.status === "rented") {
-    color = "#03870E";
+    user2 = "To";
   }
   if (item.status === "bought") {
+    color = "#03870E";
+    user2 = "From";
+  }
+  if (item.status === "rented") {
     color = "#034287";
+    user2 = borrowed ? "From" : "To";
   }
   return (
     <ThemeProvider theme={theme}>
       <Paper elevation={4}>
         <Card>
-          <Stack
-            display={"flex"}
-            justifyContent={"space-between"}
-            direction={"row"}
-          >
-            <Box m={0.8}>
-              <Stack
-                display={"flex"}
-                justifyContent={"flex-start"}
-                direction={"row"}
-              >
-                <img
-                  height={132}
-                  width={132}
-                  src={Image}
-                  style={{ borderRadius: "3px" }}
-                />
-
-                <Stack px={1} spacing={0.4}>
-                  <Typography fontSize={28} variant="title" component="div">
-                    {item.name}
-                    <Typography
-                      borderRadius={"0.75em"}
-                      variant={"subtitle2"}
-                      maxWidth={
-                        item.status === "sold"
-                          ? 43
-                          : item.status === "rented"
-                          ? 54
-                          : 62
-                      }
-                      textAlign="center"
-                      sx={{
-                        color: "#fff",
-                        backgroundColor: color,
-                      }}
-                    >
-                      {item.status}
-                    </Typography>
-                  </Typography>
-                  <Typography color="text.secondary">
-                    {item.model || "KW7120"}
-                  </Typography>
-                  <Typography variant="subtitle1">{item.value}$</Typography>
-                  <Typography variant="caption">{item.createdAt}</Typography>
-                </Stack>
+          <Box m={0.8}>
+            <Stack
+              direction={"row"}
+              display="flex"
+              justifyContent={"space-between"}
+            >
+              <Stack spacing={0.4}>
+                <Typography
+                  fontFamily={"sans-serif"}
+                  variant="title"
+                  fontSize={28}
+                  component="div"
+                >
+                  {item.name}
+                </Typography>
+                <Typography variant="caption">
+                  {item.product_name || "KW7120"}
+                </Typography>
               </Stack>
-            </Box>
-          </Stack>
+
+              <Stack display={"flex"} justifyContent={"left"}>
+                <Typography fontSize={24}>{item.value}$</Typography>
+                <Typography
+                  align="right"
+                  variant={"subtitle2"}
+                  sx={{
+                    color: color,
+                  }}
+                >
+                  {item.status}
+                </Typography>
+              </Stack>
+            </Stack>
+            <Stack
+              direction={"row"}
+              display="flex"
+              justifyContent={"space-between"}
+            >
+              <Typography variant="body2">
+                {user2}: {item.user2 || "kal_el"}
+              </Typography>
+              <Typography align="right" variant="body2">
+                {item.createdAt}
+              </Typography>
+            </Stack>
+          </Box>
         </Card>
       </Paper>
     </ThemeProvider>

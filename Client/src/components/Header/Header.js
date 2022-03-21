@@ -17,7 +17,6 @@ import {
 //
 import theme from "../../theme";
 import NavMenu from "./HeadItems/NavMenu";
-import SearchBar from "../Search/Search.backup";
 import AccountSettings from "./HeadItems/AccountSettings";
 import { Link } from "react-router-dom";
 
@@ -30,20 +29,33 @@ const ResponsiveAppBar = (props) => {
       <AppBar>
         <Container maxWidth="xl">
           <Toolbar xs={100} disableGutters>
-            <Typography
-              variant="h4"
-              noWrap
-              component="div"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex", color: "white" },
-              }}
-            >
-              <Link style={{ color: "inherit", textDecoration: "none" }} to="/">
-                InnerCircle
-              </Link>
-            </Typography>
-            <NavMenu pages={pages} catagory={catagory} />
+            <Box sx={{ display: { xs: "none", md: "flex" } }}>
+              <NavMenu pages={pages} catagory={catagory} />
+            </Box>
+            <Box mx={2}>
+              <Typography
+                variant="h4"
+                noWrap
+                component="div"
+                sx={{
+                  display: { xs: "none", md: "flex", color: "white" },
+                }}
+              >
+                <Link
+                  style={{ color: "inherit", textDecoration: "none" }}
+                  to="/"
+                >
+                  InnerCircle
+                </Link>
+              </Typography>
+            </Box>
+
+            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+              <div></div>
+            </Box>
+            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+              <NavMenu pages={pages} catagory={catagory} />
+            </Box>
             <Typography
               variant="h6"
               noWrap
@@ -57,9 +69,7 @@ const ResponsiveAppBar = (props) => {
                 InnerCircle
               </Link>
             </Typography>
-            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-              <SearchBar />
-            </Box>
+
             <AccountSettings status={props.status} />
           </Toolbar>
         </Container>
