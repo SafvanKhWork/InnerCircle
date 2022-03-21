@@ -4,14 +4,14 @@ const User = require("../models/user");
 const auth = require("../middleware/auth");
 const router = new express.Router();
 const nodemailer = require("nodemailer");
-const dotenv = require("dotenv");
+require("dotenv").config();
 
-let otp = undefined;
+let code = undefined;
 let un_email = null;
 let ver_email = null;
-const timers = [];
+let timer;
 
-//Register new user
+//Register new user (Test: Passed )
 router.post("/user/register", async (req, res) => {
   try {
     let data = req.body;
@@ -32,79 +32,88 @@ router.post("/user/register", async (req, res) => {
     res.status(400).send(e);
   }
 });
-//send otp on Email
-router.post("/email", auth, async (req, res) => {
+//send code on Email (Test: Passed )
+router.post("/verify/email", auth, async (req, res) => {
   try {
-    const email = req.param.email;
-    const code = [
-      Math.round(Math.random() * 10) + 1,
-      Math.round(Math.random() * 10) + 1,
-      Math.round(Math.random() * 10) + 1,
-      Math.round(Math.random() * 10) + 1,
-      Math.round(Math.random() * 10) + 1,
-      Math.round(Math.random() * 10) + 1,
-    ].join("");
+    const email = req.user.email;
 
+    const otp = Math.floor(Math.random() * 1000000);
     let transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
-        user: "",
-        pass: "",
+        user: process.env.PROJECT_EMAIL_ADDRESS,
+        pass: process.env.PROJECT_EMAIL_PASSWD,
       },
     });
 
     let mail = {
-      from: "",
-      to: "",
-      subject: "",
-      text: "",
+      from: process.env.PROJECT_EMAIL_ADDRESS,
+      to: email,
+      subject: "Email Verification Code",
+      text: `Your InnerCircle verification code is, ${otp}. This code is only valid for 5 minutes`,
     };
-    transporter.sendMail(mail, (error, data) => {
+    await transporter.sendMail(mail, (error, data) => {
       if (data) {
-        otp = code;
+        code = String(otp);
         un_email = email;
       }
+      if (error) {
+        throw new Error(error);
+      }
     });
-    setTimeout(() => {
-      otp = undefined;
-    }, 5 * 60 * 100);
-    res.send();
+    // timer = setTimeout(() => {
+    //   code = undefined;
+    // }, 5 * 60 * 100);
+    await res.send(mail);
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e);
   }
 });
 
-//match the otp
-router.post("/verify", auth, async (req, res) => {
+//match the code (Test: Passed )
+router.post("/verify/code", auth, async (req, res) => {
   try {
-    const code = req.body.code;
-    if (code === otp) {
-      ver_email = un_email;
+    if (un_email === req.user.email) {
+      console.log(code);
+      if (code === req.body.otp) {
+        ver_email = un_email;
+        code = undefined;
+        // if (timer) {
+        //   clearTimeout(timer);
+        // }
+      } else {
+        throw new Error("Wrong OTP");
+      }
+      if (code !== req.body.otp) {
+      }
+    } else {
+      throw new Error(" User Mismatch ");
     }
-    if (code !== otp) {
-      otp = undefined;
-    }
-    res.send();
+    await res.status(200).send(ver_email);
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e.message);
   }
 });
 
-router.patch("/user/passwd", async (req, res) => {
+//Update Password (Test: Passed )
+router.patch("/user/passwd", auth, async (req, res) => {
   try {
+    console.log(req.body.password);
     const new_passwd = req.body.password;
-    const user = ver_email ? User.findOne({ email: ver_email }) : undefined;
-    if (user && new_passwd) {
-      user.password = new_passwd;
-    }
+    const user = ver_email
+      ? await User.findOne({ email: ver_email })
+      : undefined;
+
+    user["password"] = req.body["password"];
+
     await user.save();
-    res.send(req.user);
+    res.status(200).send(user);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(e.message);
   }
 });
 
-//Login User
+//Login User (Test: Passed )
 router.post("/user/login", async (req, res) => {
   try {
     const user = await User.findByCredentials(
@@ -118,7 +127,7 @@ router.post("/user/login", async (req, res) => {
   }
 });
 
-//Logout User
+//Logout User (Test: Passed )
 router.post("/users/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
@@ -132,26 +141,35 @@ router.post("/users/logout", auth, async (req, res) => {
   }
 });
 
-//Hard Logout
+//Hard Logout (Test: Passed )
 router.post("/users/logout/all", auth, async (req, res) => {
   try {
     req.user.tokens = [];
     await req.user.save();
-    res.send();
+    res.send(req.user.tokens);
   } catch (e) {
     res.status(500).send();
   }
 });
 
-//Get User Profile
+//current devices (Test: Passed )
+router.get("/me/current", auth, async (req, res) => {
+  try {
+    res.send(`Currently LoggedIn in ${req.user.tokens.length} device(s).`);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Get User Profile (Test: Passed )
 router.get("/user/me", auth, async (req, res) => {
   res.send(req.user);
 });
 
-//Update User Profile
+//Update User Profile (Test: Passed )
 router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["name", "email", "password", "age", "avatar"];
+  const allowedUpdates = ["name", "email", "age", "avatar"];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
@@ -169,9 +187,33 @@ router.patch("/users/me", auth, async (req, res) => {
   }
 });
 
-//Delete User
+//Delete User (Test: Passed )
 router.delete("/users/me", auth, async (req, res) => {
   try {
+    // req.user.circle.forEach((username) => {
+    //   const user = User.findOne({ username });
+    //   const present = user.circle.includes(req.user.username);
+    //   if (present !== -1) {
+    //     user.circle.splice(present, 1);
+    //     user.save();
+    //   }
+    // });
+    // req.user.friendRequest.forEach((username) => {
+    //   const user = User.findOne({ username });
+    //   const present = user.friendRequest.includes(req.user.username);
+    //   if (present !== -1) {
+    //     user.friendRequest.splice(present, 1);
+    //     user.save();
+    //   }
+    // });
+    // req.user.sentfriendRequest.forEach((username) => {
+    //   const user = User.findOne({ username });
+    //   const present = user.sentfriendRequest.includes(req.user.username);
+    //   if (present !== -1) {
+    //     user.sentfriendRequest.splice(present, 1);
+    //     user.save();
+    //   }
+    // });
     await req.user.remove();
     res.send(req.user);
   } catch (e) {
@@ -179,8 +221,8 @@ router.delete("/users/me", auth, async (req, res) => {
   }
 });
 
-//Get User by ID
-router.get("/user/id/:id", async (req, res) => {
+//Get User by ID (Test: Passed )
+router.get("/user/id/:id", auth, async (req, res) => {
   const _id = req.params.id;
 
   try {
@@ -194,8 +236,8 @@ router.get("/user/id/:id", async (req, res) => {
   }
 });
 
-//Add Friend
-router.post("/user/:uname/add", auth, async (req, res) => {
+//Add Friend (Test: Passed)
+router.post("/add-friend/:uname", auth, async (req, res) => {
   const username = req.params.uname;
 
   try {
@@ -205,21 +247,54 @@ router.post("/user/:uname/add", auth, async (req, res) => {
     }
     user.friendRequest.push(req.user.username);
     user.friendRequest = [...new Set(user.friendRequest)];
+    req.user.sentFriendRequest.push(user.username);
+    req.user.sentFriendRequest = [...new Set(req.user.sentFriendRequest)];
     user.save();
-    res.status(200).send(user);
+    req.user.save();
+    res.status(200).send(req.user.sentFriendRequest);
   } catch (e) {
     res.status(500).send();
   }
 });
 
-//Get CIRCLE
+//Accept friendRequest (Test: Passed)
+router.patch("/accept-friend-request/:uname", auth, async (req, res) => {
+  const username = req.params.uname;
+
+  try {
+    const user = await User.findOne({ username }); //find sender
+
+    if (!user) {
+      return res.status(404).send();
+    }
+
+    const atRequest = req.user.friendRequest.indexOf(username); //find sender in users req-list
+    const atSent = user.sentFriendRequest.indexOf(req.user.username); // find user in sender sent-req-list
+
+    if (atRequest !== -1 && atSent !== -1) {
+      req.user.friendRequest.splice(atRequest, 1); //User
+      user.sentFriendRequest.splice(atSent, 1); //Sender
+
+      user.circle.push(req.user.username); // add in senders circle
+      user.circle = [...new Set(user.circle)]; //remove repitations at sender
+
+      req.user.circle.push(user.username); // add in user circle
+      req.user.circle = [...new Set(req.user.circle)]; //remove repitations at user
+      req.user.save();
+      user.save();
+    }
+
+    res.status(200).send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+//Get CIRCLE (Test: Passed)
 router.get("/circle", auth, async (req, res) => {
   try {
     const user = req.user;
-    const circle = user.circle.map((friend) => {
-      const ob1 = User.findOne({ username: friend });
-      return ob1;
-    });
+    const circle = user.circle;
 
     res.status(200).send(circle);
   } catch (e) {
@@ -227,56 +302,36 @@ router.get("/circle", auth, async (req, res) => {
   }
 });
 
-//Accept friendRequest
-router.patch("/user/:uname/add", auth, async (req, res) => {
-  const username = req.params.uname;
-
-  try {
-    const user = await User.findOne({ username });
-    const atIndex = user.friendRequest.indexOf(username);
-    if (!user) {
-      return res.status(404).send();
-    }
-    user.circle.push(req.user.username);
-    user.circle = [...new Set(user.circle)];
-
-    if (atIndex !== -1) {
-      user.friendRequest.splice(atIndex, 1);
-    }
-    user.save();
-    res.status(200).send(user);
-  } catch (e) {
-    res.status(500).send();
-  }
-});
-
-//Get User By Username
+//Get User By Username (Test: Passed)
 router.get("/user/:uname", async (req, res) => {
   const username = req.params.uname;
 
   try {
     const user = await User.findOne({ username });
     if (!user) {
-      return res.status(404).send();
+      throw new Error("user not found");
     }
     res.send(user);
   } catch (e) {
-    res.status(500).send();
+    res.status(404).send();
   }
 });
 
-// Search by Name
-router.get("/search/user/:name", async (req, res) => {
-  const name = req.params.name;
+// Search by Name (Test: Passed)
+router.get("/search/user/:query", async (req, res) => {
+  const query = req.params.query.toLowerCase();
 
   try {
-    const user = await User.find({ name });
-    if (user.length) {
-      return res.status(404).send();
-    }
+    const user = [
+      ...new Set([
+        ...(await User.find({ name: query })),
+        ...(await User.find({ username: query })),
+      ]),
+    ];
+
     res.send(user);
   } catch (e) {
-    res.status(500).send();
+    res.status(400).send(e);
   }
 });
 

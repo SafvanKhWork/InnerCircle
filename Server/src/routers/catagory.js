@@ -3,6 +3,7 @@ const Catagory = require("../models/catagory");
 const auth = require("../middleware/auth");
 const router = new express.Router();
 
+//(Test: Passed )
 router.post("/catagory/new", async (req, res) => {
   const catagory = new Catagory(req.body);
 
@@ -15,6 +16,7 @@ router.post("/catagory/new", async (req, res) => {
   }
 });
 
+//(Test: Passed )
 router.get("/catagories", async (req, res) => {
   try {
     const catagories = await Catagory.find({});

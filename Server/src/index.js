@@ -19,12 +19,13 @@ const Catagory = require("./models/catagory");
 //
 
 const app = express();
-const port = process.env.PORT || 3005;
+const port = process.env.PORT || 3006;
 
 app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
 
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(userRouter);
 app.use(productRouter);

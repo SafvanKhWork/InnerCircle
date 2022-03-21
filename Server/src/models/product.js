@@ -24,10 +24,11 @@ const productSchema = new mongoose.Schema(
       trim: true,
       ref: "Catagory",
     },
-    image: {
-      data: Buffer,
-      contentType: String,
-    },
+    images: [
+      {
+        type: String,
+      },
+    ],
     description: {
       type: String,
       required: true,
@@ -42,17 +43,15 @@ const productSchema = new mongoose.Schema(
       default: 1,
       required: true,
     },
-    like: {
-      users: [
-        {
-          type: mongoose.Schema.Types.ObjectId,
-          required: true,
-          ref: "User",
-        },
-      ],
-      likes: {
-        type: Number,
+    like: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
+        ref: "User",
       },
+    ],
+    likes: {
+      type: Number,
     },
     bids: [
       {
@@ -67,7 +66,12 @@ const productSchema = new mongoose.Schema(
         },
       },
     ],
-    comments: [{ _id: mongoose.Schema.Types.ObjectId, value: String }],
+    comments: [
+      {
+        user: { type: String },
+        value: { type: String },
+      },
+    ],
     owner: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
@@ -78,6 +82,17 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+productSchema.pre("save", async function (next) {
+  const product = this;
+
+  product.product_name = await product.product_name
+    .split(" ")
+    .join("")
+    .toLowerCase();
+
+  next();
+});
 
 const Product = mongoose.model("Product", productSchema);
 

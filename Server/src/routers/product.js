@@ -1,17 +1,60 @@
 const express = require("express");
 const router = new express.Router();
 const { ObjectID } = require("mongodb");
-
+const multer = require("multer");
 const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
+  },
+});
 
-//add new product
-router.post("/product/new", auth, async (req, res) => {
+const fileFilter = (req, file, cb) => {
+  cb(null, file.mimetype === "image/jpeg" || file.mimetype === "image/png");
+};
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 10,
+  },
+  fileFilter,
+});
+
+// add images to product (Test: Passed)
+router.post(
+  "/:id/add-image",
+  auth,
+  upload.single("image"),
+  async (req, res) => {
+    // req.params.id
+    // req.file.path
+    try {
+      const product = await Product.findById(req.params.id);
+      if (String(req.user._id) === String(product.owner)) {
+        await product.images.push(req.file.path);
+        await product.save();
+      }
+
+      res.status(201).send(product);
+    } catch (e) {
+      res.status(400).send(e);
+    }
+  }
+);
+
+//add new product (Test: Passed)
+router.post("/product/new", auth, upload.single("image"), async (req, res) => {
   const product = new Product({
     ...req.body,
     owner: req.user._id,
+    images: [req.file.path],
   });
 
   try {
@@ -27,7 +70,7 @@ router.post("/product/new", auth, async (req, res) => {
   }
 });
 
-//get all products
+//get all products (Test: Passed)
 router.get("/products", async (req, res) => {
   try {
     const product = await Product.find({});
@@ -37,7 +80,7 @@ router.get("/products", async (req, res) => {
   }
 });
 
-//get most liked products
+//get most liked products (Test: Passed)
 router.get("/products/popular", async (req, res) => {
   try {
     const product = await Product.find({}).sort({ likes: -1 });
@@ -47,7 +90,7 @@ router.get("/products/popular", async (req, res) => {
   }
 });
 
-//get recent products
+//get recent products (Test: Passed)
 router.get("/products/recent", async (req, res) => {
   try {
     const product = await Product.find({}).sort({ createdAt: -1 });
@@ -57,7 +100,7 @@ router.get("/products/recent", async (req, res) => {
   }
 });
 
-//Recommand the Product
+//Recommand the Product (Test: Passed)
 router.patch("/recommand", auth, async (req, res) => {
   let visited = false;
   try {
@@ -94,7 +137,7 @@ router.patch("/recommand", auth, async (req, res) => {
   }
 });
 
-//get all product with given type
+//get all product with given type (Test: Passed)
 router.get("/products/catagory/:catagory", async (req, res) => {
   try {
     const catagory = req.params.catagory;
@@ -106,18 +149,19 @@ router.get("/products/catagory/:catagory", async (req, res) => {
   }
 });
 
-//Get By OwnerId
+//Get By OwnerId (Test: Passed)
 router.get("/products/owner/:user", async (req, res) => {
   try {
     const _id = req.params.user;
-    const product = await Product.find({ _id });
-    res.send(product);
+    const products = await Product.find({});
+    const prods = products.filter((el) => String(el.owner) === String(_id));
+    res.send(prods);
   } catch (e) {
     res.status(500).send();
   }
 });
 
-//Get Recommanded product
+//Get Recommanded product (Test: Passed)
 router.get("/recommanded", auth, async (req, res) => {
   try {
     const user = req.user;
@@ -135,10 +179,10 @@ router.get("/recommanded", auth, async (req, res) => {
   }
 });
 
-//get all product with same modal number
+//get all product with same modal number (Test: Passed)
 router.get("/products/model/:model", async (req, res) => {
   try {
-    const model = req.params.type;
+    const model = req.params.model;
     const product = await Product.find({ model });
     res.send(product);
   } catch (e) {
@@ -146,7 +190,7 @@ router.get("/products/model/:model", async (req, res) => {
   }
 });
 
-// get products by id
+// get products by id (Test: Passed)
 router.get("/products/id/:id", async (req, res) => {
   const _id = req.params.id;
 
@@ -163,7 +207,7 @@ router.get("/products/id/:id", async (req, res) => {
   }
 });
 
-//Get product by given product_name
+//Get product by given product_name (Test: Passed)
 router.get("/products/:product", async (req, res) => {
   const product_name = req.params.product;
 
@@ -180,7 +224,7 @@ router.get("/products/:product", async (req, res) => {
   }
 });
 
-//Update the product with given id
+//Update the product with given id (Test: Passed)
 router.patch("/products/:id", auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ["description", "name"];
@@ -209,7 +253,7 @@ router.patch("/products/:id", auth, async (req, res) => {
   }
 });
 
-//Like the product
+//Like the product (Test: Passed)
 router.patch("/like/:id", auth, async (req, res) => {
   const _id = req.params.id;
   try {
@@ -221,15 +265,16 @@ router.patch("/like/:id", auth, async (req, res) => {
       return res.status(404).send();
     }
 
-    const lk = product.like.users;
+    const lk = product.like;
 
     const ur = req.user;
     if (lk.includes(req.user._id)) {
       throw new Error("Already Liked!");
     }
     lk.push({ _id: ur._id });
-    product.like.users = lk;
-    product.like.likes = lk.length;
+    product.like = lk;
+
+    product.likes = lk.length;
     await product.save();
     res.send(product);
   } catch (e) {
@@ -237,10 +282,10 @@ router.patch("/like/:id", auth, async (req, res) => {
   }
 });
 
-// Bid on product
+// Bid on product (Test: Passed)
 router.patch("/bid/:id", auth, async (req, res) => {
   const _id = req.params.id;
-  let altered = false;
+  let exists = false;
   try {
     const product = await Product.findOne({
       _id,
@@ -251,49 +296,47 @@ router.patch("/bid/:id", auth, async (req, res) => {
     }
 
     const bids = product.bids;
-
     const bid = {
       user: req.user._id,
       bid: req.body.bid,
     };
 
     bids.forEach((el, index) => {
-      console.log();
       if (String(el.user) === String(bid.user)) {
         el.bid = bid.bid;
-        altered = true;
+        exists = true;
       }
     });
-    if (!altered) {
+
+    if (!exists) {
       product.bids.push(bid);
     }
-
+    console.log(product);
     await product.save();
 
     res.send(product);
   } catch (e) {
-    res.status(400).send(e);
+    res.status(400).send(e.message);
   }
 });
 
-//Comment on product
-router.patch("/comment/:id", auth, async (req, res) => {
-  const _id = req.params.id;
+//Comment on product (Test: Passed)
+router.patch("/comment/:product", auth, async (req, res) => {
+  const _id = req.params.product;
+
   try {
-    const product = await Product.findOne({
-      _id,
-    });
+    const product = await Product.findById(_id);
+
     if (!product) {
       return res.status(404).send();
     }
-    const cm = product.comment;
+    const cm = product.comments;
     const ur = req.user;
     cm.push({
-      _id: ur._id,
-
+      user: ur.username,
       value: req.body.value,
     });
-    product.comment = cm;
+    product.comments = cm;
     await product.save();
     res.send(product);
   } catch (e) {
@@ -301,21 +344,22 @@ router.patch("/comment/:id", auth, async (req, res) => {
   }
 });
 
-//View Comments
+//View Comments (Test: Passed)
 router.get("/comments/:id", async (req, res) => {
   const _id = req.params.id;
   try {
-    const product = await Product.findOne({ _id });
+    const product = await Product.findById(_id);
     if (!product) {
       return res.status(404).send();
     }
-    res.send(product.comment);
+
+    res.send(product.comments);
   } catch (e) {
     res.status(500).send();
   }
 });
 
-//Item sold
+//Item sold (Test: Passed )
 router.patch("/products/sold/:id", auth, async (req, res) => {
   const _id = req.params.id;
   console.log(req.user);
@@ -366,7 +410,7 @@ router.patch("/products/sold/:id", auth, async (req, res) => {
   }
 });
 
-//Item rented
+//Item rented (Test: Passed )
 router.patch("/products/rented/:id", auth, async (req, res) => {
   const _id = req.params.id;
   console.log(req.user);
@@ -377,7 +421,7 @@ router.patch("/products/rented/:id", auth, async (req, res) => {
 
     const rentedBy = req.user;
     const rentedTo = await User.findOne({
-      _id: req.body.soldTo,
+      _id: req.body.rentedTo,
     });
 
     if (!product || !rentedTo || !rentedBy) {
@@ -426,7 +470,7 @@ router.patch("/products/rented/:id", auth, async (req, res) => {
   }
 });
 
-//Delete the product with given id
+//Delete the product with given id (Test: Passed )
 router.delete("/products/:id", auth, async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({
