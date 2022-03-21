@@ -6,7 +6,7 @@ import products from "./data";
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import Profile from "./components/User/Profile";
-
+import Post from "./components/Product/NewPost";
 import Product from "./components/Product/Views/ProductPage";
 
 const Landing = (props) => {
@@ -21,6 +21,7 @@ const Landing = (props) => {
             <Route index element={<Home products={products} />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/product/:id" element={<Product />} />
+            <Route path="/product/post" element={<Post />} />
             <Route path="*" element={<div></div>} />
           </Route>
         </Routes>
