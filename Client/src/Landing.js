@@ -2,10 +2,11 @@ import { Fragment, useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 
+import products from "./data";
 import Header from "./components/Header/Header";
 import Home from "./components/Home/Home";
 import Profile from "./components/User/Profile";
-import { products } from "./data";
+
 import Product from "./components/Product/Views/ProductPage";
 
 const Landing = (props) => {

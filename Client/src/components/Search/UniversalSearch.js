@@ -61,7 +61,7 @@ const productFinder = (isubstring, data) => {
   const matches = data.filter((obj) => {
     if (
       obj.name.split(" ").join("").toLowerCase().includes(substring)
-      // || obj.product_name.split(" ").join("").toLowerCase().includes(substring) ||
+      //  || obj.product_name.split(" ").join("").toLowerCase().includes(substring) ||
       // obj.modal.split(" ").join("").toLowerCase().includes(substring)
     ) {
       return true;

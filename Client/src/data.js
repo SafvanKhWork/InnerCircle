@@ -1,6 +1,20 @@
-const user = {};
+import { url } from "./config";
 
-export const products = [
+// let user;
+
+// const getInitial = async () => {
+//   const products = await JSON.parse(
+//     await fetch(`${url}/products`, {
+//       method: "GET",
+//     })
+//   );
+//   console.log(products);
+//   return products;
+// };
+
+// export default getInitial();
+
+const products = [
   {
     name: "test product",
     model: "TS234",
@@ -230,12 +244,5 @@ export const products = [
     timestamps: "22 Oct 2020",
   },
 ];
-
-// export const feed = [];
-// export const reccomanded = [];
-// export const circle = [];
-// export const history = [];
-
-// export default { products, feed, reccomanded, circle, history };
 
 export default products;

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/SafvanKhWork/InnerCircle#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.16.4",
     "gravatar": "^1.8.2",
