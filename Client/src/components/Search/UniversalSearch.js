@@ -22,7 +22,7 @@ const SearchBar = ({ setSearchQuery, search }) => (
     fullWidth
     value={search ? value : ""}
     className="text"
-    onInput={(e) => {
+    onChange={(e) => {
       setSearchQuery(e.target.value);
       value = e.target.value;
     }}
