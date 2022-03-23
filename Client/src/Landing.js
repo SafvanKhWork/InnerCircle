@@ -20,17 +20,15 @@ const Landing = (props) => {
   return (
     <Router>
       <Stack>
-        <Header status={props.status} />
+        <Header products={products} status={props.status} />
       </Stack>
       <Box pt={12} m={1}>
         <Routes>
-          <Route path="/">
-            <Route index element={<Home products={products} />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/product/:id" element={<Product />} />
-            <Route path="/product/post" element={<Post />} />
-            <Route path="*" element={<div></div>} />
-          </Route>
+          <Route path="/" element={<Home products={products} />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/product/:id" element={<Product />} />
+          <Route path="/product/post" element={<Post />} />
+          <Route path="*" element={<div></div>} />
         </Routes>
       </Box>
     </Router>

@@ -30,7 +30,11 @@ const ResponsiveAppBar = (props) => {
         <Container maxWidth="xl">
           <Toolbar xs={100} disableGutters>
             <Box sx={{ display: { xs: "none", md: "flex" } }}>
-              <NavMenu pages={pages} catagory={catagory} />
+              <NavMenu
+                products={props.products}
+                pages={pages}
+                catagory={catagory}
+              />
             </Box>
             <Box mx={2}>
               <Typography

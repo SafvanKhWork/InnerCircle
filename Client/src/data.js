@@ -1,5 +1,5 @@
 import axios from "axios";
-import { url } from "./config";
+import { url, setToken } from "./config";
 
 export let user =
   JSON.parse(window.localStorage.getItem("inner-circle-user")) || false;
@@ -10,7 +10,6 @@ let products;
   products = data;
 })();
 
-export default products;
+setToken(user.token);
 
-//  const { data } = await axios.get(`${url}/products`);
-//  console.log(Object.keys(data[0]));
+export default products;

@@ -2,138 +2,26 @@ import { useState } from "react";
 import {
   Card,
   Box,
-  CardActions,
   Collapse,
   Paper,
-  Grid,
-  Container,
-  CardMedia,
   CardContent,
   Typography,
-  Tab,
-  Tabs,
-  ThemeProvider,
-  CardHeader,
-  Avatar,
   Stack,
-  IconButton,
-  PagesOutlined,
 } from "@mui/material";
 
-import {
-  MonetizationOn,
-  Favorite,
-  Comment,
-  AddComment,
-  Recommend,
-  MoreVert,
-  Share,
-} from "@mui/icons-material";
-
-import { red, green, blue, yellow } from "@mui/material/colors";
 import { Scrollbars } from "react-custom-scrollbars";
-import Carousel from "react-material-ui-carousel";
 
 import Bids from "../../Details/Bids/Bids";
 import NewBid from "../../Details/Bids/NewBid";
 import Search from "../../../Search/Search";
 import Comments from "../../Details/Comments/Comments";
 
-const bids = [
-  {
-    name: "zack1",
-    bid: 1800,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 18,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 190,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 1,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 186,
-    time: "time",
-  },
-  {
-    name: "zack1",
-    bid: 1800,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 18,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 190,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 1,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 186,
-    time: "time",
-  },
-  {
-    name: "zack1",
-    bid: 1800,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 18,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 190,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 1,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 186,
-    time: "time",
-  },
-];
-
 const SideBox = (props) => {
-  const {
-    recc,
-    setRecc,
-    comm,
-    setComm,
-    value,
-    setValue,
-    width,
-    setWidth,
-    expandedBids,
-    setExpandedBids,
-    liked,
-    setLiked,
-    isFocused,
-    setIsFocused,
-  } = props.status;
+  const product = props.product;
+  const bids = product.bids;
+  const comments = product.comments;
+
+  const { recc, comm, expandedBids } = props.status;
   return (
     <Paper elevation={4}>
       <Card>

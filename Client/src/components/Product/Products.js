@@ -6,7 +6,7 @@ import { useState, Fragment, useEffect } from "react";
 import ProductCard from "./Views/ProductCard";
 
 const Products = (props) => {
-  const products = props.products;
+  const products = props.products || [];
   const [amounts, setAmounts] = useState({});
   const [isLandscape, setIsLandscape] = useState(
     window.matchMedia("(orientation: landscape").matches
@@ -24,7 +24,7 @@ const Products = (props) => {
       <Grid container justifyContent="center" spacing={1}>
         {products.map((product, i) => {
           return (
-            <Grid item lg={s} xs={s}>
+            <Grid key={product.product_name} item lg={s} xs={s}>
               <ProductCard
                 index={i}
                 isPotrait={!isLandscape}

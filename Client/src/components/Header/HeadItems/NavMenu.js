@@ -1,19 +1,10 @@
 import * as React from "react";
 import {
-  AppBar,
+  CircularProgress,
   Box,
-  Toolbar,
   IconButton,
   Typography,
-  Container,
-  Avatar,
-  Button,
-  Tooltip,
   Drawer,
-  Divider,
-  ListItem,
-  ListItemText,
-  ThemeProvider,
   MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -26,7 +17,15 @@ const NavMenu = (props) => {
   const [search, setSearch] = React.useState(false);
   const [menu, setMenu] = React.useState(pages);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
   const [results, setResults] = React.useState([]);
+
+  const changeResult = (value) => {
+    if (search) {
+      setResults(value);
+    }
+  };
+
   const handleOpenNavMenu = (event) => {
     setSearch(false);
     setAnchorElNav(event.currentTarget);
@@ -34,7 +33,6 @@ const NavMenu = (props) => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-  const searchResults = (ar) => setResults(ar);
 
   return (
     <React.Fragment>
@@ -76,13 +74,18 @@ const NavMenu = (props) => {
         <Box m={1}>
           <Box p={1}>
             <div onClick={() => (!search ? setSearch(true) : "")}>
-              <SearchBar search={search} searchResults={searchResults} />
+              <SearchBar
+                products={props.products}
+                search={search}
+                setLoading={setLoading}
+                changeResult={changeResult}
+              />
             </div>
           </Box>
           {!search
-            ? menu.map((page) => (
+            ? menu.map((page, i) => (
                 <MenuItem
-                  key={Math.random()}
+                  key={"menuitem" + i}
                   onClick={() => {
                     setMenu(catagory);
                   }}
@@ -91,7 +94,26 @@ const NavMenu = (props) => {
                   <Typography>{page}</Typography>
                 </MenuItem>
               ))
-            : results}
+            : ""}
+          {search && loading ? (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                py: 4,
+              }}
+            >
+              <CircularProgress
+                size={56}
+                variant="indeterminate"
+                sx={{ color: "#4db6ac" }}
+              />
+            </Box>
+          ) : (
+            results
+          )}
         </Box>
       </Drawer>
     </React.Fragment>

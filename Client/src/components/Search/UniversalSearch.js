@@ -1,11 +1,10 @@
-import { useState } from "react";
-import { Stack, Grid, Button, TextField } from "@mui/material";
-import { Scrollbars } from "react-custom-scrollbars";
-import UserResultItem from "./ResultItem";
+import { useEffect, useState } from "react";
+import { TextField } from "@mui/material";
+import axios from "axios";
+import { url } from "../../config";
 
-//
+import UserResultItem from "./ResultItem";
 import ProductResultItem from "./ProductResultItem";
-import products from "../../data";
 
 const users = [
   { name: "safvan khalifa", username: "khsafvan" },
@@ -16,15 +15,25 @@ const users = [
   { name: "test4", username: "4tester" },
 ];
 let value;
-const SearchBar = ({ setSearchQuery, search }) => (
+const SearchBar = ({ setLoading, setSearchQuery, search }) => (
   <TextField
     id="universal-search-bar"
     fullWidth
     value={search ? value : ""}
     className="text"
     onChange={(e) => {
-      setSearchQuery(e.target.value);
-      value = e.target.value;
+      if (prev !== e.target.value) {
+        setSearchQuery(e.target.value);
+        value = e.target.value;
+        prev = e.target.value;
+        setLoading(true);
+        const validTime = setTimeout(() => {
+          setLoading(false);
+          return () => {
+            clearTimeout(validTime);
+          };
+        }, 1000);
+      }
     }}
     label="Search"
     variant="outlined"
@@ -38,7 +47,9 @@ const Userfinder = (isubstring, data) => {
   if (!substring) {
     return [];
   }
-
+  if (!data) {
+    return [];
+  }
   const matches = data.filter((obj) => {
     if (
       obj.name.split(" ").join("").toLowerCase().includes(substring) ||
@@ -57,12 +68,14 @@ const productFinder = (isubstring, data) => {
   if (!substring) {
     return [];
   }
-
+  if (!data) {
+    return [];
+  }
   const matches = data.filter((obj) => {
     if (
-      obj.name.split(" ").join("").toLowerCase().includes(substring)
-      //  || obj.product_name.split(" ").join("").toLowerCase().includes(substring) ||
-      // obj.modal.split(" ").join("").toLowerCase().includes(substring)
+      obj.name.split(" ").join("").toLowerCase().includes(substring) ||
+      obj.product_name.split(" ").join("").toLowerCase().includes(substring) ||
+      obj.model.split(" ").join("").toLowerCase().includes(substring)
     ) {
       return true;
     } else {
@@ -72,31 +85,38 @@ const productFinder = (isubstring, data) => {
   return matches;
 };
 
-let prev;
+let prev = "";
 
 export default function SearchBox(props) {
+  let results;
   const [searchQuery, setSearchQuery] = useState("");
-  let matches;
-
-  if (prev !== searchQuery) {
-    if (searchQuery.trim() === "" && props.show) {
-      matches = products;
-    }
-
-    const prodResults = productFinder(searchQuery, products).map((user) => {
-      return <ProductResultItem user={user} />;
-    });
-    const userResults = productFinder(searchQuery, users).map((user) => {
-      return <UserResultItem user={user} />;
-    });
-    const results = [...userResults, ...prodResults];
-    props.searchResults(results);
+  if (searchQuery === "") {
+    results = [];
   }
+  if (searchQuery !== "") {
+    const prodResults = productFinder(searchQuery, props.products).map(
+      (user, i) => {
+        return <ProductResultItem key={"resultProduct" + i} user={user} />;
+      }
+    );
+    const userResults = Userfinder(searchQuery, users).map((user, i) => {
+      return <UserResultItem key={"resultUser" + i} user={user} />;
+    });
+    results = [...userResults, ...prodResults];
+  }
+  useEffect(() => {
+    const validat = setTimeout(() => {
+      props.changeResult(results);
+      return () => {
+        clearTimeout(validat);
+      };
+    }, 1000);
+  }, [results]);
 
-  prev = searchQuery;
   return (
     <SearchBar
       pb={2}
+      setLoading={props.setLoading}
       search={props.search}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}

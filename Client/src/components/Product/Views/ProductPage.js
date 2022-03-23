@@ -1,13 +1,22 @@
-import { useState } from "react";
-import { Grid, ThemeProvider } from "@mui/material";
+import { useState, useEffect, Fragment } from "react";
+import { Grid, ThemeProvider, Box, CircularProgress } from "@mui/material";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { url } from "../../../config";
 
 //
+
 import theme from "../../../theme";
 import SideBox from "./PageElements/Sidebox";
 import ActiveBox from "./PageElements/ActiveBox";
 import Alternatives from "./PageElements/Alternatives";
 
+let product;
+let resStatus;
+
 const ProductPage = (props) => {
+  const { id: productID } = useParams();
+
   const [recc, setRecc] = useState(false);
   const [comm, setComm] = useState(false);
   const [value, setValue] = useState(0);
@@ -15,6 +24,24 @@ const ProductPage = (props) => {
   const [expandedBids, setExpandedBids] = useState(false);
   const [liked, setLiked] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [inProgress, setInProgress] = useState(true);
+
+  useEffect(async () => {
+    if (resStatus === undefined) {
+      const { data, status: resStatus } = await axios.get(`${url}/product`);
+      product = data;
+      console.log(data, resStatus);
+    } else if (Math.floor(Number(resStatus) / 100) != 2) {
+      console.log("Not A Product");
+    }
+    const validat = setTimeout(() => {
+      setInProgress(false);
+      return () => {
+        clearTimeout(validat);
+      };
+    }, 1000);
+  }, []);
+
   const status = {
     recc,
     setRecc,
@@ -37,19 +64,39 @@ const ProductPage = (props) => {
   });
 
   return (
-    <ThemeProvider theme={theme}>
-      <Grid container px={1} justifyContent="center" spacing={2}>
-        <Grid item lg={3} xs={3}>
-          <SideBox status={status} />
-        </Grid>
-        <Grid item lg={6} xs={6}>
-          <ActiveBox status={status} />
-        </Grid>
-        <Grid item lg={3} xs={3}>
-          <Alternatives />
-        </Grid>
-      </Grid>
-    </ThemeProvider>
+    <Fragment>
+      {inProgress ? (
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            py: 4,
+          }}
+        >
+          <CircularProgress
+            size={56}
+            variant="indeterminate"
+            sx={{ color: "#4db6ac" }}
+          />
+        </Box>
+      ) : (
+        <ThemeProvider theme={theme}>
+          <Grid container px={1} justifyContent="center" spacing={2}>
+            <Grid item lg={3} xs={3}>
+              <SideBox product={product} status={status} />
+            </Grid>
+            <Grid item lg={6} xs={6}>
+              <ActiveBox product={product} status={status} />
+            </Grid>
+            <Grid item lg={3} xs={3}>
+              <Alternatives model={product.model} />
+            </Grid>
+          </Grid>
+        </ThemeProvider>
+      )}
+    </Fragment>
   );
 };
 export default ProductPage;

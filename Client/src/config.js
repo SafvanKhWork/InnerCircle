@@ -1,4 +1,8 @@
-export let url = "http://localhost:3000";
-export let token = "";
+let url = "http://localhost:3000";
+let token = "";
 
-export default { url, token };
+const setToken = (newToken) => {
+  token = newToken;
+};
+
+export { url, token, setToken };
