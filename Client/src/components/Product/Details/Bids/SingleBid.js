@@ -25,7 +25,7 @@ const Bid = (props) => {
   useEffect(() => {
     async function getUser(id) {
       const { data, status: responseStatus } = await axios.get(
-        `${url}/products/id/${id}`,
+        `${url}/user/id/${id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
