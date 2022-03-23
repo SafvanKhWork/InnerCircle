@@ -60,7 +60,7 @@ export default function SignIn(props) {
       setErrorMessage(`Please Enter Valid ${component}`);
     } else {
       const credentials = { email, password };
-      console.log(credentials);
+      // console.log(credentials);
       RequestLogin(credentials, setErrorMessage);
     }
     setPassword("");
