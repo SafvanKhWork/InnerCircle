@@ -19,7 +19,7 @@ import {
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../theme";
 import axios from "axios";
-let unvisited = [true, true];
+
 async function RequestLogin(creds, setErrorMessage) {
   try {
     const response = await axios.post(`${url}/user/login`, creds);

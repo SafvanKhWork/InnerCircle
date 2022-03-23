@@ -10,14 +10,30 @@ import {
   Collapse,
   Avatar,
 } from "@mui/material";
-import { useState, Fragment } from "react";
-import { green, red } from "@mui/material/colors";
 
+import { green, red } from "@mui/material/colors";
+import { url, token } from "../../../../config";
+import { useState, useEffect, Fragment } from "react";
+import axios from "axios";
 //
 import Image from "../../../../img/img.jpg";
 
 const Bid = (props) => {
   const [opt, setOpt] = useState(false);
+  const [user, setUser] = useState(false);
+
+  useEffect(() => {
+    async function getUser(id) {
+      const { data, status: responseStatus } = await axios.get(
+        `${url}/products/id/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUser(data);
+    }
+    getUser(bid.user);
+  }, []);
 
   const bid = props.bid;
 
@@ -41,10 +57,10 @@ const Bid = (props) => {
 
             <Stack>
               <Typography fontFamily={"sans-serif"} variant="title">
-                {bid.name}
+                {user.name}
               </Typography>
               <Typography color="text.secondary" variant="body2">
-                {"username"}
+                {user.username}
               </Typography>
             </Stack>
           </Stack>

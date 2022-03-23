@@ -6,11 +6,22 @@ import { useState, Fragment } from "react";
 
 import { url, token } from "../../../../config";
 
-const addComment = async (msg) => {};
+const addComment = async (msg, id) => {
+  const comments = await axios.patch(
+    `${url}/comment/${id}`,
+    {
+      value: msg,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+  console.log(comments);
+};
 
 const NewComment = (props) => {
   const [comment, setComment] = useState("");
-  const { reRenderer } = props;
+  const { product } = props;
   return (
     <Box mt={props.mt}>
       <Stack spacing={1} direction="row">
@@ -27,10 +38,9 @@ const NewComment = (props) => {
           size="small"
         />
         <Button
-          onClick={(e) => {
-            addComment(comment);
+          onClick={async (e) => {
+            await addComment(comment, product._id);
             setComment("");
-            reRenderer(comment[0]);
           }}
           variant="outlined"
           size="small"

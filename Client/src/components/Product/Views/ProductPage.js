@@ -11,12 +11,9 @@ import SideBox from "./PageElements/Sidebox";
 import ActiveBox from "./PageElements/ActiveBox";
 import Alternatives from "./PageElements/Alternatives";
 
-let product;
-let resStatus;
-
 const ProductPage = (props) => {
   const { id: productID } = useParams();
-
+  const [product, setProduct] = useState([]);
   const [recc, setRecc] = useState(false);
   const [comm, setComm] = useState(false);
   const [value, setValue] = useState(0);
@@ -26,14 +23,15 @@ const ProductPage = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 
-  useEffect(async () => {
-    if (resStatus === undefined) {
-      const { data, status: resStatus } = await axios.get(`${url}/product`);
-      product = data;
-      console.log(data, resStatus);
-    } else if (Math.floor(Number(resStatus) / 100) != 2) {
-      console.log("Not A Product");
+  useEffect(() => {
+    async function getProduct(id) {
+      const { data, status: responseStatus } = await axios.get(
+        `${url}/products/id/${id}`
+      );
+      setProduct(data);
+      console.log(data, responseStatus);
     }
+    getProduct(productID);
     const validat = setTimeout(() => {
       setInProgress(false);
       return () => {

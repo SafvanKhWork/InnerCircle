@@ -11,6 +11,7 @@ import {
 
 import { Scrollbars } from "react-custom-scrollbars";
 
+import { user } from "../../../../data";
 import Bids from "../../Details/Bids/Bids";
 import NewBid from "../../Details/Bids/NewBid";
 import Search from "../../../Search/Search";
@@ -36,10 +37,10 @@ const SideBox = (props) => {
             <Collapse in={!expandedBids && !comm && !recc}>
               <CardContent>
                 <Typography variant="h5" component="div">
-                  {"name"}
+                  {product.name}
                 </Typography>
                 <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  {"MDNM123"}
+                  {product.model}
                 </Typography>
                 <Scrollbars
                   style={{ height: 200 }}
@@ -52,9 +53,7 @@ const SideBox = (props) => {
                     fontFamily={"sans-serif"}
                     variant="body2"
                   >
-                    {
-                      "Cupidatat ad velit nostrud laborum elit ad. Fugiat cupidatat velit incididunt labore nisi ea nostrud veniam exercitation adipisicing in velit. Sint in id elit quis duis. Consequat Lorem eu sit quis amet nostrud commodo ut. Enim mollit exercitation reprehenderit minim aute. Elit nostrud quis commodo ex mollit laboris esse. Lorem laboris laboris laboris magna. Sint consectetur incididunt ut eiusmod nulla nostrud tempor incididunt sunt deserunt id. Eiusmod minim eu aute sunt. Officia in ex ut commodo excepteur labore. Ut qui nostrud enim culpa. Eiusmod adipisicing ut est ut non nostrud. Dolore excepteur eu sint eu officia laborum id aliquip commodo consectetur excepteur. Do dolore elit minim eiusmod."
-                    }
+                    {product.description}
                   </Typography>
                 </Scrollbars>
               </CardContent>
@@ -65,7 +64,7 @@ const SideBox = (props) => {
                   </Typography>
 
                   <Typography fontFamily={"monospace"} variant="subtitle2">
-                    1200$
+                    {"1230$"}
                   </Typography>
                 </Stack>
 
@@ -75,12 +74,12 @@ const SideBox = (props) => {
                   </Typography>
 
                   <Typography fontFamily={"monospace"} variant="subtitle2">
-                    1190$
+                    {"1190$"}
                   </Typography>
                 </Stack>
               </Stack>
               <Box pt={5}>
-                <NewBid />
+                <NewBid product={product} />
               </Box>
             </Collapse>
             <Collapse in={expandedBids}>
@@ -94,11 +93,11 @@ const SideBox = (props) => {
               </Scrollbars>
             </Collapse>
             <Collapse in={comm}>
-              <Comments size={12} desk={true} />
+              <Comments comments={comments} size={12} desk={true} />
             </Collapse>
             <Collapse in={recc}>
               <Box pt={2}>
-                <Search show={true} />
+                <Search users={user.circle} show={true} />
               </Box>
             </Collapse>
           </Box>
