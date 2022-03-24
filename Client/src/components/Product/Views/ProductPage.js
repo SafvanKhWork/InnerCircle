@@ -23,15 +23,14 @@ const ProductPage = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 
+  async function updateProduct(id) {
+    const { data, status: responseStatus } = await axios.get(
+      `${url}/products/id/${id}`
+    );
+    setProduct(data);
+  }
   useEffect(() => {
-    async function getProduct(id) {
-      const { data, status: responseStatus } = await axios.get(
-        `${url}/products/id/${id}`
-      );
-      setProduct(data);
-      console.log(data, responseStatus);
-    }
-    getProduct(productID);
+    updateProduct(productID);
     const validat = setTimeout(() => {
       setInProgress(false);
       return () => {
@@ -83,7 +82,13 @@ const ProductPage = (props) => {
         <ThemeProvider theme={theme}>
           <Grid container px={1} justifyContent="center" spacing={2}>
             <Grid item lg={3} xs={3}>
-              <SideBox product={product} status={status} />
+              <SideBox
+                updateProduct={async () => {
+                  updateProduct(product._id);
+                }}
+                product={product}
+                status={status}
+              />
             </Grid>
             <Grid item lg={6} xs={6}>
               <ActiveBox product={product} status={status} />

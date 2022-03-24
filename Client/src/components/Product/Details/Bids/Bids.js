@@ -20,37 +20,8 @@ import { Scrollbars } from "react-custom-scrollbars";
 import { useState, Fragment } from "react";
 import { green, red } from "@mui/material/colors";
 
-//
-
 import Bid from "./SingleBid";
 
-const bids = [
-  {
-    name: "zack1",
-    bid: 1800,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 18,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 190,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 1,
-    time: "time",
-  },
-  {
-    name: "zack",
-    bid: 186,
-    time: "time",
-  },
-];
 let visitOn = false;
 const Bids = (props) => {
   const [page, setPage] = useState(0);
@@ -98,9 +69,9 @@ const Bids = (props) => {
   return (
     <Box p={1} mx={1}>
       <Stack spacing={1}>
-        {bids.map((bid, i) => {
+        {bids.map((bid) => {
           return (
-            <Box p={1}>
+            <Box key={bids._id} p={1}>
               <Bid bid={bid} />
             </Box>
           );

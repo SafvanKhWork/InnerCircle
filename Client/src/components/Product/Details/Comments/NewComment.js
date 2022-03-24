@@ -16,7 +16,6 @@ const addComment = async (msg, id) => {
       headers: { Authorization: `Bearer ${token}` },
     }
   );
-  console.log(comments);
 };
 
 const NewComment = (props) => {
@@ -35,13 +34,16 @@ const NewComment = (props) => {
           id="comment"
           label="comment"
           defaultValue=""
+          value={comment}
           size="small"
         />
         <Button
           onClick={async (e) => {
             await addComment(comment, product._id);
             setComment("");
+            props.update();
           }}
+          disabled={comment === ""}
           variant="outlined"
           size="small"
         >

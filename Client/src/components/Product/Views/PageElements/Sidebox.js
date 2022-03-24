@@ -20,7 +20,6 @@ import Comments from "../../Details/Comments/Comments";
 const SideBox = (props) => {
   const product = props.product;
   const bids = product.bids;
-  const comments = product.comments;
 
   const { recc, comm, expandedBids } = props.status;
   return (
@@ -79,21 +78,24 @@ const SideBox = (props) => {
                 </Stack>
               </Stack>
               <Box pt={5}>
-                <NewBid product={product} />
+                <NewBid product={product} update={props.updateProduct} />
               </Box>
             </Collapse>
             <Collapse in={expandedBids}>
               <Scrollbars
-                style={{ height: 500 }}
+                style={{ height: 445 }}
                 autoHide
                 autoHideTimeout={0}
                 autoHideDuration={200}
               >
-                <Bids desk={true} bids={bids} />
+                <Bids product={product} desk={true} bids={bids} />
               </Scrollbars>
+              <Box pt={1}>
+                <NewBid product={product} update={props.updateProduct} />
+              </Box>
             </Collapse>
             <Collapse in={comm}>
-              <Comments comments={comments} size={12} desk={true} />
+              <Comments product={product} size={12} desk={true} />
             </Collapse>
             <Collapse in={recc}>
               <Box pt={2}>

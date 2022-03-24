@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Box, Stack, TextField, MenuItem, Button } from "@mui/material";
+import axios from "axios";
+import { url, token } from "../../../../config";
 
 const currencies = [
   {
@@ -21,20 +23,28 @@ const currencies = [
   },
 ];
 
+const updateBid = async (amount, id) => {
+  const bids = await axios.patch(
+    `${url}/bid/${id}`,
+    {
+      bid: amount,
+    },
+    {
+      headers: { Authorization: `Bearer ${token}` },
+    }
+  );
+};
+
 const NewBid = (props) => {
   const [currency, setCurrency] = useState("EUR");
-  const [isEmpty, setIsEmpty] = useState(true);
+  const [bid, setBid] = useState(undefined);
 
   const handleChange = (event) => {
     setCurrency(event.target.value);
   };
 
   const handleChangeAdd = (e) => {
-    setIsEmpty(!e.target.value || e.target.value < 1);
-    props.status.setAmounts((amount) => ({
-      ...amount,
-      ...{ [e.target.id]: e.target.value },
-    }));
+    setBid(e.target.value);
   };
 
   return (
@@ -72,6 +82,7 @@ const NewBid = (props) => {
             id={`amount${props.index}`}
             onChange={handleChangeAdd}
             label="Amount"
+            value={bid}
             type="number"
             InputLabelProps={{
               shrink: true,
@@ -79,15 +90,18 @@ const NewBid = (props) => {
           />
         </item>
         <item>
-          {isEmpty ? (
-            <Button size="medium" disabled variant="text">
-              Bid
-            </Button>
-          ) : (
-            <Button size="medium" variant="text">
-              Bid
-            </Button>
-          )}
+          <Button
+            onClick={async (e) => {
+              await updateBid(bid, props.product._id);
+              setBid("");
+              props.update();
+            }}
+            size="medium"
+            disabled={!bid || bid < 1}
+            variant="text"
+          >
+            Bid
+          </Button>
         </item>
       </Stack>
     </Box>

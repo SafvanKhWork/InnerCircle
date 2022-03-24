@@ -353,7 +353,7 @@ router.get("/comments/:id", async (req, res) => {
       return res.status(404).send();
     }
 
-    res.send(product.comments);
+    res.status(200).send(product.comments);
   } catch (e) {
     res.status(500).send();
   }

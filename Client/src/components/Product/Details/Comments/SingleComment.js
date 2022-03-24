@@ -4,6 +4,7 @@ import {
   Avatar,
   Typography,
   IconButton,
+  Collapse,
   CardHeader,
   Divider,
   Grid,
@@ -11,36 +12,73 @@ import {
   ThemeProvider,
   TextField,
 } from "@mui/material";
+import { green, red } from "@mui/material/colors";
+import axios from "axios";
+import { url, token } from "../../../../config";
 import { Send, ArrowForward, ArrowBack } from "@mui/icons-material";
-import { useState, Fragment } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
 
 const Comment = (props) => {
   const i = props.key;
   const comment = props.comment;
+  const [user, setUser] = useState({});
+  const [opt, setOpt] = useState(false);
+
+  useEffect(() => {
+    async function getUser(id) {
+      const { data, status: responseStatus } = await axios.get(
+        `${url}/user/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      setUser(data);
+    }
+    getUser(comment.user);
+  }, []);
+
+  const firstPh =
+    comment.value.length > 35
+      ? comment.value.split(",")[0] + "..."
+      : comment.value;
+  const shortcomm =
+    firstPh.length > 38
+      ? comment.value.split("").slice(0, 25).join("") + "..."
+      : firstPh;
+
   return (
-    <Box p={1}>
-      {
+    <div
+      onClick={(event) => {
+        setOpt(!opt);
+      }}
+    >
+      <Box p={1}>
         <Stack
           display={"flex"}
-          alignContent={"flex-start"}
+          alignItems={"center"}
           spacing={1}
           direction="row"
         >
-          <Box pt={1}>
-            <Avatar src={Image} sx={{ width: 34, height: 34 }} />
-          </Box>
+          <Avatar src={Image} sx={{ width: 34, height: 34 }} />
           <Stack>
-            <Typography fontFamily={"sans-serif"} variant="subtitle2">
-              {comment.user}
+            <Typography fontFamily={"sans-serif"} variant="title">
+              {user.name}
             </Typography>
             <Typography color="text.secondary" variant="body2">
-              {comment.message}
+              {opt ? user.username : shortcomm}
             </Typography>
           </Stack>
         </Stack>
-      }
-    </Box>
+        <Box py={1} ml={1} pl={"34px"}>
+          <Collapse in={opt}>
+            <Typography color="text.secondary" variant="body2">
+              {comment.value}
+            </Typography>
+          </Collapse>
+        </Box>
+      </Box>
+    </div>
   );
 };
 

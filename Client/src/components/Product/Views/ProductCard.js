@@ -17,6 +17,7 @@ export default function ProductCard(props) {
   const [expandedRecc, setExpandedRecc] = useState(false);
   const [expandedComment, setExpandedComment] = useState(false);
   const [liked, setLiked] = useState(false);
+  const { product } = props;
   const values = {
     expandedDesc,
     expandedBid,
@@ -34,7 +35,7 @@ export default function ProductCard(props) {
 
             {props.isPotrait ? (
               <Fragment>
-                <CardImage />
+                <CardImage images={product.images} />
                 <CardInfo expandedDesc={expandedDesc} product={props.product} />
                 <CardButtons
                   thrower={{
@@ -46,7 +47,7 @@ export default function ProductCard(props) {
                     ...values,
                   }}
                 />
-                <CardActivity catcher={values} />
+                <CardActivity product={product} catcher={values} />
               </Fragment>
             ) : (
               <Link
