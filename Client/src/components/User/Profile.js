@@ -22,108 +22,11 @@ import Scrollbars from "react-custom-scrollbars";
 //
 import Products from "../Product/Products";
 import theme from "../../theme";
-import Image from "../../img/img.jpg";
+
+import { user } from "../../data";
 import data from "../../data";
 import History from "./History";
 
-const history = [
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "rented",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "bought",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product 12 one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "bought",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-  {
-    name: "product one",
-    value: 1234,
-    createdAt: "04-12-22",
-    status: "sold",
-  },
-];
 const active = {
   color: "#fff",
   background: "#4db6ac",
@@ -132,6 +35,8 @@ const active = {
 const inactive = { color: "#4db6ac" };
 
 const Profile = (props) => {
+  const Image = user.avatar;
+  const history = user.history || [];
   const [width, setWidth] = useState(window.innerWidth);
   const [rug, setRug] = useState(false);
   const [value, setValue] = useState("1");

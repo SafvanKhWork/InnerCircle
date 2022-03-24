@@ -128,16 +128,15 @@ router.post("/user/login", async (req, res) => {
 });
 
 //Logout User (Test: Passed )
-router.post("/users/logout", auth, async (req, res) => {
+router.post("/users/logout/all", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
       return token.token !== req.token;
     });
     await req.user.save();
-
-    res.send();
+    res.status(200).send();
   } catch (e) {
-    res.status(500).send();
+    res.status(500).send(e.message);
   }
 });
 

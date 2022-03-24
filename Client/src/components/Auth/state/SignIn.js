@@ -20,13 +20,17 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../theme";
 import axios from "axios";
 
-async function RequestLogin(creds, setErrorMessage) {
+async function RequestLogin(creds, setErrorMessage, login) {
   try {
     const response = await axios.post(`${url}/user/login`, creds);
-    console.log(response);
+
     const { data } = response;
     if (data) {
-      window.localStorage.setItem("inner-circle-user", JSON.stringify(data));
+      window.localStorage.setItem(
+        "inner-circle-token",
+        JSON.stringify(data.token)
+      );
+      login(true);
     }
   } catch (e) {
     console.log(e.message);
@@ -35,10 +39,10 @@ async function RequestLogin(creds, setErrorMessage) {
 }
 
 export default function SignIn(props) {
+  const { isLoggedIn, setIsLoggedIn } = props.status;
   const [errorMessage, setErrorMessage] = React.useState(undefined);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [hasToken, setHasToken] = React.useState(false);
 
   const [validEmail, setValidEmail] = React.useState(true);
   const [validPassword, setValidPassword] = React.useState(true);
@@ -58,10 +62,10 @@ export default function SignIn(props) {
       component =
         !validEmail && !validPassword ? "Email & Password" : component;
       setErrorMessage(`Please Enter Valid ${component}`);
-    } else {
+    }
+    if (validEmail && validPassword) {
       const credentials = { email, password };
-      // console.log(credentials);
-      RequestLogin(credentials, setErrorMessage);
+      RequestLogin(credentials, setErrorMessage, setIsLoggedIn);
     }
     setPassword("");
   };
@@ -98,8 +102,8 @@ export default function SignIn(props) {
               required
               value={email}
               onChange={(e) => {
-                setEmail(e.target.value.split(" ").join(""));
-                setValidEmail(validator.isEmail(email));
+                setEmail(e.target.value);
+                setValidEmail(validator.isEmail(e.target.value));
               }}
               color={!validEmail ? "error" : "primary"}
               fullWidth
@@ -122,9 +126,9 @@ export default function SignIn(props) {
               }
               fullWidth
               onChange={(e) => {
-                setPassword(e.target.value.split(" ").join(""));
-                setValidPassword(validator.isLength(password, 6, 18));
-                setStrongPassword(validator.isStrongPassword(password));
+                setPassword(e.target.value);
+                setValidPassword(validator.isLength(e.target.value, 6, 18));
+                setStrongPassword(validator.isStrongPassword(e.target.value));
               }}
               name="password"
               label="Password"

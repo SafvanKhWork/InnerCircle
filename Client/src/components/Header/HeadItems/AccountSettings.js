@@ -23,13 +23,22 @@ import {
   MenuList,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import Image from "../../../img/img.jpg";
-
+import axios from "axios";
+import { user } from "../../../data";
+import { url, token } from "../../../config";
 const drawerWidth = 240;
 
 const AccountSettings = (props) => {
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
+  const Image = user.user.avatar;
+  console.log(Image);
+  const logout = async () => {
+    const logout1 = await axios.post(`${url}/users/logout`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    console.log(logout1.status);
+  };
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -60,22 +69,6 @@ const AccountSettings = (props) => {
     prevOpen.current = open;
   }, [open]);
 
-  const settings = [
-    "Profile",
-    "Post",
-    "History",
-    "Settings",
-    ,
-    <Button
-      variant="text"
-      onClick={() => {
-        props.status.setIsLoggedIn(false);
-      }}
-    >
-      Logout
-    </Button>,
-  ];
-
   return (
     <Box sx={{ flexGrow: 0 }}>
       <Tooltip title="Open settings">
@@ -87,7 +80,7 @@ const AccountSettings = (props) => {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Avatar alt="Remy Sharp" src={Image} />
+          <Avatar src={"https://" + Image} alt={user.user.name} />
         </IconButton>
       </Tooltip>
 
@@ -115,16 +108,27 @@ const AccountSettings = (props) => {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  {settings.map((setting) => (
-                    <MenuItem onClick={handleClose}>
-                      <Link
-                        style={{ color: "inherit", textDecoration: "none" }}
-                        to="/profile"
-                      >
-                        {setting}
-                      </Link>
-                    </MenuItem>
-                  ))}
+                  <MenuItem key={"profile"} onClick={handleClose}>
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      to="/profile"
+                    >
+                      Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem
+                    key={"logout"}
+                    onClick={async () => {
+                      window.localStorage.setItem(
+                        "inner-circle-user",
+                        JSON.stringify({})
+                      );
+                      await logout();
+                      props.status.setIsLoggedIn(false);
+                    }}
+                  >
+                    Logout
+                  </MenuItem>
                 </MenuList>
               </ClickAwayListener>
             </Paper>
