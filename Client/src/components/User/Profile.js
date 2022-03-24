@@ -23,7 +23,7 @@ import Scrollbars from "react-custom-scrollbars";
 import Products from "../Product/Products";
 import theme from "../../theme";
 
-import { user } from "../../data";
+import { getAccountUser } from "../../data";
 import data from "../../data";
 import History from "./History";
 
@@ -35,6 +35,7 @@ const active = {
 const inactive = { color: "#4db6ac" };
 
 const Profile = (props) => {
+  const user = getAccountUser();
   const Image = user.avatar;
   const history = user.history || [];
   const [width, setWidth] = useState(window.innerWidth);

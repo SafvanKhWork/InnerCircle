@@ -24,12 +24,13 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { user } from "../../../data";
+import { getAccountUser } from "../../../data";
 import { url, token } from "../../../config";
-const drawerWidth = 240;
 
 const AccountSettings = (props) => {
   const [open, setOpen] = React.useState(false);
+  const drawerWidth = 240;
+  const user = getAccountUser();
   const anchorRef = React.useRef(null);
   const Image = user.user.avatar;
   console.log(Image);
@@ -80,7 +81,7 @@ const AccountSettings = (props) => {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Avatar src={"https://" + Image} alt={user.user.name} />
+          <Avatar src={Image} alt={user.user.name} />
         </IconButton>
       </Tooltip>
 

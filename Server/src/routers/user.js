@@ -16,13 +16,15 @@ router.post("/user/register", async (req, res) => {
   try {
     let data = req.body;
 
-    let avatar = gravatar
-      .url(data.email, {
-        s: 400,
-        r: "pg",
-        d: "mm",
-      })
-      .slice(2);
+    let avatar =
+      "https://" +
+      gravatar
+        .url(data.email, {
+          s: 400,
+          r: "pg",
+          d: "mm",
+        })
+        .slice(2);
     data = { ...data, avatar };
     const user = new User(data);
     await user.save();

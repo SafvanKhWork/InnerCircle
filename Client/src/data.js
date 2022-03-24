@@ -1,14 +1,27 @@
-import axios from "axios";
-import { url, token } from "./config";
-
 let products;
-let user;
+let user =
+  JSON.parse(window.localStorage.getItem("inner-circle-user")) || false;
 const setGlobelUser = async (value) => {
   user = value;
 };
-const setProducts = async (value) => {
-  user = value;
+const setProductsList = async (value) => {
+  products = value;
+};
+const sender = async (value) => {
+  const t = await setTimeout(() => {
+    return () => {
+      clearTimeout(t);
+    };
+  }, 1000);
+  return value;
 };
 
-export { setProducts, setGlobelUser };
+function getAccountUser() {
+  return user;
+}
+function getProductList() {
+  return products;
+}
+
+export { setProductsList, setGlobelUser, getAccountUser, getProductList };
 export default products;

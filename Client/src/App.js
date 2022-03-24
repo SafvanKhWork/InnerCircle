@@ -2,18 +2,19 @@ import { useState, useEffect, Fragment } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
 //
-import { user } from "./data";
+import { setGlobelUser, setProductsList } from "./data";
 import AuthModel from "./components/Auth/AuthModel";
 import Landing from "./Landing";
 import axios from "axios";
-import { url } from "./config";
+import { url, token } from "./config";
 
-let validToken;
 const config = {
-  headers: { Authorization: `Bearer ${user.token}` },
+  headers: { Authorization: `Bearer ${token}` },
 };
+
 (async () => {
-  validToken = (await axios.get(`${url}/user/me`, config)).status;
+  const { data } = await axios.get(`${url}/products`);
+  setProductsList(data);
 })();
 
 function App() {
@@ -21,15 +22,23 @@ function App() {
   const [inProgress, setInProgress] = useState(true);
 
   useEffect(() => {
+    let user, responseStatus;
+    const getGlobelUser = async () => {
+      const response = await axios.get(`${url}/user/me`, config);
+      responseStatus = response.status;
+      const { data } = response;
+      user = data;
+    };
+    getGlobelUser();
     const validat = setTimeout(() => {
-      console.log(validToken);
-      if (validToken === 200) {
+      if (responseStatus === 200) {
+        setGlobelUser(user);
+        window.localStorage.setItem("inner-circle-user", JSON.stringify(user));
         setIsLoggedIn(true);
-        setInProgress(false);
-      } else if (validToken !== 200) {
-        setInProgress(false);
+      } else {
+        setIsLoggedIn(false);
       }
-
+      setInProgress(false);
       return () => {
         clearTimeout(validat);
       };
