@@ -25,6 +25,7 @@ router.post("/user/register", async (req, res) => {
           d: "mm",
         })
         .slice(2);
+
     data = { ...data, avatar };
     const user = new User(data);
     await user.save();
@@ -34,6 +35,7 @@ router.post("/user/register", async (req, res) => {
     res.status(400).send(e);
   }
 });
+
 //send code on Email (Test: Passed )
 router.post("/verify/email", auth, async (req, res) => {
   try {
