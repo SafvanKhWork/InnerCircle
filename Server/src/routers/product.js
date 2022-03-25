@@ -164,8 +164,10 @@ router.get("/products/owner/:user", async (req, res) => {
 //fetch Posts from friends (Work in Progress)
 router.get("/user/feed", auth, async (req, res) => {
   req.user.circle.map(async (friend) => {
-    const products = await Product.find({});
-    const prods = products.filter((el) => String(el.owner) === String(_id));
+    const products = await Product.find({}).populate("owner");
+    const prods = products.filter(
+      (el) => String(el.owner.username) === String(friend)
+    );
   });
 });
 
