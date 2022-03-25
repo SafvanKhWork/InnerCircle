@@ -14,34 +14,50 @@ import {
   Typography,
   Container,
   Grid,
+  CircularProgress,
   Paper,
 } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../theme";
 import axios from "axios";
 
-async function RequestLogin(creds, setErrorMessage, login) {
+async function RequestLogin(creds, setErrorMessage, login, loading) {
+  console.log(creds);
   try {
     const response = await axios.post(`${url}/user/login`, creds);
-
     const { data } = response;
     if (data) {
+      window.localStorage.setItem("inner-circle-user", JSON.stringify(data));
       window.localStorage.setItem(
         "inner-circle-token",
         JSON.stringify(data.token)
       );
-      login(true);
+      const validat = setTimeout(() => {
+        loading(false);
+        login(true);
+        return () => {
+          clearTimeout(validat);
+        };
+      }, 1000);
     }
   } catch (e) {
     console.log(e.message);
+    const validat = setTimeout(() => {
+      loading(false);
+      return () => {
+        clearTimeout(validat);
+      };
+    }, 500);
     setErrorMessage(`Provided Email Address or Password is Invalid`);
   }
 }
 
 export default function SignIn(props) {
+  let temail;
   const { isLoggedIn, setIsLoggedIn } = props.status;
+  const [inProgress, setInProgress] = React.useState(false);
   const [errorMessage, setErrorMessage] = React.useState(undefined);
-  const [email, setEmail] = React.useState("");
+  const [email, setEmail] = React.useState(temail ?? "");
   const [password, setPassword] = React.useState("");
 
   const [validEmail, setValidEmail] = React.useState(true);
@@ -50,6 +66,7 @@ export default function SignIn(props) {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     if (email.trim() === "" || password.trim() === "") {
       let component = email.trim() === "" ? "Email" : "";
       component = password.trim() === "" ? "Password" : component;
@@ -64,10 +81,13 @@ export default function SignIn(props) {
       setErrorMessage(`Please Enter Valid ${component}`);
     }
     if (validEmail && validPassword) {
+      setInProgress(true);
       const credentials = { email, password };
-      RequestLogin(credentials, setErrorMessage, setIsLoggedIn);
+      RequestLogin(credentials, setErrorMessage, setIsLoggedIn, setInProgress);
     }
+    temail = email;
     setPassword("");
+    setValidPassword(false);
   };
 
   return (
@@ -81,98 +101,126 @@ export default function SignIn(props) {
             alignItems: "center",
           }}
         >
-          <Typography component="h1" variant="h5">
-            SignIn
-          </Typography>
-          {errorMessage ? (
-            <Box m={1} color="red">
-              <Typography variant="caption">{errorMessage}</Typography>
+          {inProgress ? (
+            <Box
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                py: 4,
+              }}
+            >
+              <CircularProgress
+                size={56}
+                variant="indeterminate"
+                sx={{ color: "#4db6ac" }}
+              />
             </Box>
           ) : (
             ""
           )}
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setValidEmail(validator.isEmail(e.target.value));
-              }}
-              color={!validEmail ? "error" : "primary"}
-              fullWidth
-              id="email"
-              label="Email Address"
-              name="email"
-              autoComplete="email"
-              autoFocus
-            />
-            <TextField
-              margin="normal"
-              required
-              value={password}
-              color={
-                !validPassword
-                  ? "error"
-                  : !strongPassword
-                  ? "warning"
-                  : "primary"
-              }
-              fullWidth
-              onChange={(e) => {
-                setPassword(e.target.value);
-                setValidPassword(validator.isLength(e.target.value, 6, 18));
-                setStrongPassword(validator.isStrongPassword(e.target.value));
-              }}
-              name="password"
-              label="Password"
-              type="password"
-              id="password"
-              autoComplete="current-password"
-            />
-            <Grid container>
-              <Grid item xs>
-                <Link
-                  component="button"
-                  variant="body2"
-                  onClick={() => {
-                    props.status.setHasPasswd(false);
-                  }}
-                >
-                  Forgot password?
-                </Link>
-              </Grid>
-            </Grid>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Sign In
-            </Button>
-            <Stack spacing={1}>
-              <Button
-                onClick={() => {
-                  props.status.setIsUser(!props.status.isUser);
-                }}
-                variant="outlined"
-                fullWidth
+          {!inProgress ? (
+            <React.Fragment>
+              {" "}
+              <Typography component="h1" variant="h5">
+                SignIn
+              </Typography>
+              {errorMessage ? (
+                <Box m={1} color="red">
+                  <Typography variant="caption">{errorMessage}</Typography>
+                </Box>
+              ) : (
+                ""
+              )}
+              <Box
+                component="form"
+                onSubmit={handleSubmit}
+                noValidate
+                sx={{ mt: 1 }}
               >
-                {"Don't have an account? Sign Up"}
-              </Button>
-            </Stack>
-          </Box>
+                <TextField
+                  margin="normal"
+                  required
+                  value={email}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setValidEmail(validator.isEmail(e.target.value));
+                  }}
+                  color={!validEmail ? "error" : "primary"}
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                  autoFocus
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  value={password}
+                  color={
+                    !validPassword
+                      ? "error"
+                      : !strongPassword
+                      ? "warning"
+                      : "primary"
+                  }
+                  fullWidth
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    setValidPassword(validator.isLength(e.target.value, 6, 18));
+                    setStrongPassword(
+                      validator.isStrongPassword(e.target.value)
+                    );
+                  }}
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="current-password"
+                />
+                <Grid container>
+                  <Grid item xs>
+                    <Link
+                      component="button"
+                      variant="body2"
+                      onClick={() => {
+                        props.status.setHasPasswd(false);
+                      }}
+                    >
+                      Forgot password?
+                    </Link>
+                  </Grid>
+                </Grid>
+                <FormControlLabel
+                  control={<Checkbox value="remember" color="primary" />}
+                  label="Remember me"
+                />
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2 }}
+                >
+                  Sign In
+                </Button>
+                <Stack spacing={1}>
+                  <Button
+                    onClick={() => {
+                      props.status.setIsUser(!props.status.isUser);
+                    }}
+                    variant="outlined"
+                    fullWidth
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </Button>
+                </Stack>
+              </Box>
+            </React.Fragment>
+          ) : (
+            ""
+          )}
         </Box>
       </Container>
     </ThemeProvider>

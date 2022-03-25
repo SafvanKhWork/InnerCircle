@@ -15,15 +15,14 @@ import {
   Button,
   Stack,
 } from "@mui/material";
-
 import { styled } from "@mui/material/styles";
 import Scrollbars from "react-custom-scrollbars";
-
+import { Navigate } from "react-router-dom";
 //
 import Products from "../Product/Products";
 import theme from "../../theme";
 
-import { getAccountUser } from "../../data";
+import { user } from "../../data";
 import data from "../../data";
 import History from "./History";
 
@@ -35,17 +34,18 @@ const active = {
 const inactive = { color: "#4db6ac" };
 
 const Profile = (props) => {
-  const user = getAccountUser();
-  const Image = user.avatar;
-  const history = user.history || [];
   const [width, setWidth] = useState(window.innerWidth);
   const [rug, setRug] = useState(false);
   const [value, setValue] = useState("1");
-
   const onClick = (BId) => setValue(BId);
   window.addEventListener("resize", () => {
     setWidth(window.innerWidth);
   });
+  if (!user) {
+    return <Navigate to="/" />;
+  }
+  const Image = user?.avatar ?? "";
+  const history = user?.history || [];
 
   return (
     <ThemeProvider theme={theme}>

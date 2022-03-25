@@ -8,17 +8,17 @@ import {
   Typography,
   Stack,
 } from "@mui/material";
-
 import { Scrollbars } from "react-custom-scrollbars";
+import { Navigate } from "react-router-dom";
+//
 
-import { getAccountUser } from "../../../../data";
+import { user } from "../../../../data";
 import Bids from "../../Details/Bids/Bids";
 import NewBid from "../../Details/Bids/NewBid";
 import Search from "../../../Search/Search";
 import Comments from "../../Details/Comments/Comments";
 
 const SideBox = (props) => {
-  const user = getAccountUser();
   const product = props.product;
   const bids = product.bids;
 

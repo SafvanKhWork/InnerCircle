@@ -2,37 +2,45 @@ import { useState, useEffect, Fragment } from "react";
 import { Box, CircularProgress } from "@mui/material";
 
 //
-import { setGlobelUser, setProductsList } from "./data";
+import { user } from "./data";
 import AuthModel from "./components/Auth/AuthModel";
 import Landing from "./Landing";
 import axios from "axios";
-import { url, token } from "./config";
+import { url, token, setToken } from "./config";
 
-const config = {
-  headers: { Authorization: `Bearer ${token}` },
-};
-
-(async () => {
-  const { data } = await axios.get(`${url}/products`);
-  setProductsList(data);
-})();
-
-function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [inProgress, setInProgress] = useState(true);
-
-  useEffect(() => {
-    let user, responseStatus;
+const refresh = async (setUser) => {
+  let tempUser;
+  if (token !== false) {
+    let responseStatus;
+    const config = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     const getGlobelUser = async () => {
       const response = await axios.get(`${url}/user/me`, config);
       responseStatus = response.status;
+      if (responseStatus != 200) {
+        setToken(false);
+        tempUser = false;
+      }
       const { data } = response;
-      user = data;
+      tempUser = data;
     };
-    getGlobelUser();
+    await getGlobelUser();
+    console.log(token, user, responseStatus);
+  }
+  (async () => {
+    const { data } = await axios.get(`${url}/products`);
+    //products = data;
+  })();
+};
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [inProgress, setInProgress] = useState(true);
+  console.table(user);
+  useEffect(async () => {
     const validat = setTimeout(() => {
-      if (responseStatus === 200) {
-        setGlobelUser(user);
+      console.log(token !== false && user !== false);
+      if (token !== false && user !== false) {
         window.localStorage.setItem("inner-circle-user", JSON.stringify(user));
         setIsLoggedIn(true);
       } else {
@@ -42,13 +50,15 @@ function App() {
       return () => {
         clearTimeout(validat);
       };
-    }, 1000);
+    }, 2000);
   }, []);
-
   const status = {
     isLoggedIn,
     setIsLoggedIn,
+    inProgress,
+    setInProgress,
   };
+
   return (
     <Fragment>
       {inProgress ? (

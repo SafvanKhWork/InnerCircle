@@ -24,16 +24,19 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { getAccountUser } from "../../../data";
+import { user } from "../../../data";
 import { url, token } from "../../../config";
+import { Navigate } from "react-router-dom";
+
+//
 
 const AccountSettings = (props) => {
   const [open, setOpen] = React.useState(false);
   const drawerWidth = 240;
-  const user = getAccountUser();
+  const [user, setUser] = React.useState();
   const anchorRef = React.useRef(null);
-  const Image = user.user.avatar;
-  console.log(Image);
+  let responseStatus;
+
   const logout = async () => {
     const logout1 = await axios.post(`${url}/users/logout`, {
       headers: { Authorization: `Bearer ${token}` },
@@ -47,7 +50,6 @@ const AccountSettings = (props) => {
 
   const handleClose = (event) => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
     }
 
     setOpen(false);
@@ -81,7 +83,7 @@ const AccountSettings = (props) => {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Avatar src={Image} alt={user.user.name} />
+          <Avatar src={user.avatar} alt={user.name} />
         </IconButton>
       </Tooltip>
 
