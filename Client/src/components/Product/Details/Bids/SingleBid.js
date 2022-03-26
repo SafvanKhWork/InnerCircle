@@ -6,13 +6,16 @@ import {
   Collapse,
   Avatar,
 } from "@mui/material";
-
 import { green, red } from "@mui/material/colors";
-import { url, token } from "../../../../config";
 import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
+
+
 //
+
+
 import Image from "../../../../img/img.jpg";
+import { url, token } from "../../../../config";
 
 const Bid = (props) => {
   const [opt, setOpt] = useState(false);

@@ -23,12 +23,16 @@ const ProductPage = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 
+//Relocate
   async function updateProduct(id) {
     const { data, status: responseStatus } = await axios.get(
       `${url}/products/id/${id}`
     );
     setProduct(data);
   }
+
+  //
+  
   useEffect(() => {
     updateProduct(productID);
     const validat = setTimeout(() => {

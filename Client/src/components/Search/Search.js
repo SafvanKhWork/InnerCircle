@@ -6,33 +6,6 @@ import { Scrollbars } from "react-custom-scrollbars";
 import ResultItem from "./ResultItem";
 import Users from "../../data";
 
-const users = [
-  { name: "safvan khalifa", username: "khsafvan" },
-  { name: "lukman", username: "khlukman" },
-  { name: "test1", username: "khtest" },
-  { name: "subhan", username: "khsubhan" },
-
-  { name: "test4", username: "4tester" },
-  { name: "safvan khalifa", username: "khsafvan" },
-  { name: "lukman", username: "khlukman" },
-  { name: "test1", username: "khtest" },
-  { name: "subhan", username: "khsubhan" },
-
-  { name: "test4", username: "4tester" },
-  { name: "safvan khalifa", username: "khsafvan" },
-  { name: "lukman", username: "khlukman" },
-  { name: "test1", username: "khtest" },
-  { name: "subhan", username: "khsubhan" },
-
-  { name: "test4", username: "4tester" },
-  { name: "safvan khalifa", username: "khsafvan" },
-  { name: "lukman", username: "khlukman" },
-  { name: "test1", username: "khtest" },
-  { name: "subhan", username: "khsubhan" },
-
-  { name: "test4", username: "4tester" },
-];
-
 const SearchBar = ({ setSearchQuery }) => (
   <form>
     <TextField

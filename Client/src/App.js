@@ -8,31 +8,7 @@ import Landing from "./Landing";
 import axios from "axios";
 import { url, token, setToken } from "./config";
 
-const refresh = async (setUser) => {
-  let tempUser;
-  if (token !== false) {
-    let responseStatus;
-    const config = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
-    const getGlobelUser = async () => {
-      const response = await axios.get(`${url}/user/me`, config);
-      responseStatus = response.status;
-      if (responseStatus != 200) {
-        setToken(false);
-        tempUser = false;
-      }
-      const { data } = response;
-      tempUser = data;
-    };
-    await getGlobelUser();
-    console.log(token, user, responseStatus);
-  }
-  (async () => {
-    const { data } = await axios.get(`${url}/products`);
-    //products = data;
-  })();
-};
+
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [inProgress, setInProgress] = useState(true);
