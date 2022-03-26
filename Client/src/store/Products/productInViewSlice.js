@@ -1,0 +1,55 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  images: [],
+  quantity: 0,
+  like: [],
+  _id: "",
+  name: "",
+  product_name: "",
+  model: "",
+  description: "",
+  price: 0,
+  catagory: "",
+  owner: "",
+  bids: [],
+  comments: [],
+  likes: 0,
+  alternatives: [],
+};
+
+const productInViewSlice = createSlice({
+  name: "productInView",
+  initialState,
+  reducers: {
+    refreshProduct: (state, { payload }) => {
+      state._id = payload._id;
+      state.name = payload.name;
+      state.product_name = payload.product_name;
+      state.model = payload.model;
+      state.description = payload.description;
+      state.price = payload.price;
+      state.catagory = payload.catagory;
+      state.owner = payload.owner;
+      state.bids = payload.bids;
+      state.comments = payload.comments;
+      state.images = payload.images;
+      state.quantity = payload.quantity;
+      state.like = payload.like;
+      state.likes = payload.likes;
+      state.alternatives = payload.alternatives;
+    },
+    refreshProductField: (state, { payload }) => {
+      Object.keys(payload).forEach((field) => {
+        state[field] = payload[field];
+      });
+    },
+    exitProduct: (state, action) => {
+      state = initialState
+    }
+  },
+});
+
+export const { refreshProductField, refreshProduct, exitProduct } =
+  productInViewSlice.actions;
+export default productInViewSlice.reducer;
