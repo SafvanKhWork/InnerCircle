@@ -132,7 +132,7 @@ router.post("/user/login", async (req, res) => {
 });
 
 //Logout User (Test: Passed )
-router.post("/users/logout/all", auth, async (req, res) => {
+router.post("/user/logout", auth, async (req, res) => {
   try {
     req.user.tokens = req.user.tokens.filter((token) => {
       return token.token !== req.token;
@@ -167,6 +167,11 @@ router.get("/me/current", auth, async (req, res) => {
 //Get User Profile (Test: Passed )
 router.get("/user/me", auth, async (req, res) => {
   res.send(req.user);
+});
+
+//Get User History (Test: Passed )
+router.get("/user/history", auth, async (req, res) => {
+  res.send(req.user.history);
 });
 
 //Update User Profile (Test: Passed )

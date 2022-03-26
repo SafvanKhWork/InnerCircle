@@ -81,7 +81,7 @@ router.get("/products", async (req, res) => {
 });
 
 //get most liked products (Test: Passed)
-router.get("/products/popular", async (req, res) => {
+router.get("/products/popular", auth, async (req, res) => {
   try {
     const product = await Product.find({}).sort({ likes: -1 });
     res.send(product);
@@ -162,13 +162,27 @@ router.get("/products/owner/:user", async (req, res) => {
 });
 
 //fetch Posts from friends (Work in Progress)
-router.get("/user/feed", auth, async (req, res) => {
-  req.user.circle.map(async (friend) => {
-    const products = await Product.find({}).populate("owner");
-    const prods = products.filter(
-      (el) => String(el.owner.username) === String(friend)
-    );
-  });
+router.get("/feed", auth, async (req, res) => {
+  try {
+    let feed=[];   
+    await req.user.circle.forEach(async (friend, i) => {
+      const products = await Product.find({}).populate("owner");
+      const posts = await products.filter(
+        (product) => product.owner.username === friend
+      );
+      feed.push(...posts)
+      if(
+req.user.circle.length === i+1
+        )
+      {
+         res.status(200).send(feed);
+      }
+    });
+   
+  } catch (error) {
+    console.log(error.message);
+    res.status(400).send(error.message);
+  }
 });
 
 //Get Recommanded product (Test: Passed)

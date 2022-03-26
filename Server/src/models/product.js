@@ -88,7 +88,7 @@ productSchema.pre("save", async function (next) {
 
   product.product_name = await product.product_name
     .split(" ")
-    .join("")
+    .join("_")
     .toLowerCase();
 
   next();
