@@ -15,10 +15,9 @@ const setProductsList = async (value) => {
 export { products, user, setGlobelUser, setProductsList };
 export default products;
 
-
 // FETCH REQUESTS
 
-const refresh = async (setUser) => {
+const refresh = async () => {
   let tempUser;
   if (token !== false) {
     let responseStatus;

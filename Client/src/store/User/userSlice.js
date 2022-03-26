@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { url, token, setToken } from "./config";
 
 const initialState = {
   _id: "",
@@ -21,7 +23,24 @@ const userSlice = createSlice({
     signIn: (state, { payload }) => {
       state.token = payload;
     },
-    refreshUser: (state, { payload }) => {
+    refreshUser: async (state) => {
+      let responseStatus, payload;
+      if (state.token !== false) {
+        const config = {
+          headers: { Authorization: `Bearer ${state.token}` },
+        };
+        const getGlobelUser = async () => {
+          const response = await axios.get(`${url}/user/me`, config);
+          responseStatus = response.status;
+          if (responseStatus != 200) {
+            setToken(false);
+          }
+          const { data } = response;
+          payload = data;
+        };
+        await getGlobelUser();
+      }
+
       state._id = payload._id;
       state.name = payload.name;
       state.email = payload.email;
