@@ -1,23 +1,30 @@
 import { useState, useEffect, Fragment } from "react";
 import { Box, CircularProgress } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  initUser,
+  getToken,
+  refreshUser,
+  getUser,
+} from "./store/User/userSlice";
 
 //
 import { user } from "./data";
 import AuthModel from "./components/Auth/AuthModel";
 import Landing from "./Landing";
 import axios from "axios";
-import { url, token, setToken } from "./config";
-
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [inProgress, setInProgress] = useState(true);
-  console.table(user);
-  useEffect(async () => {
+  const dispatch = useDispatch();
+  dispatch(initUser);
+  const token = useSelector(getToken);
+  const user = useSelector(getUser);
+  useEffect(() => {
+    dispatch(refreshUser);
     const validat = setTimeout(() => {
-      console.log(token !== false && user !== false);
       if (token !== false && user !== false) {
-        window.localStorage.setItem("inner-circle-user", JSON.stringify(user));
         setIsLoggedIn(true);
       } else {
         setIsLoggedIn(false);

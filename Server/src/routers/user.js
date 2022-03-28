@@ -195,33 +195,80 @@ router.patch("/users/me", auth, async (req, res) => {
   }
 });
 
+//Remove Friend (Test: Passed)
+router.delete("/unfriend/:uname", auth, async (req, res) => {
+  try {
+    const username = req.params.uname;
+    const present = req.user.circle.findIndex((friend) => friend == username);
+    if (present !== -1) {
+      req.user.circle.splice(present, 1);
+      req.user.save();
+    }
+    res.send(req.user.circle);
+  } catch (e) {
+    res.status(400).send(e);
+  }
+});
+
+//Reject Friend Request (Test: Passed)
+router.delete("/reject-friend-request/:uname", auth, async (req, res) => {
+  try {
+    const username = req.params.uname;
+    const user = await User.findOne({ username });
+    const present = req.user.friendRequest.findIndex(
+      (friend) => friend == username
+    );
+    if (present !== -1) {
+      req.user.friendRequest.splice(present, 1);
+      req.user.save();
+    }
+
+    const presentAt = user.sentFriendRequest.findIndex(
+      (friend) => friend == req.user.username
+    );
+    if (presentAt !== -1) {
+      user.sentFriendRequest.splice(present, 1);
+      user.save();
+    }
+    res.send(req.user.friendRequest);
+  } catch (error) {
+    res.status(404).send(error.message);
+  }
+});
+
 //Delete User (Test: Passed )
 router.delete("/users/me", auth, async (req, res) => {
   try {
-    // req.user.circle.forEach((username) => {
-    //   const user = User.findOne({ username });
-    //   const present = user.circle.includes(req.user.username);
-    //   if (present !== -1) {
-    //     user.circle.splice(present, 1);
-    //     user.save();
-    //   }
-    // });
-    // req.user.friendRequest.forEach((username) => {
-    //   const user = User.findOne({ username });
-    //   const present = user.friendRequest.includes(req.user.username);
-    //   if (present !== -1) {
-    //     user.friendRequest.splice(present, 1);
-    //     user.save();
-    //   }
-    // });
-    // req.user.sentfriendRequest.forEach((username) => {
-    //   const user = User.findOne({ username });
-    //   const present = user.sentfriendRequest.includes(req.user.username);
-    //   if (present !== -1) {
-    //     user.sentfriendRequest.splice(present, 1);
-    //     user.save();
-    //   }
-    // });
+    req.user.circle.forEach(async (username) => {
+      const user = await User.findOne({ username });
+      const present = user.circle.findIndex(
+        (friend) => friend == req.user.username
+      );
+      if (present !== -1) {
+        user.circle.splice(present, 1);
+        user.save();
+      }
+    });
+    req.user.friendRequest.forEach(async (username) => {
+      const user = await User.findOne({ username });
+      const present = user.friendRequest.findIndex(
+        (friend) => friend == req.user.username
+      );
+      if (present !== -1) {
+        user.friendRequest.splice(present, 1);
+        user.save();
+      }
+    });
+    req.user.sentFriendRequest.forEach(async (username) => {
+      const user = await User.findOne({ username });
+      const present = user.sentFriendRequest.findIndex(
+        (friend) => friend == req.user.username
+      );
+      if (present !== -1) {
+        user.sentFriendRequest.splice(present, 1);
+        user.save();
+      }
+    });
     await req.user.remove();
     res.send(req.user);
   } catch (e) {
@@ -292,19 +339,19 @@ router.patch("/accept-friend-request/:uname", auth, async (req, res) => {
       user.save();
     }
 
-    res.status(200).send();
+    res.status(200).send(req.user.circle);
   } catch (e) {
     res.status(500).send();
   }
 });
 
 //Get CIRCLE (Test: Passed)
-router.get("/circle", auth, async (req, res) => {
+router.get("/account/:field", auth, async (req, res) => {
   try {
+    const field = req.params.field;
     const user = req.user;
-    const circle = user.circle;
-
-    res.status(200).send(circle);
+    const value = user[field];
+    res.status(200).send(value);
   } catch (e) {
     res.status(500).send(e.message);
   }

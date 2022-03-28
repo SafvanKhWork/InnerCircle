@@ -1,4 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+import { url } from "./config";
 
 const initialState = {
   images: [],
@@ -39,14 +41,14 @@ const productInViewSlice = createSlice({
       state.likes = payload.likes;
       state.alternatives = payload.alternatives;
     },
-    refreshProductField: (state, { payload }) => {
+    updateProductField: (state, { payload }) => {
       Object.keys(payload).forEach((field) => {
         state[field] = payload[field];
       });
     },
     exitProduct: (state, action) => {
-      state = initialState
-    }
+      state = initialState;
+    },
   },
 });
 

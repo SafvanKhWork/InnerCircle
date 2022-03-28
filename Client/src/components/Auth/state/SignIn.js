@@ -21,37 +21,6 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../theme";
 import axios from "axios";
 
-async function RequestLogin(creds, setErrorMessage, login, loading) {
-  console.log(creds);
-  try {
-    const response = await axios.post(`${url}/user/login`, creds);
-    const { data } = response;
-    if (data) {
-      window.localStorage.setItem("inner-circle-user", JSON.stringify(data));
-      window.localStorage.setItem(
-        "inner-circle-token",
-        JSON.stringify(data.token)
-      );
-      const validat = setTimeout(() => {
-        loading(false);
-        login(true);
-        return () => {
-          clearTimeout(validat);
-        };
-      }, 1000);
-    }
-  } catch (e) {
-    console.log(e.message);
-    const validat = setTimeout(() => {
-      loading(false);
-      return () => {
-        clearTimeout(validat);
-      };
-    }, 500);
-    setErrorMessage(`Provided Email Address or Password is Invalid`);
-  }
-}
-
 export default function SignIn(props) {
   let temail;
   const { isLoggedIn, setIsLoggedIn } = props.status;
@@ -83,7 +52,7 @@ export default function SignIn(props) {
     if (validEmail && validPassword) {
       setInProgress(true);
       const credentials = { email, password };
-      RequestLogin(credentials, setErrorMessage, setIsLoggedIn, setInProgress);
+      //      RequestLogin(credentials, setErrorMessage, setIsLoggedIn, setInProgress); [Dispatch signIn]
     }
     temail = email;
     setPassword("");

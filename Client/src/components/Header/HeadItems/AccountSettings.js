@@ -37,13 +37,6 @@ const AccountSettings = (props) => {
   const anchorRef = React.useRef(null);
   let responseStatus;
 
-  const logout = async () => {
-    const logout1 = await axios.post(`${url}/users/logout`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    console.log(logout1.status);
-  };
-
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -122,11 +115,6 @@ const AccountSettings = (props) => {
                   <MenuItem
                     key={"logout"}
                     onClick={async () => {
-                      window.localStorage.setItem(
-                        "inner-circle-user",
-                        JSON.stringify({})
-                      );
-                      await logout();
                       props.status.setIsLoggedIn(false);
                     }}
                   >

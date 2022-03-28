@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Stack, Grid, Button, TextField } from "@mui/material";
 import { Scrollbars } from "react-custom-scrollbars";
+import { useSelector } from "react-redux";
+import { getUser } from "../../store/User/userSlice";
 
 //
 import ResultItem from "./ResultItem";
-import Users from "../../data";
 
 const SearchBar = ({ setSearchQuery }) => (
   <form>
@@ -43,6 +44,8 @@ const finder = (isubstring, data) => {
 };
 
 export default function SearchBox(props) {
+  const tempUser = useSelector(getUser);
+  const users = tempUser.circle;
   const [searchQuery, setSearchQuery] = useState("");
 
   let matches = finder(searchQuery, users);
