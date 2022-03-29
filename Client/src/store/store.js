@@ -1,16 +1,20 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
 import userReducer from "./User/userSlice";
-// import productInViewReducer from "./Products/productInViewSlice";
+import productInViewReducer from "./Products/productInViewSlice";
 import productListReducer from "./Products/productListSlice";
-// import userInViewReducer from "./User/userInViewSlice";
+import userInViewReducer from "./User/userInViewSlice";
 
 const store = configureStore({
   reducer: {
     user: userReducer,
-    // userInView: userInViewReducer,
+    userInView: userInViewReducer,
     products: productListReducer,
-    // productInView: productInViewReducer,
+    productInView: productInViewReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });
 
 export default store;

@@ -1,40 +1,45 @@
 import { useState, useEffect, Fragment } from "react";
 import { Box, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  initUser,
-  getToken,
-  refreshUser,
-  getUser,
-} from "./store/User/userSlice";
+import { initUser, getToken, refreshUser } from "./store/User/userSlice";
 
 //
-import { user } from "./data";
 import AuthModel from "./components/Auth/AuthModel";
 import Landing from "./Landing";
-import axios from "axios";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [inProgress, setInProgress] = useState(true);
+  const [user, setUser] = useState(undefined);
   const dispatch = useDispatch();
-  dispatch(initUser);
-  const token = useSelector(getToken);
-  const user = useSelector(getUser);
-  useEffect(() => {
-    dispatch(refreshUser);
-    const validat = setTimeout(() => {
-      if (token !== false && user !== false) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-      setInProgress(false);
-      return () => {
-        clearTimeout(validat);
-      };
-    }, 2000);
+  let promisedUser = useSelector((state) => state.user);
+  const token = useSelector((state) => state.user.token);
+
+  dispatch(refreshUser);
+  setUser(promisedUser);
+  console.log(user);
+
+  useEffect(async () => {
+    if (token) {
+      const validat = setTimeout(() => {
+        console.log(token && user._id !== "");
+        if (user._id !== "") {
+          setIsLoggedIn(true);
+        } else {
+          setIsLoggedIn(false);
+        }
+        if (isLoggedIn || !token || true) {
+          setInProgress(false);
+        }
+        return () => {
+          clearTimeout(validat);
+        };
+      }, 1000);
+    }
   }, []);
+  if (!inProgress) {
+    console.log(user);
+  }
   const status = {
     isLoggedIn,
     setIsLoggedIn,

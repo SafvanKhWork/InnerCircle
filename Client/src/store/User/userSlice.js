@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { url } from "../../config";
 
+//Add createAsyncThunks
+
 const initialState = {
   _id: "",
   name: "",
@@ -13,7 +15,7 @@ const initialState = {
   circle: [],
   history: [],
   recommandation: [],
-  token: "",
+  token: window.localStorage.getItem("inner-circle-token").split('"')[1] || "",
 };
 
 let authHeader;
@@ -24,17 +26,16 @@ const userSlice = createSlice({
   reducers: {
     initUser: async (state, { payload }) => {
       try {
-        const token = JSON.parse(
-          window.localStorage.getItem("inner-circle-token")
-        );
-        state.token = token ? token : "";
+        state.token = payload ? payload : "";
       } catch (error) {
         console.log(error);
       }
     },
     signIn: async (state, { payload }) => {
-      const { credentials, setErrorMessage, login, loading } = payload;
+      const { credentials, setErrorMessage, setIsLoggedIn, setInProgress } =
+        payload;
       try {
+        setInProgress(true);
         const response = await axios.post(`${url}/user/login`, credentials);
         const { data } = response;
         if (data) {
@@ -43,8 +44,8 @@ const userSlice = createSlice({
             JSON.stringify(data.token)
           );
           const validat = setTimeout(() => {
-            loading(false);
-            login(true);
+            setInProgress(false);
+            setIsLoggedIn(true);
             return () => {
               clearTimeout(validat);
             };
@@ -53,7 +54,7 @@ const userSlice = createSlice({
         state.token = data.token;
       } catch (error) {
         const validat = setTimeout(() => {
-          loading(false);
+          setInProgress(false);
           return () => {
             clearTimeout(validat);
           };
@@ -64,22 +65,20 @@ const userSlice = createSlice({
     refreshUser: async (state) => {
       //Always runs at init
       try {
-        let responseStatus, account;
-        if (state.token) {
-          authHeader = {
-            headers: { Authorization: `Bearer ${state.token}` },
-          };
-          const getGlobelUser = async () => {
-            const response = await axios.get(`${url}/user/me`, authHeader);
-            responseStatus = response.status;
-            if (responseStatus != 200) {
-              state.token = "";
-            }
-            const { data } = response;
-            account = data ? data : state;
-          };
-          await getGlobelUser();
-        }
+        let responseStatus;
+        authHeader = {
+          headers: { Authorization: `Bearer ${state.token}` },
+        };
+        const account = await (async () => {
+          const response = await axios.get(`${url}/user/me`, authHeader);
+          responseStatus = response.status;
+          if (responseStatus != 200) {
+            state.token = "";
+          }
+          const { data } = response;
+          return data;
+        })();
+        // state = { ...state, ...account };
         state._id = account._id;
         state.name = account.name;
         state.email = account.email;
@@ -185,6 +184,6 @@ export const {
   updateAccountDetail,
   logout,
 } = userSlice.actions;
-export const getUser = (state) => state;
-export const getToken = (state) => state.token;
+export const getUser = (state) => state.user;
+export const getToken = (state) => state.user.token;
 export default userSlice.reducer;

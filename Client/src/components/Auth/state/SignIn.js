@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, useEffect, Fragment } from "react";
 import { url } from "../../../config";
 import validator from "validator";
 import {
@@ -14,49 +14,63 @@ import {
   Typography,
   Container,
   Grid,
+  Alert,
   CircularProgress,
   Paper,
 } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../theme";
+import { signIn } from "../../../store/User/userSlice";
 import axios from "axios";
 
-export default function SignIn(props) {
+const SignIn = (props) => {
+  const dispatch = useDispatch();
   let temail;
   const { isLoggedIn, setIsLoggedIn } = props.status;
-  const [inProgress, setInProgress] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState(undefined);
-  const [email, setEmail] = React.useState(temail ?? "");
-  const [password, setPassword] = React.useState("");
+  const [inProgress, setInProgress] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(undefined);
+  const [email, setEmail] = useState(temail || "");
+  const [password, setPassword] = useState("");
 
-  const [validEmail, setValidEmail] = React.useState(true);
-  const [validPassword, setValidPassword] = React.useState(true);
-  const [strongPassword, setStrongPassword] = React.useState(true);
+  const [validEmail, setValidEmail] = useState(true);
+  const [validPassword, setValidPassword] = useState(true);
+  const [strongPassword, setStrongPassword] = useState(true);
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (email.trim() === "" || password.trim() === "") {
-      let component = email.trim() === "" ? "Email" : "";
-      component = password.trim() === "" ? "Password" : component;
-      component =
-        password.trim() === "" && email === "" ? "Email & Password" : component;
-      setErrorMessage(`Please Enter ${component}`);
-    } else if (!validEmail || !validPassword) {
-      let component = !validEmail ? "Email" : "";
-      component = !validPassword ? "Password" : component;
-      component =
-        !validEmail && !validPassword ? "Email & Password" : component;
-      setErrorMessage(`Please Enter Valid ${component}`);
+    try {
+      event.preventDefault();
+      if (email.trim() === "" || password.trim() === "") {
+        let component = email.trim() === "" ? "Email" : "";
+        component = password.trim() === "" ? "Password" : component;
+        component =
+          password.trim() === "" && email === ""
+            ? "Email & Password"
+            : component;
+        setErrorMessage(`Please Enter ${component}`);
+      } else if (!validEmail || !validPassword) {
+        let component = !validEmail ? "Email" : "";
+        component = !validPassword ? "Password" : component;
+        component =
+          !validEmail && !validPassword ? "Email & Password" : component;
+        setErrorMessage(`Please Enter Valid ${component}`);
+      } else if (validEmail && validPassword) {
+        const credentials = { email, password };
+        dispatch(
+          signIn({
+            credentials,
+            setErrorMessage,
+            setIsLoggedIn,
+            setInProgress,
+          })
+        );
+      }
+      temail = email;
+      setPassword("");
+      setValidPassword(false);
+    } catch (error) {
+      console.log(error);
     }
-    if (validEmail && validPassword) {
-      setInProgress(true);
-      const credentials = { email, password };
-      //      RequestLogin(credentials, setErrorMessage, setIsLoggedIn, setInProgress); [Dispatch signIn]
-    }
-    temail = email;
-    setPassword("");
-    setValidPassword(false);
   };
 
   return (
@@ -90,15 +104,13 @@ export default function SignIn(props) {
             ""
           )}
           {!inProgress ? (
-            <React.Fragment>
+            <Fragment>
               {" "}
               <Typography component="h1" variant="h5">
                 SignIn
               </Typography>
               {errorMessage ? (
-                <Box m={1} color="red">
-                  <Typography variant="caption">{errorMessage}</Typography>
-                </Box>
+                <Alert severity="error">{errorMessage}</Alert>
               ) : (
                 ""
               )}
@@ -147,7 +159,6 @@ export default function SignIn(props) {
                   label="Password"
                   type="password"
                   id="password"
-                  autoComplete="current-password"
                 />
                 <Grid container>
                   <Grid item xs>
@@ -186,7 +197,7 @@ export default function SignIn(props) {
                   </Button>
                 </Stack>
               </Box>
-            </React.Fragment>
+            </Fragment>
           ) : (
             ""
           )}
@@ -194,4 +205,6 @@ export default function SignIn(props) {
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default SignIn;

@@ -20,7 +20,12 @@ export default function BasicModal(props) {
   const status = props.status;
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    if (!status.isLoggedIn) {
+      return;
+    }
+    setOpen(false);
+  };
 
   return (
     <div>
