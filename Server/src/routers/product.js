@@ -1,20 +1,22 @@
 const express = require("express");
 const router = new express.Router();
+const path = require("path");
 const { ObjectID } = require("mongodb");
 const multer = require("multer");
 const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
+const uploadDestination = path.join(__dirname + "/uploads/");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "./uploads/");
+    cb(null, uploadDestination);
   },
   filename: function (req, file, cb) {
     cb(null, new Date().toISOString() + file.originalname);
   },
 });
-
+console.log(uploadDestination);
 const fileFilter = (req, file, cb) => {
   cb(null, file.mimetype === "image/jpeg" || file.mimetype === "image/png");
 };
@@ -73,7 +75,7 @@ router.post("/product/new", auth, upload.single("image"), async (req, res) => {
 //get all products (Test: Passed)
 router.get("/products", async (req, res) => {
   try {
-    const product = await Product.find({});
+    const product = await Product.find({}).populate("owner");
     res.send(product);
   } catch (e) {
     res.status(500).send();
@@ -205,7 +207,7 @@ router.get("/recommanded", auth, async (req, res) => {
 router.get("/products/model/:model", async (req, res) => {
   try {
     const model = req.params.model;
-    const product = await Product.find({ model });
+    const product = await Product.find({ model }).populate("owner");
     res.send(product);
   } catch (e) {
     res.status(500).send();
@@ -217,7 +219,7 @@ router.get("/products/id/:id", async (req, res) => {
   const _id = req.params.id;
 
   try {
-    const product = await Product.findOne({ _id });
+    const product = await Product.findOne({ _id }).populate("owner");
 
     if (!product) {
       return res.status(404).send();
@@ -234,7 +236,7 @@ router.get("/products/:product", async (req, res) => {
   const product_name = req.params.product;
 
   try {
-    const product = await Product.findOne({ product_name });
+    const product = await Product.findOne({ product_name }).populate("owner");
 
     if (!product) {
       return res.status(404).send();

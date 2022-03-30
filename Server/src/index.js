@@ -25,7 +25,7 @@ app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
 app.use(cors());
-app.use("/uploads", express.static("uploads"));
+app.use("/uploads", express.static("./routers/uploads"));
 app.use(express.json());
 app.use(userRouter);
 app.use(productRouter);
