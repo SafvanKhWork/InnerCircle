@@ -8,14 +8,19 @@ import Profile from "./components/User/Profile";
 import Post from "./components/Product/NewPost";
 import Product from "./components/Product/Views/ProductPage";
 import axios from "axios";
-import { url, token } from "./config";
-let products;
+import { url } from "./config";
+import { useDispatch, useSelector } from "react-redux";
+import { refreshProductLists } from "./store/Products/productListSlice";
 
 const Landing = (props) => {
+  const products = useSelector((state) => state.products.discover);
+  const dispatch = useDispatch();
   useEffect(async () => {
     await (async () => {
-      const { data } = await axios.get(`${url}/products`);
-      products = data;
+      const response = await axios.get(`${url}/products`);
+      if (response.data) {
+        dispatch(refreshProductLists(response.data));
+      }
     })();
   }, []);
   return (

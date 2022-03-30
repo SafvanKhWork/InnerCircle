@@ -15,24 +15,8 @@ const productListSlice = createSlice({
   name: "productList",
   initialState,
   reducers: {
-    refreshProductLists: async (state, { payload }) => {
-      //Always runs at init
-      try {
-        authHeader = {
-          headers: {
-            Authorization: `Bearer ${JSON.parse(
-              window.localStorage.getItem("inner-circle-token")
-            )}`,
-          },
-        };
-        const { data } = await axios.get(
-          `${url}/${payload ? "products/" + payload : "products"}`,
-          authHeader
-        );
-        state.discover = data ? data : state.discover;
-      } catch (error) {
-        console.log(error.message);
-      }
+    refreshProductLists: (state, { payload }) => {
+      state.discover = [...payload];
     },
     refreshCatagory: async (state, { payload }) => {
       try {

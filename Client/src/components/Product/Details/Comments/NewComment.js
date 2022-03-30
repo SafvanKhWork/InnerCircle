@@ -1,12 +1,14 @@
 import { Box, Stack, Button, TextField } from "@mui/material";
 import axios from "axios";
 import { useState, Fragment } from "react";
+import { useSelector } from "react-redux";
 
 //
 
-import { url, token } from "../../../../config";
+import { url } from "../../../../config";
+import { getToken, getUser } from "../../../../store/User/userSlice";
 
-const addComment = async (msg, id) => {
+const addComment = async (msg, id, token) => {
   const comments = await axios.patch(
     `${url}/comment/${id}`,
     {
@@ -19,6 +21,7 @@ const addComment = async (msg, id) => {
 };
 
 const NewComment = (props) => {
+  const token = useSelector(getToken);
   const [comment, setComment] = useState("");
   const { product } = props;
   return (
@@ -39,7 +42,7 @@ const NewComment = (props) => {
         />
         <Button
           onClick={async (e) => {
-            await addComment(comment, product._id);
+            await addComment(comment, product._id, token);
             setComment("");
             props.update();
           }}

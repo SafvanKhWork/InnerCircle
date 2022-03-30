@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Box, Stack, TextField, MenuItem, Button } from "@mui/material";
 import axios from "axios";
-import { url, token } from "../../../../config";
+import { url } from "../../../../config";
+import { useSelector } from "react-redux";
+import { getToken, getUser } from "../../../../store/User/userSlice";
 
 const currencies = [
   {
@@ -23,7 +25,7 @@ const currencies = [
   },
 ];
 
-const updateBid = async (amount, id) => {
+const updateBid = async (amount, id, token) => {
   const bids = await axios.patch(
     `${url}/bid/${id}`,
     {
@@ -36,6 +38,7 @@ const updateBid = async (amount, id) => {
 };
 
 const NewBid = (props) => {
+  const token = useSelector(getToken);
   const [currency, setCurrency] = useState("EUR");
   const [bid, setBid] = useState(undefined);
 
@@ -91,8 +94,8 @@ const NewBid = (props) => {
         </item>
         <item>
           <Button
-            onClick={async (e) => {
-              await updateBid(bid, props.product._id);
+            onClick={async (event) => {
+              await updateBid(bid, props.product._id, token);
               setBid("");
               props.update();
             }}

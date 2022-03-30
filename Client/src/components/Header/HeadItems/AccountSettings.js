@@ -24,19 +24,20 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { user } from "../../../data";
-import { url, token } from "../../../config";
+import { useSelector, useDispatch } from "react-redux";
+import { getUser } from "../../../store/User/userSlice";
+import { url } from "../../../config";
 import { Navigate } from "react-router-dom";
+import { getToken, logout } from "../../../store/User/userSlice";
 
 //
 
 const AccountSettings = (props) => {
+  const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const drawerWidth = 240;
-  const [user, setUser] = React.useState();
   const anchorRef = React.useRef(null);
-  let responseStatus;
-
+  const user = useSelector(getUser);
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -114,8 +115,9 @@ const AccountSettings = (props) => {
                   </MenuItem>
                   <MenuItem
                     key={"logout"}
-                    onClick={async () => {
+                    onClick={() => {
                       props.status.setIsLoggedIn(false);
+                      dispatch(logout());
                     }}
                   >
                     Logout

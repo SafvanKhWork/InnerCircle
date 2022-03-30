@@ -18,13 +18,13 @@ import {
   IconButton,
   PagesOutlined,
 } from "@mui/material";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
-
-import products from "../../../../data";
+import { useSelector } from "react-redux";
 import Products from "../../Products";
 
 const Alternatives = (props) => {
+  const products = useSelector((state) => state.products.discover);
   return (
     <Fragment>
       <Paper elevation={4}>

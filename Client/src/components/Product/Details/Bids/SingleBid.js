@@ -9,18 +9,18 @@ import {
 import { green, red } from "@mui/material/colors";
 import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
-
+import { getToken, getUser } from "../../../../store/User/userSlice";
 
 //
 
-
 import Image from "../../../../img/img.jpg";
-import { url, token } from "../../../../config";
+import { url } from "../../../../config";
+import { useSelector } from "react-redux";
 
 const Bid = (props) => {
   const [opt, setOpt] = useState(false);
   const [user, setUser] = useState(false);
-
+  const token = useSelector(getToken);
   useEffect(() => {
     async function getUser(id) {
       const { data, status: responseStatus } = await axios.get(

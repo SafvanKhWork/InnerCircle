@@ -9,19 +9,20 @@ import {
   Stack,
 } from "@mui/material";
 import { Scrollbars } from "react-custom-scrollbars";
-import { Navigate } from "react-router-dom";
+
 //
 
-import { user } from "../../../../data";
 import Bids from "../../Details/Bids/Bids";
 import NewBid from "../../Details/Bids/NewBid";
 import Search from "../../../Search/Search";
 import Comments from "../../Details/Comments/Comments";
+import { useSelector } from "react-redux";
+import { getUser } from "../../../../store/User/userSlice";
 
 const SideBox = (props) => {
   const product = props.product;
   const bids = product.bids;
-
+  const user = useSelector(getUser);
   const { recc, comm, expandedBids } = props.status;
   return (
     <Paper elevation={4}>

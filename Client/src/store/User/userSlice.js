@@ -26,7 +26,7 @@ const userSlice = createSlice({
   reducers: {
     initUser: async (state, { payload }) => {
       try {
-        state.token = payload ? payload : "";
+        state.token = payload;
       } catch (error) {
         console.log(error);
       }
@@ -62,33 +62,33 @@ const userSlice = createSlice({
         setErrorMessage(`Provided Email Address or Password is Invalid`);
       }
     },
-    refreshUser: async (state) => {
+    refreshUser: (state, { payload }) => {
       //Always runs at init
       try {
-        let responseStatus;
-        authHeader = {
-          headers: { Authorization: `Bearer ${state.token}` },
-        };
-        const account = await (async () => {
-          const response = await axios.get(`${url}/user/me`, authHeader);
-          responseStatus = response.status;
-          if (responseStatus != 200) {
-            state.token = "";
-          }
-          const { data } = response;
-          return data;
-        })();
+        // let responseStatus;
+        // authHeader = {
+        //   headers: { Authorization: `Bearer ${state.token}` },
+        // };
+        // const account = await (async () => {
+        //   const response = await axios.get(`${url}/user/me`, authHeader);
+        //   responseStatus = response.status;
+        //   if (responseStatus != 200) {
+        //     state.token = "";
+        //   }
+        //   const { data } = response;
+        //   return data;
+        // })();
         // state = { ...state, ...account };
-        state._id = account._id;
-        state.name = account.name;
-        state.email = account.email;
-        state.username = account.username;
-        state.avatar = account.avatar;
-        state.friendRequest = account.friendRequest;
-        state.sentFriendRequest = account.sentFriendRequest;
-        state.circle = account.circle;
-        state.history = account.history;
-        state.recommandation = account.recommandation;
+        state._id = payload._id;
+        state.name = payload.name;
+        state.email = payload.email;
+        state.username = payload.username;
+        state.avatar = payload.avatar;
+        state.friendRequest = payload.friendRequest;
+        state.sentFriendRequest = payload.sentFriendRequest;
+        state.circle = payload.circle;
+        state.history = payload.history;
+        state.recommandation = payload.recommandation;
 
         // dispatch to set History & Recommandation
       } catch (error) {
@@ -162,12 +162,17 @@ const userSlice = createSlice({
       }
     },
     logout: async (state, { payload }) => {
-      const { setIsLoggedIn } = payload;
       try {
-        await axios.post(`${url}/user/logout`, authHeader);
-        window.localStorage.setItem("inner-circle-user", JSON.stringify({}));
-        state = initialState;
-      } catch (error) {}
+        window.localStorage.setItem("inner-circle-token", "");
+        if (state.token !== "") {
+          console.log(state.token);
+          await axios.post(`${url}/user/logout`, {
+            headers: { Authorization: `Bearer ${state.token}` },
+          });
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
     },
   },
 });

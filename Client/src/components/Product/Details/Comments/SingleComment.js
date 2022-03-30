@@ -14,12 +14,15 @@ import {
 } from "@mui/material";
 import { green, red } from "@mui/material/colors";
 import axios from "axios";
-import { url, token } from "../../../../config";
+import { url } from "../../../../config";
 import { Send, ArrowForward, ArrowBack } from "@mui/icons-material";
 import { useState, useEffect, Fragment } from "react";
 import { Scrollbars } from "react-custom-scrollbars";
+import { useSelector } from "react-redux";
+import { getToken } from "../../../../store/User/userSlice";
 
 const Comment = (props) => {
+  const token = useSelector(getToken);
   const i = props.key;
   const comment = props.comment;
   const [user, setUser] = useState({});

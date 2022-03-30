@@ -21,10 +21,9 @@ import { Navigate } from "react-router-dom";
 //
 import Products from "../Product/Products";
 import theme from "../../theme";
-
-import { user } from "../../data";
-import data from "../../data";
 import History from "./History";
+import { useSelector } from "react-redux";
+import { getUser } from "../../store/User/userSlice";
 
 const active = {
   color: "#fff",
@@ -34,6 +33,8 @@ const active = {
 const inactive = { color: "#4db6ac" };
 
 const Profile = (props) => {
+  const user = useSelector(getUser);
+  const products = useSelector((state) => state.products.discover);
   const [width, setWidth] = useState(window.innerWidth);
   const [rug, setRug] = useState(false);
   const [value, setValue] = useState("1");
@@ -133,7 +134,7 @@ const Profile = (props) => {
             autoHideDuration={1000}
           >
             <Box px={2} py={1}>
-              <Products products={data} />
+              <Products products={products} />
             </Box>
           </Scrollbars>
         </Grid>

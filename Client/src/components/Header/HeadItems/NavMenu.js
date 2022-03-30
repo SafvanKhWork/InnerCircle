@@ -9,16 +9,18 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchBar from "../../Search/UniversalSearch";
+import { useSelector } from "react-redux";
 
 const drawerWidth = 240;
 
 const NavMenu = (props) => {
-  const { pages, catagory } = props;
+  const { pages } = props;
   const [search, setSearch] = React.useState(false);
   const [menu, setMenu] = React.useState(pages);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [results, setResults] = React.useState([]);
+  const catagory = [];
 
   const changeResult = (value) => {
     if (search) {
