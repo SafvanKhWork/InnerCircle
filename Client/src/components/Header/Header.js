@@ -19,6 +19,7 @@ import theme from "../../theme";
 import NavMenu from "./HeadItems/NavMenu";
 import AccountSettings from "./HeadItems/AccountSettings";
 import { Link } from "react-router-dom";
+import FriendRequests from "./HeadItems/FriendRequests";
 
 const ResponsiveAppBar = (props) => {
   const pages = ["Discover", "Catagories", "Recommended"];
@@ -73,7 +74,7 @@ const ResponsiveAppBar = (props) => {
                 InnerCircle
               </Link>
             </Typography>
-
+            <FriendRequests />
             <AccountSettings status={props.status} />
           </Toolbar>
         </Container>

@@ -21,18 +21,20 @@ import {
   Paper,
   Menu,
   MenuList,
+  Badge,
 } from "@mui/material";
+import GroupIcon from "@mui/icons-material/Group";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { getUser } from "../../../store/User/userSlice";
 import { url } from "../../../config";
-import { Navigate } from "react-router-dom";
 import { getToken, logout } from "../../../store/User/userSlice";
+import SingleFriendRequest from "./SingleFriendRequest";
 
 //
 
-const AccountSettings = (props) => {
+const FriendRequests = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
   const drawerWidth = 240;
@@ -68,7 +70,7 @@ const AccountSettings = (props) => {
 
   return (
     <Box sx={{ flexGrow: 0 }}>
-      <Tooltip title={user.username}>
+      <Tooltip title={"friendRequests"}>
         <IconButton
           ref={anchorRef}
           id="composition-button"
@@ -77,7 +79,14 @@ const AccountSettings = (props) => {
           aria-haspopup="true"
           onClick={handleToggle}
         >
-          <Avatar src={user.avatar} alt={user.name} />
+          <Badge
+            color="error"
+            variant="standard"
+            invisible={user.friendRequest?.length <= 0}
+            badgeContent={user.friendRequest?.length}
+          >
+            <GroupIcon sx={{ color: "white" }} />
+          </Badge>
         </IconButton>
       </Tooltip>
 
@@ -105,23 +114,11 @@ const AccountSettings = (props) => {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  <MenuItem key={"profile"} onClick={handleClose}>
-                    <Link
-                      style={{ color: "inherit", textDecoration: "none" }}
-                      to="/profile"
-                    >
-                      Profile
-                    </Link>
-                  </MenuItem>
-                  <MenuItem
-                    key={"logout"}
-                    onClick={() => {
-                      props.status.setIsLoggedIn(false);
-                      dispatch(logout());
-                    }}
-                  >
-                    Logout
-                  </MenuItem>
+                  {user.friendRequest?.map((request, i) => {
+                    <MenuItem key={i + "r3q"} onClick={handleClose}>
+                      <SingleFriendRequest user={request} />
+                    </MenuItem>;
+                  })}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -132,4 +129,4 @@ const AccountSettings = (props) => {
   );
 };
 
-export default AccountSettings;
+export default FriendRequests;

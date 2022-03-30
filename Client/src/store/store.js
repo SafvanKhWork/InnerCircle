@@ -4,6 +4,7 @@ import productInViewReducer from "./Products/productInViewSlice";
 import productListReducer from "./Products/productListSlice";
 import userInViewReducer from "./User/userInViewSlice";
 import applicationStateReducer from "./ApplicationStates/applicationStateSlice";
+// import { composeWithDevTools } from "@redux-devtools/extension";
 
 const store = configureStore({
   reducer: {

@@ -31,7 +31,6 @@ const Landing = (props) => {
       <Box pt={12} m={1}>
         <Routes>
           <Route path="/" element={<Home products={products} />} />
-          {/* <Route path="/Auth" element={<AuthModel status={props.status} />} /> */}
           <Route path="/profile" element={<Profile />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/product/post" element={<Post />} />
