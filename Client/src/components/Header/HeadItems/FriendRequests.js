@@ -22,6 +22,7 @@ import {
   Menu,
   MenuList,
   Badge,
+  Alert,
 } from "@mui/material";
 import GroupIcon from "@mui/icons-material/Group";
 import { Link } from "react-router-dom";
@@ -107,20 +108,22 @@ const FriendRequests = (props) => {
             }}
           >
             <Paper>
-              <ClickAwayListener onClickAway={handleClose}>
+              {user.friendRequest.length <= 0 ? (
+                <Alert severity="info">No Friend Requests Found</Alert>
+              ) : (
                 <MenuList
                   autoFocusItem={open}
                   id="composition-menu"
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  {user.friendRequest?.map((request, i) => {
-                    <MenuItem key={i + "r3q"} onClick={handleClose}>
+                  {user.friendRequest?.map((request, i) => (
+                    <Box px={1} key={i + "request"}>
                       <SingleFriendRequest user={request} />
-                    </MenuItem>;
-                  })}
+                    </Box>
+                  ))}
                 </MenuList>
-              </ClickAwayListener>
+              )}
             </Paper>
           </Grow>
         )}

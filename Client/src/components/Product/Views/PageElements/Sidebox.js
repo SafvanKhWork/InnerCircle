@@ -37,18 +37,19 @@ const SideBox = (props) => {
           <Box pb={3} sx={{ width: "100%", bgcolor: "background.paper" }}>
             <Collapse in={!expandedBids && !comm && !recc}>
               <CardContent>
-                <Typography variant="h5" component="div">
-                  {product.name}
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                  {product.model}
-                </Typography>
                 <Scrollbars
-                  style={{ height: 200 }}
+                  style={{ height: 260 }}
                   autoHide
                   autoHideTimeout={0}
                   autoHideDuration={200}
                 >
+                  <Typography variant="h5" component="div">
+                    {product.name}
+                  </Typography>
+                  <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                    {product.model}
+                  </Typography>
+
                   <Typography
                     textAlign={"left"}
                     fontFamily={"sans-serif"}

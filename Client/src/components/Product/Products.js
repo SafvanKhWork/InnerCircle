@@ -21,7 +21,7 @@ const Products = (props) => {
   let s = props.s ? props.s : width < 700 ? 6 : width < 1150 ? 6 : 4;
   if (isLandscape && !props.infiScroll) {
     return (
-      <Grid container justifyContent="center" spacing={1}>
+      <Grid container justifyContent="start" spacing={1}>
         {products.map((product, i) => {
           return (
             <Grid key={product.product_name} item lg={s} xs={s}>
@@ -43,6 +43,7 @@ const Products = (props) => {
         {products.map((product, i) => {
           return (
             <ProductCard
+              key={product._id}
               index={i}
               status={status}
               isPotrait={!isLandscape}

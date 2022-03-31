@@ -28,7 +28,7 @@ const Comment = (props) => {
   const [user, setUser] = useState({});
   const [opt, setOpt] = useState(false);
 
-  useEffect(() => {
+  useEffect(async () => {
     async function getUser(id) {
       const { data, status: responseStatus } = await axios.get(
         `${url}/user/${id}`,
@@ -40,7 +40,6 @@ const Comment = (props) => {
     }
     getUser(comment.user);
   }, []);
-
   const firstPh =
     comment.value.length > 35
       ? comment.value.split(",")[0] + "..."
@@ -63,7 +62,7 @@ const Comment = (props) => {
           spacing={1}
           direction="row"
         >
-          <Avatar src={Image} sx={{ width: 34, height: 34 }} />
+          <Avatar src={user.avatar} sx={{ width: 34, height: 34 }} />
           <Stack>
             <Typography fontFamily={"sans-serif"} variant="title">
               {user.name}

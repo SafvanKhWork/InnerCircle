@@ -31,7 +31,7 @@ export default function ProductCard(props) {
       <Box sx={{ minWidth: 2 }}>
         <Paper elevation={4}>
           <Card variant="text">
-            <CardHead />
+            <CardHead product={product} />
 
             {props.isPotrait ? (
               <Fragment>

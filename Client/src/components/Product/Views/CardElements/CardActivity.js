@@ -14,7 +14,7 @@ const CardActivity = (props) => {
     <Stack direction={"column-reverse"}>
       <Collapse in={expandedBid} timeout="auto" unmountOnExit>
         <NewBid />
-        <Bids bids={product.bids} />
+        <Bids product={product} bids={product.bids} />
       </Collapse>
       <Collapse in={expandedRecc} timeout="auto" unmountOnExit>
         <Box justifyContent="center" p={1}>
@@ -23,7 +23,7 @@ const CardActivity = (props) => {
       </Collapse>
       <Collapse in={expandedComment} timeout="auto" unmountOnExit>
         <Box textAlign={"justify"}>
-          <Comments comments={product.comments} />
+          <Comments product={product} comments={product.comments} />
         </Box>
       </Collapse>
     </Stack>

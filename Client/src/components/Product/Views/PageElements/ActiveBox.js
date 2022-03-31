@@ -35,6 +35,7 @@ import Carousel from "react-material-ui-carousel";
 
 import Image from "../../../../img/img.jpg";
 import Vmag from "../../../../img/vimg.jpg";
+import CardHead from "../CardElements/CardHead";
 
 function Item(props) {
   return (
@@ -66,11 +67,7 @@ const ActiveBox = (props) => {
     <Paper elevation={4}>
       <Card>
         <Box minHeight={510} maxHeight={510}>
-          <CardHeader
-            avatar={<Avatar src={Image} aria-label="recipe" />}
-            title="Username"
-            subheader="Created At"
-          />
+          <CardHead product={props.product} />
 
           <Box maxHeight={388} minHeight={388}>
             <div
@@ -88,7 +85,7 @@ const ActiveBox = (props) => {
                 indicators={false}
               >
                 {images.map((img, i) => (
-                  <Item>{img}</Item>
+                  <Item key={img + "" + i}>{img}</Item>
                 ))}
               </Carousel>
             </div>

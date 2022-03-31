@@ -39,7 +39,10 @@ const Bid = (props) => {
   return (
     <div
       onClick={(event) => {
-        if (!event.target.className.includes("MuiButton-root")) {
+        if (
+          !event.target.className.includes("MuiButton-root") &&
+          props.isOwner
+        ) {
           setOpt(!opt);
         }
       }}
@@ -52,14 +55,14 @@ const Bid = (props) => {
             spacing={1}
             direction="row"
           >
-            <Avatar src={Image} sx={{ width: 34, height: 34 }} />
+            <Avatar src={user.avatar} sx={{ width: 34, height: 34 }} />
 
             <Stack>
               <Typography fontFamily={"sans-serif"} variant="title">
-                {user.name}
+                {user.name || "[Deleted User]"}
               </Typography>
               <Typography color="text.secondary" variant="body2">
-                {user.username}
+                {user.username || "[Deleted User]"}
               </Typography>
             </Stack>
           </Stack>

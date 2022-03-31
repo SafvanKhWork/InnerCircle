@@ -35,7 +35,6 @@ import { getToken, logout } from "../../../store/User/userSlice";
 const AccountSettings = (props) => {
   const dispatch = useDispatch();
   const [open, setOpen] = React.useState(false);
-  const drawerWidth = 240;
   const anchorRef = React.useRef(null);
   const user = useSelector(getUser);
   const handleToggle = () => {
@@ -111,6 +110,14 @@ const AccountSettings = (props) => {
                       to="/profile"
                     >
                       Profile
+                    </Link>
+                  </MenuItem>
+                  <MenuItem key={"profile"} onClick={handleClose}>
+                    <Link
+                      style={{ color: "inherit", textDecoration: "none" }}
+                      to="/product/post"
+                    >
+                      Add Post
                     </Link>
                   </MenuItem>
                   <MenuItem

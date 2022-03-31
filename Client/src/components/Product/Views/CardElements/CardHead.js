@@ -1,4 +1,6 @@
 import { useState, Fragment } from "react";
+import moment from "moment";
+import { format, formatDistance, formatRelative, subDays } from "date-fns";
 import {
   Grid,
   Box,
@@ -37,20 +39,17 @@ import { red, green, blue, yellow } from "@mui/material/colors";
 import Image from "../../../../img/img.jpg";
 
 const CardHead = (props) => {
+  const product = props.product;
   return (
     <CardHeader
-      avatar={
-        <Avatar sx={{ bgcolor: red[500] }} aria-label="recipe">
-          S
-        </Avatar>
+      avatar={<Avatar src={product.owner.avatar} aria-label="recipe" />}
+      title={`${product.owner.username}`}
+      subheader={
+        product.new ||
+        `${formatDistance(new Date(product.createdAt), new Date(), {
+          addSuffix: true,
+        })}`
       }
-      action={
-        <IconButton aria-label="settings">
-          <MoreVert />
-        </IconButton>
-      }
-      title="Username"
-      subheader="Created At"
     />
   );
 };

@@ -239,6 +239,11 @@ router.delete("/reject-friend-request/:uname", auth, async (req, res) => {
 //Delete User (Test: Passed )
 router.delete("/users/me", auth, async (req, res) => {
   try {
+    //Remove Posts
+    //Remove Bids
+    //Remove Comments
+
+    //Remove from Circle
     req.user.circle.forEach(async (username) => {
       const user = await User.findOne({ username });
       const present = user.circle.findIndex(
@@ -249,6 +254,8 @@ router.delete("/users/me", auth, async (req, res) => {
         user.save();
       }
     });
+
+    //Remove from friendRequest
     req.user.friendRequest.forEach(async (username) => {
       const user = await User.findOne({ username });
       const present = user.friendRequest.findIndex(
@@ -259,6 +266,8 @@ router.delete("/users/me", auth, async (req, res) => {
         user.save();
       }
     });
+
+    //Remove from sentFriendRequest
     req.user.sentFriendRequest.forEach(async (username) => {
       const user = await User.findOne({ username });
       const present = user.sentFriendRequest.findIndex(
@@ -319,7 +328,7 @@ router.patch("/accept-friend-request/:uname", auth, async (req, res) => {
   try {
     const user = await User.findOne({ username }); //find sender
 
-    if (!user) {
+    if (!user || !req.user.friendRequest.includes(username)) {
       return res.status(404).send();
     }
 

@@ -21,11 +21,13 @@ import { useState, Fragment } from "react";
 import { green, red } from "@mui/material/colors";
 
 import Bid from "./SingleBid";
+import { useSelector } from "react-redux";
+import { getToken, getUser } from "../../../../store/User/userSlice";
 
 let visitOn = false;
 const Bids = (props) => {
   const [page, setPage] = useState(0);
-
+  const account = useSelector(getUser);
   const size = props.size || 3;
   const setVisit = (value) => {
     visitOn = value;
@@ -72,7 +74,10 @@ const Bids = (props) => {
         {bids.map((bid) => {
           return (
             <Box key={bids._id} p={1}>
-              <Bid bid={bid} />
+              <Bid
+                bid={bid}
+                isOwner={account.username === props.product.owner.username}
+              />
             </Box>
           );
         })}
