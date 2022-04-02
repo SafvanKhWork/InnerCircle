@@ -34,13 +34,15 @@ import theme from "../../theme";
 import { useSelector } from "react-redux";
 import { getToken, getUser } from "../../store/User/userSlice";
 
-const addProduct = async (productInfo, token, setInProgress) => {
-  setInProgress(true);
-  const product = await axios.post(`${url}/product/new`, productInfo, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  console.log(product.data);
-  setInProgress(true);
+const addProduct = async (productInfo, token) => {
+  try {
+    const response = await axios.post(`${url}/product/new`, productInfo, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return true;
+  } catch (error) {
+    return false;
+  }
 };
 
 const NewPost = (props) => {
@@ -77,9 +79,10 @@ const NewPost = (props) => {
     }
     getUser();
   }, []);
+
   const productInfo = {
-    productTitle,
-    productName,
+    name: productTitle,
+    product_name: productName,
     model,
     description,
     price,
@@ -221,7 +224,23 @@ const NewPost = (props) => {
             <Box m={2}>
               <Button
                 onClick={async (event) => {
-                  addProduct(productInfo, token, setInProgress);
+                  try {
+                    setInProgress(true);
+                    const status = await addProduct(productInfo, token);
+                    if (status) {
+                      setInProgress("");
+                      setProductTitle("");
+                      setProductName("");
+                      setModel("");
+                      setDescription("");
+                      setPrice(0);
+                      setQuantity(0);
+                    }
+                    const fakeLoad = setTimeout(() => {
+                      setInProgress(false);
+                      return () => clearTimeout(fakeLoad);
+                    }, 200);
+                  } catch (error) {}
                 }}
                 fullWidth
                 variant="contained"

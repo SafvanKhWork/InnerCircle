@@ -1,2 +1,3 @@
 let url = "http://localhost:3000";
-export { url };
+let myUrl = "http://localhost:3001";
+export { url, myUrl };

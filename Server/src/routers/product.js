@@ -56,9 +56,8 @@ router.post("/product/new", auth, upload.single("image"), async (req, res) => {
   const product = new Product({
     ...req.body,
     owner: req.user._id,
-    images: [req.file.path],
+    images: [req.file?.path],
   });
-
   try {
     Catagory.exists({ name: req.body.name }, function (e) {
       if (e) {
@@ -66,8 +65,10 @@ router.post("/product/new", auth, upload.single("image"), async (req, res) => {
       }
     });
     await product.save();
+
     res.status(201).send(product);
   } catch (e) {
+    console.log(e.message);
     res.status(400).send(e);
   }
 });

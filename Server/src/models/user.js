@@ -180,7 +180,7 @@ userSchema.pre("save", async function (next) {
   if (user.isModified("password")) {
     user.password = await bcrypt.hash(user.password, 8);
   }
-  user.username = user.username.split(" ").join("").toLowerCase();
+  user.username = user.username.split(" ").join("");
 
   user.name = user.name.toLowerCase();
 

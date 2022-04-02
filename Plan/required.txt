@@ -1,0 +1,5 @@
+S3 Bucket
+Verify Email
+Controller Folder
+Interceptor (preRequest)
+Add Depandencies to useEffect(s)

@@ -102,7 +102,7 @@ router.post("/verify/code", auth, async (req, res) => {
 //Update Password (Test: Passed )
 router.patch("/user/passwd", auth, async (req, res) => {
   try {
-    console.log(req.body.password);
+    // console.log(req.body.password);
     const new_passwd = req.body.password;
     const user = ver_email
       ? await User.findOne({ email: ver_email })
@@ -210,32 +210,6 @@ router.delete("/unfriend/:uname", auth, async (req, res) => {
   }
 });
 
-//Reject Friend Request (Test: Passed)
-router.delete("/reject-friend-request/:uname", auth, async (req, res) => {
-  try {
-    const username = req.params.uname;
-    const user = await User.findOne({ username });
-    const present = req.user.friendRequest.findIndex(
-      (friend) => friend == username
-    );
-    if (present !== -1) {
-      req.user.friendRequest.splice(present, 1);
-      req.user.save();
-    }
-
-    const presentAt = user.sentFriendRequest.findIndex(
-      (friend) => friend == req.user.username
-    );
-    if (presentAt !== -1) {
-      user.sentFriendRequest.splice(present, 1);
-      user.save();
-    }
-    res.send(req.user.friendRequest);
-  } catch (error) {
-    res.status(404).send(error.message);
-  }
-});
-
 //Delete User (Test: Passed )
 router.delete("/users/me", auth, async (req, res) => {
   try {
@@ -306,7 +280,12 @@ router.post("/add-friend/:uname", auth, async (req, res) => {
 
   try {
     const user = await User.findOne({ username });
-    if (!user) {
+    if (
+      !user ||
+      user.username === req.user.username ||
+      req.user.circle.includes(user.username) ||
+      req.user.sentFriendRequest.includes(user.username)
+    ) {
       return res.status(404).send();
     }
     user.friendRequest.push(req.user.username);
@@ -328,7 +307,7 @@ router.patch("/accept-friend-request/:uname", auth, async (req, res) => {
   try {
     const user = await User.findOne({ username }); //find sender
 
-    if (!user || !req.user.friendRequest.includes(username)) {
+    if (!user) {
       return res.status(404).send();
     }
 
@@ -351,6 +330,36 @@ router.patch("/accept-friend-request/:uname", auth, async (req, res) => {
     res.status(200).send(req.user.circle);
   } catch (e) {
     res.status(500).send();
+  }
+});
+
+//Reject Friend Request (Test: Passed)
+router.delete("/reject-friend-request/:uname", auth, async (req, res) => {
+  try {
+    const username = req.params.uname;
+    const user = await User.findOne({ username });
+    const present = req.user.friendRequest.findIndex(
+      (friend) => friend == username
+    );
+    console.log(username);
+    if (present !== -1) {
+      req.user.friendRequest.splice(present, 1);
+      req.user.save();
+    }
+
+    if (user !== null) {
+      const presentAt = user.sentFriendRequest.findIndex(
+        (friend) => friend == req.user.username
+      );
+      if (presentAt !== -1) {
+        user.sentFriendRequest.splice(present, 1);
+        user.save();
+      }
+    }
+
+    res.send(req.user.friendRequest);
+  } catch (error) {
+    res.status(404).send(error.message);
   }
 });
 

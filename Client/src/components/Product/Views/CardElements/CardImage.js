@@ -35,7 +35,7 @@ import {
 import Carousel from "react-material-ui-carousel";
 import { styled } from "@mui/material/styles";
 import { red, green, blue, yellow } from "@mui/material/colors";
-
+import { myUrl } from "../../../../config";
 import Image from "../../../../img/img.jpg";
 import Vmag from "../../../../img/vimg.jpg";
 
@@ -53,7 +53,10 @@ function Item(props) {
 
 const CardImage = (props) => {
   const [isFocused, setIsFocused] = useState(false);
-
+  const productImages = props.images?.map((image) => {
+    const tempImage = `${myUrl}/` + image?.split("/").slice(-2).join("/");
+    console.log(tempImage);
+  });
   const images = [Image, Vmag, Image];
   return (
     <Box maxHeight={200} minHeight={200}>

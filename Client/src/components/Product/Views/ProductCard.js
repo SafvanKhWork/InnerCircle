@@ -54,7 +54,7 @@ export default function ProductCard(props) {
                 style={{ color: "inherit", textDecoration: "none" }}
                 to={`/product/${props.product._id}`}
               >
-                <CardImage />
+                <CardImage images={product.images} />
                 <CardInfo expandedDesc={expandedDesc} product={props.product} />
               </Link>
             )}

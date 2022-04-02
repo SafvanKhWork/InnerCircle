@@ -29,17 +29,12 @@ const finder = (isubstring, data) => {
   if (!substring) {
     return [];
   }
-
-  const matches = data.filter((obj) => {
-    if (
-      obj.name.split(" ").join("").toLowerCase().includes(substring) ||
-      obj.username.split(" ").join("").toLowerCase().includes(substring)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  });
+  let matches = data.filter((username) =>
+    username.split(" ").join("").toLowerCase().includes(substring)
+  );
+  if (substring === " ") {
+    matches = data;
+  }
   return matches;
 };
 

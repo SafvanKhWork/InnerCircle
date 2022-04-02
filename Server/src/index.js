@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 //
 
@@ -25,7 +26,15 @@ app.listen(port, () => {
   console.log("Server is up on port " + port);
 });
 app.use(cors());
-app.use("/uploads", express.static("./routers/uploads"));
+app.use(
+  "/uploads",
+  express.static(
+    path.join(
+      "/home/lcom/Basement/DemoProjects/InnerCircle/Server/src/routers",
+      "uploads"
+    )
+  )
+);
 app.use(express.json());
 app.use(userRouter);
 app.use(productRouter);

@@ -16,31 +16,44 @@ import { useSelector } from "react-redux";
 import { getToken } from "../../../store/User/userSlice";
 import { url } from "../../../config";
 
-const acceptRequest = async (uname, token) => {
-  await axios.patch(`${url}/accept-friend-request/${uname}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
-const rejectRequest = async (uname, token) => {
-  await axios.delete(`${url}/reject-friend-request/${uname}`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-};
+// const acceptRequest = async (uname, authHeader) => {
+//   console.log(authHeader);
+//   await axios.patch(`${url}/accept-friend-request/${uname}`, authHeader);
+// };
+// const rejectRequest = async (uname, authHeader) => {
+//   console.log(authHeader);
+//   await axios.delete(`${url}/reject-friend-request/${uname}`, authHeader);
+// };
 
 const SingleFriendRequest = (props) => {
-  console.log("entered");
-  const [user, setUser] = useState(true);
+  const [user, setUser] = useState("");
   const token = useSelector(getToken);
+  let authHeader = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const acceptRequest = async (uname, authHeader) => {
+    await axios.patch(
+      `${url}/accept-friend-request/${uname}`,
+      undefined,
+      authHeader
+    );
+  };
+  const rejectRequest = async (uname, authHeader) => {
+    await axios.delete(`${url}/reject-friend-request/${uname}`, authHeader);
+  };
   useEffect(async () => {
-    console.log(props);
     async function getUser(uname) {
-      const { data, status: responseStatus } = await axios.get(
-        `${url}/user/${uname}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      return data;
+      try {
+        const { data, status: responseStatus } = await axios.get(
+          `${url}/user/${uname}`,
+          authHeader
+        );
+        console.log(data);
+        return data;
+      } catch (error) {
+        const status = await rejectRequest(props.user, token);
+        console.log(error.message);
+      }
     }
     setUser(await getUser(props.user));
   }, []);
@@ -56,21 +69,23 @@ const SingleFriendRequest = (props) => {
       minWidth={350}
     >
       <Grid container justifyContent="center" alignItems="center">
-        <Grid item key={`${user.username}3`} pl={1} pr={1}>
-          {<Avatar src={user.avatar} sx={{ width: 34, height: 34 }} />}
+        <Grid item key={`${user?.username}3`} pl={1} pr={1}>
+          {<Avatar src={user?.avatar} sx={{ width: 34, height: 34 }} />}
         </Grid>
-        <Grid key={`${user.username}4`} item xs={true}>
+        <Grid key={`${user?.username}4`} item xs={true}>
           <Typography fontFamily={"sans-serif"} variant="title">
-            {user.name || "[Deleted User]"}
+            {user?.name || "[Deleted User]"}
           </Typography>
           <Typography color="text.secondary" variant="body2">
-            {user.username || "[Deleted User]"}
+            {user?.username || "[Deleted User]"}
           </Typography>
         </Grid>
       </Grid>
       <Stack direction={"row"}>
         <Button
-          onClick={async (event) => await acceptRequest(user.username, token)}
+          onClick={async (event) => {
+            await acceptRequest(user?.username, authHeader);
+          }}
           variant="text"
           sx={{ color: "green" }}
         >
@@ -78,7 +93,7 @@ const SingleFriendRequest = (props) => {
         </Button>
         <Button
           onClick={async (event) => {
-            await rejectRequest(user.username, token);
+            await rejectRequest(props.user, authHeader);
           }}
           variant="text"
           sx={{ color: "red" }}
