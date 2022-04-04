@@ -9,6 +9,7 @@ const initialState = {
   feed: [],
   recommandation: [],
   catagory: [],
+  catagories: [],
 };
 
 const productListSlice = createSlice({

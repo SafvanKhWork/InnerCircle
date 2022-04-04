@@ -32,6 +32,7 @@ import { getUser } from "../../../store/User/userSlice";
 import { url } from "../../../config";
 import { getToken, logout } from "../../../store/User/userSlice";
 import SingleFriendRequest from "./SingleFriendRequest";
+import Scrollbars from "react-custom-scrollbars";
 
 //
 
@@ -117,9 +118,21 @@ const FriendRequests = (props) => {
                   aria-labelledby="composition-button"
                   onKeyDown={handleListKeyDown}
                 >
-                  {user.friendRequest?.map((request, i) => (
+                  {user.friendRequest?.slice(-3).map((request, i) => (
                     <Box px={1} key={i + "request"}>
                       <SingleFriendRequest user={request} />
+                      {i !== 2 ? (
+                        <Divider />
+                      ) : user.friendRequest.length - 1 !== 2 ? (
+                        <React.Fragment>
+                          <Divider />
+                          <Button variant="contained" fullWidth>
+                            Veiw All Requests
+                          </Button>
+                        </React.Fragment>
+                      ) : (
+                        ""
+                      )}
                     </Box>
                   ))}
                 </MenuList>

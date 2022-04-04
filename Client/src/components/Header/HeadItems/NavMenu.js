@@ -6,22 +6,40 @@ import {
   Typography,
   Drawer,
   MenuItem,
+  Divider,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchBar from "../../Search/UniversalSearch";
 import { useSelector } from "react-redux";
+import axios from "axios";
+import { url } from "../../../config";
+import { getToken } from "../../../store/User/userSlice";
 
 const drawerWidth = 240;
 
 const NavMenu = (props) => {
+  const token = useSelector(getToken);
   const { pages } = props;
   const [search, setSearch] = React.useState(false);
   const [menu, setMenu] = React.useState(pages);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [results, setResults] = React.useState([]);
-  const catagory = [];
-
+  const [catagories, setCatagories] = React.useState([]);
+  React.useEffect(async () => {
+    async function getCatagories() {
+      const { data, status: responseStatus } = await axios.get(
+        `${url}/catagories`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      let catagories = data.map((catagory) => catagory.name);
+      console.log(catagories);
+      return catagories;
+    }
+    setCatagories(await getCatagories());
+  }, []);
   const changeResult = (value) => {
     if (search) {
       setResults(value);
@@ -29,6 +47,7 @@ const NavMenu = (props) => {
   };
 
   const handleOpenNavMenu = (event) => {
+    setMenu(pages);
     setSearch(false);
     setAnchorElNav(event.currentTarget);
   };
@@ -84,20 +103,31 @@ const NavMenu = (props) => {
               />
             </div>
           </Box>
-          {!search
-            ? menu.map((page, i) => (
-                <MenuItem
-                  key={"menuitem" + i}
-                  onClick={() => {
-                    setMenu(catagory);
-                  }}
-                  sx={{}}
-                >
-                  <Typography>{page}</Typography>
-                </MenuItem>
-              ))
-            : ""}
-          {search && loading ? (
+          {!search ? (
+            <React.Fragment>
+              <MenuItem key={"Discover"}>
+                <Typography>Discover</Typography>
+              </MenuItem>
+              {/* <Divider /> */}
+              <MenuItem key={"Catagory"}>
+                <Typography>Catagory</Typography>
+              </MenuItem>
+              {/* <Divider /> */}
+              <MenuItem key={"Recommanded"}>
+                <Typography>Recommanded</Typography>
+              </MenuItem>
+            </React.Fragment>
+          ) : // menu.map((page, i) => (
+          //   <MenuItem
+          //     key={"menuitem" + i}
+          //     onClick={() => {
+          //       setMenu(catagories);
+          //     }}
+          //   >
+          //     <Typography>{page}</Typography>
+          //   </MenuItem>
+          // ))
+          search && loading ? (
             <Box
               sx={{
                 position: "absolute",

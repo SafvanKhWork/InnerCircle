@@ -32,9 +32,7 @@ const finder = (isubstring, data) => {
   let matches = data.filter((username) =>
     username.split(" ").join("").toLowerCase().includes(substring)
   );
-  if (substring === " ") {
-    matches = data;
-  }
+
   return matches;
 };
 
@@ -44,11 +42,13 @@ export default function SearchBox(props) {
   const [searchQuery, setSearchQuery] = useState("");
 
   let matches = finder(searchQuery, users);
-  if (searchQuery.trim() === "" && props.show) {
+  if (searchQuery.trim() === "") {
     matches = users;
   }
+  // console.log(matches);
   const results = matches.map((user) => {
-    return <ResultItem user={user} />;
+    // console.log(user);
+    return <ResultItem username={user} />;
   });
   return (
     <Stack spacing={1}>

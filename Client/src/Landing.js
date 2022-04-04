@@ -10,19 +10,31 @@ import Product from "./components/Product/Views/ProductPage";
 import axios from "axios";
 import { url } from "./config";
 import { useDispatch, useSelector } from "react-redux";
+import { getToken, refreshUser } from "./store/User/userSlice";
 import { refreshProductLists } from "./store/Products/productListSlice";
 
 const Landing = (props) => {
   const products = useSelector((state) => state.products.discover);
+  const token = useSelector(getToken);
   const dispatch = useDispatch();
-  useEffect(async () => {
-    await (async () => {
-      const response = await axios.get(`${url}/products`);
-      if (response.data) {
-        dispatch(refreshProductLists(response.data));
-      }
-    })();
-  }, []);
+  // useEffect(async () => {
+  //   await (async () => {
+  //     const response = await axios.get(`${url}/products`);
+  //     if (response.data) {
+  //       dispatch(refreshProductLists(response.data));
+  //     }
+  //   })();
+  //   await (async () => {
+  //     const response = await axios.get(`${url}/user/me`, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     });
+
+  //     if (response.data) {
+  //       const { data } = response;
+  //       dispatch(refreshUser(data));
+  //     }
+  //   })();
+  // }, []);
   return (
     <Router>
       <Stack>

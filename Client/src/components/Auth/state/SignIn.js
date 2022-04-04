@@ -21,11 +21,17 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "../../../theme";
-import { signIn } from "../../../store/User/userSlice";
+import {
+  getToken,
+  initUser,
+  refreshUser,
+  signIn,
+} from "../../../store/User/userSlice";
 import axios from "axios";
 
 const SignIn = (props) => {
   const dispatch = useDispatch();
+  const token = useSelector(getToken);
   let temail;
   const { isLoggedIn, setIsLoggedIn } = props.status;
   const [inProgress, setInProgress] = useState(false);
@@ -56,7 +62,7 @@ const SignIn = (props) => {
         setErrorMessage(`Please Enter Valid ${component}`);
       } else if (validEmail && validPassword) {
         const credentials = { email, password };
-        dispatch(
+        await dispatch(
           signIn({
             credentials,
             setErrorMessage,
@@ -64,6 +70,7 @@ const SignIn = (props) => {
             setInProgress,
           })
         );
+        dispatch(initUser());
       }
       temail = email;
       setPassword("");
@@ -72,6 +79,19 @@ const SignIn = (props) => {
       console.log(error);
     }
   };
+  // let user;
+  // useEffect(async () => {
+  //   const { data } = await axios.get(`${url}/user/me`, {
+  //     headers: {
+  //       Authorization: `Bearer ${token}`,
+  //     },
+  //   });
+  //   user = data;
+  // }, [token]);
+
+  // if (user) {
+  //   dispatch(refreshUser(user));
+  // }
 
   return (
     <ThemeProvider theme={theme}>
@@ -160,7 +180,7 @@ const SignIn = (props) => {
                   type="password"
                   id="password"
                 />
-                <Grid container>
+                {/* <Grid container>
                   <Grid item xs>
                     <Link
                       component="button"
@@ -172,7 +192,7 @@ const SignIn = (props) => {
                       Forgot password?
                     </Link>
                   </Grid>
-                </Grid>
+                </Grid> */}
                 <FormControlLabel
                   control={<Checkbox value="remember" color="primary" />}
                   label="Remember me"

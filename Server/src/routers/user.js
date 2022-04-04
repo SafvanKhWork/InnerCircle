@@ -4,6 +4,7 @@ const User = require("../models/user");
 const auth = require("../middleware/auth");
 const router = new express.Router();
 const nodemailer = require("nodemailer");
+const _ = require("lodash");
 require("dotenv").config();
 
 let code = undefined;
@@ -32,7 +33,8 @@ router.post("/user/register", async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ user, token });
   } catch (e) {
-    res.status(400).send(e);
+    console.log(e.message);
+    res.status(401).send(e);
   }
 });
 
@@ -392,17 +394,23 @@ router.get("/user/:uname", async (req, res) => {
 
 // Search by Name (Test: Passed)
 router.get("/search/user/:query", async (req, res) => {
-  const query = req.params.query.toLowerCase();
-
+  const query = new RegExp(req.params.query.toLowerCase());
+  const objID = [];
   try {
-    const user = [
-      ...new Set([
-        ...(await User.find({ name: query })),
-        ...(await User.find({ username: query })),
-      ]),
+    let users = [
+      ...(await User.find({ name: query })),
+      ...(await User.find({ username: query })),
     ];
-
-    res.send(user);
+    users = users.filter((user) => {
+      if (objID.includes(user.username)) {
+        return false;
+      }
+      if (!objID.includes(user.username)) {
+        objID.push(user.username);
+        return true;
+      }
+    });
+    res.status(200).send(users);
   } catch (e) {
     res.status(400).send(e);
   }

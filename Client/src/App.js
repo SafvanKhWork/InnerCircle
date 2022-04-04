@@ -15,6 +15,7 @@ function App() {
   const token = useSelector(getToken);
   useEffect(async () => {
     try {
+      setInProgress(false);
       if (token !== "") {
         let responseStatus;
         const authHeader = {
@@ -38,7 +39,7 @@ function App() {
       setIsLoggedIn(false);
       setInProgress(false);
     }
-  }, []);
+  }, [token]);
   useEffect(async () => {
     try {
       const { data } = await axios.get(`${url}/products`, {

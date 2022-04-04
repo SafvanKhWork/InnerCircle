@@ -24,12 +24,10 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    initUser: async (state, { payload }) => {
-      try {
-        state.token = payload;
-      } catch (error) {
-        console.log(error);
-      }
+    initUser: (state, { payload }) => {
+      state.token = window.localStorage
+        .getItem("inner-circle-token")
+        .split('"')[1];
     },
     signIn: async (state, { payload }) => {
       const { credentials, setErrorMessage, setIsLoggedIn, setInProgress } =
@@ -39,46 +37,42 @@ const userSlice = createSlice({
         const response = await axios.post(`${url}/user/login`, credentials);
         const { data } = response;
         if (data) {
+          state.token = data.token;
+          state._id = data.user._id;
+          state.name = data.user.name;
+          state.email = data.user.email;
+          state.username = data.user.username;
+          state.avatar = data.user.avatar;
+          state.friendRequest = data.user.friendRequest;
+          state.sentFriendRequest = data.user.sentFriendRequest;
+          state.circle = data.user.circle;
+          state.history = data.user.history;
+          state.recommandation = data.user.recommandation;
           window.localStorage.setItem(
             "inner-circle-token",
             JSON.stringify(data.token)
           );
-          const validat = setTimeout(() => {
-            setInProgress(false);
-            setIsLoggedIn(true);
-            return () => {
-              clearTimeout(validat);
-            };
-          }, 1000);
-        }
-        state.token = data.token;
-      } catch (error) {
-        const validat = setTimeout(() => {
+
           setInProgress(false);
-          return () => {
-            clearTimeout(validat);
-          };
-        }, 500);
+          setIsLoggedIn(true);
+        }
+      } catch (error) {
+        setInProgress(false);
         setErrorMessage(`Provided Email Address or Password is Invalid`);
       }
     },
     refreshUser: (state, { payload }) => {
       //Always runs at init
       try {
-        // let responseStatus;
-        // authHeader = {
-        //   headers: { Authorization: `Bearer ${state.token}` },
-        // };
-        // const account = await (async () => {
-        //   const response = await axios.get(`${url}/user/me`, authHeader);
-        //   responseStatus = response.status;
-        //   if (responseStatus != 200) {
-        //     state.token = "";
-        //   }
-        //   const { data } = response;
-        //   return data;
-        // })();
-        // state = { ...state, ...account };
+        // if (!payload) {
+        //   axios
+        //     .get(`${url}/user/me`, {
+        //       headers: { Authorization: `Bearer ${state.token}` },
+        //     })
+        //     .then((value) => JSON.parse(value))
+        //     .then((value) => (payload = value))
+        //     .catch((error) => console.log(error.message));
+        // }
         state._id = payload._id;
         state.name = payload.name;
         state.email = payload.email;
@@ -89,8 +83,6 @@ const userSlice = createSlice({
         state.circle = payload.circle;
         state.history = payload.history;
         state.recommandation = payload.recommandation;
-
-        // dispatch to set History & Recommandation
       } catch (error) {
         console.log(error.message);
       }
@@ -165,8 +157,7 @@ const userSlice = createSlice({
       try {
         window.localStorage.setItem("inner-circle-token", "");
         if (state.token !== "") {
-          console.log(state.token);
-          await axios.post(`${url}/user/logout`, {
+          await axios.post(`${url}/user/logout`, "data", {
             headers: { Authorization: `Bearer ${state.token}` },
           });
         }

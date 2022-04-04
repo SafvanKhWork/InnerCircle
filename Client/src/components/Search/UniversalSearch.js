@@ -6,14 +6,14 @@ import { url } from "../../config";
 import UserResultItem from "./ResultItem";
 import ProductResultItem from "./ProductResultItem";
 
-const users = [
-  { name: "safvan khalifa", username: "khsafvan" },
-  { name: "lukman", username: "khlukman" },
-  { name: "test1", username: "khtest" },
-  { name: "subhan", username: "khsubhan" },
+// const users = [
+//   { name: "safvan khalifa", username: "khsafvan" },
+//   { name: "lukman", username: "khlukman" },
+//   { name: "test1", username: "khtest" },
+//   { name: "subhan", username: "khsubhan" },
 
-  { name: "test4", username: "4tester" },
-];
+//   { name: "test4", username: "4tester" },
+// ];
 let value;
 const SearchBar = ({ setLoading, setSearchQuery, search }) => (
   <TextField
@@ -42,27 +42,14 @@ const SearchBar = ({ setLoading, setSearchQuery, search }) => (
   />
 );
 
-const Userfinder = (isubstring, data) => {
-  const substring = isubstring.split(" ").join("").toLowerCase();
-  if (!substring) {
+const getMatchedUsers = async (currSearchQuery) => {
+  if (!currSearchQuery) {
     return [];
   }
-  if (!data) {
-    return [];
-  }
-  const matches = data.filter((obj) => {
-    if (
-      obj.name.split(" ").join("").toLowerCase().includes(substring) ||
-      obj.username.split(" ").join("").toLowerCase().includes(substring)
-    ) {
-      return true;
-    } else {
-      return false;
-    }
-  });
-  return matches;
-};
+  const { data } = await axios.get(`${url}/search/user/${currSearchQuery}`);
 
+  return data || [];
+};
 const productFinder = (isubstring, data) => {
   const substring = isubstring.split(" ").join("").toLowerCase();
   if (!substring) {
@@ -90,16 +77,23 @@ let prev = "";
 export default function SearchBox(props) {
   let results;
   const [searchQuery, setSearchQuery] = useState("");
-  if (searchQuery === "") {
+  const [users, setUsers] = useState([]);
+  const isEmpty = searchQuery.trim() === "";
+  if (isEmpty) {
     results = [];
   }
-  if (searchQuery !== "") {
+  useEffect(async () => {
+    const value = await getMatchedUsers(searchQuery);
+    console.log(value);
+    setUsers(value);
+  }, [searchQuery]);
+  if (!isEmpty) {
     const prodResults = productFinder(searchQuery, props.products).map(
       (user, i) => {
         return <ProductResultItem key={"resultProduct" + i} user={user} />;
       }
     );
-    const userResults = Userfinder(searchQuery, users).map((user, i) => {
+    const userResults = users.map((user, i) => {
       return <UserResultItem key={"resultUser" + i} user={user} />;
     });
     results = [...userResults, ...prodResults];

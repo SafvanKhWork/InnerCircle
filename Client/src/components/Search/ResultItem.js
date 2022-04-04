@@ -15,8 +15,9 @@ import axios from "axios";
 
 const ResultItem = (props) => {
   const [isSent, setIsSent] = useState(false);
-  const [user, setUser] = useState(props.user);
+  const [user, setUser] = useState(props.user || {});
   const token = useSelector(getToken);
+  // console.log(user);
   useEffect(async () => {
     async function getUser(uname) {
       try {
@@ -32,8 +33,11 @@ const ResultItem = (props) => {
         // console.log(error.message);
       }
     }
-    setUser(await getUser(props.user));
-  }, []);
+    // console.log(props.username);
+    if (props.username) {
+      setUser(await getUser(props.username));
+    }
+  }, [props.username]);
 
   return (
     <Stack
@@ -45,15 +49,15 @@ const ResultItem = (props) => {
       direction="row"
     >
       <Grid container justifyContent="center" alignItems="center">
-        <Grid item key={`${user.username}3`} pl={1} pr={1}>
-          {<Avatar src={user.avatar} sx={{ width: 34, height: 34 }} />}
+        <Grid item key={`${user?.username}3`} pl={1} pr={1}>
+          {<Avatar src={user?.avatar} sx={{ width: 34, height: 34 }} />}
         </Grid>
-        <Grid key={`${user.username}4`} item xs={true}>
+        <Grid key={`${user?.username}4`} item xs={true}>
           <Typography fontFamily={"sans-serif"} variant="title">
-            {user.name}
+            {user?.name}
           </Typography>
           <Typography color="text.secondary" variant="body2">
-            {user.username}
+            {user?.username}
           </Typography>
         </Grid>
       </Grid>

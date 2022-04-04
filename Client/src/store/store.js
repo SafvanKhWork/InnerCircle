@@ -15,9 +15,9 @@ const store = configureStore({
     productInView: productInViewReducer,
   },
   // middleware: (getDefaultMiddleware) =>
-  //   getDefaultMiddleware({
-  //     serializableCheck: false,
-  //   }),
+  // getDefaultMiddleware({
+  // serializableCheck: false,
+  // }),
 });
 
 export default store;

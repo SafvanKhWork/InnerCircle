@@ -22,8 +22,10 @@ import { Navigate } from "react-router-dom";
 import Products from "../Product/Products";
 import theme from "../../theme";
 import History from "./History";
+import ResultItem from "../Search/ResultItem";
 import { useSelector } from "react-redux";
 import { getUser } from "../../store/User/userSlice";
+import SingleFriendRequest from "../Header/HeadItems/SingleFriendRequest";
 
 const active = {
   color: "#fff",
@@ -47,6 +49,8 @@ const Profile = (props) => {
   }
   const Image = user?.avatar ?? "";
   const history = user?.history || [];
+  const friendRequest = user?.friendRequest;
+  const circle = user?.circle;
 
   return (
     <ThemeProvider theme={theme}>
@@ -100,6 +104,16 @@ const Profile = (props) => {
               <Stack spacing={1}>
                 {history.map((el) => (
                   <History item={el} />
+                ))}
+              </Stack>
+              <Stack spacing={1}>
+                {friendRequest.map((el) => (
+                  <SingleFriendRequest user={el} />
+                ))}
+              </Stack>
+              <Stack spacing={1}>
+                {circle.map((el) => (
+                  <ResultItem user={el} />
                 ))}
               </Stack>
             </Box>
