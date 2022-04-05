@@ -166,20 +166,21 @@ router.get("/products/owner/:user", async (req, res) => {
 
 //fetch Posts from friends (Work in Progress)
 router.get("/feed", auth, async (req, res) => {
+  let feed = [];
+
   try {
-    let feed = [];
     await req.user.circle.forEach(async (friend, i) => {
       const products = await Product.find({}).populate("owner");
       const posts = await products.filter(
         (product) => product.owner.username === friend
       );
       feed.push(...posts);
-      // if (req.user.circle.length === i + 1) {
-      //   res.status(200).send(feed);
-      // }
+      if (req.user.circle.length === i + 1) {
+        res
+          .status(200)
+          .send([...feed].sort((a, b) => b.createdAt - a.createdAt));
+      }
     });
-
-    res.status(200).send(feed.sort({ createdAt: -1 }));
   } catch (error) {
     console.log(error.message);
     res.status(400).send(error.message);

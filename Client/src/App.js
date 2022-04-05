@@ -3,13 +3,26 @@ import { Box, CircularProgress } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import { url } from "./config";
-import { getToken, refreshUser, getUser } from "./store/User/userSlice";
+import {
+  getToken,
+  refreshUser,
+  getUser,
+  refetchUser,
+} from "./store/User/userSlice";
 import AuthModel from "./components/Auth/AuthModel";
 import Landing from "./Landing";
-import { refreshProductLists } from "./store/Products/productListSlice";
+import {
+  refreshCatagories,
+  refreshFeed,
+  refreshProductLists,
+  refreshRecommandation,
+  setCurrent,
+  setSpecifiedList,
+} from "./store/Products/productListSlice";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const inProgress = useSelector((state) => state.applicationState.loading);
   const [inProgress, setInProgress] = useState(true);
   const dispatch = useDispatch();
   const token = useSelector(getToken);
@@ -42,24 +55,60 @@ function App() {
   }, [token]);
   useEffect(async () => {
     try {
-      const { data } = await axios.get(`${url}/products`, {
+      const { data: discover } = await axios.get(`${url}/products`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      if (data) {
-        dispatch(refreshProductLists(data));
-      }
+      const { data: feed } = await axios.get(`${url}/feed`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { data: catagories } = await axios.get(`${url}/catagories`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { data: recommandation } = await axios.get(`${url}/recommanded`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch(
+        setSpecifiedList({
+          discover,
+          feed,
+          catagories,
+          recommandation,
+        })
+      );
+
+      // if (discover) {
+      //   dispatch(refreshProductLists(discover));
+      // }
+      // if (feed) {
+      //   console.log(feed);
+      //   dispatch(refreshFeed(feed));
+      // }
+      // if (catagories) {
+      //   dispatch(refreshCatagories(catagories));
+      // }
+      // if (recommandation) {
+      //   dispatch(refreshRecommandation(recommandation));
+      // }
     } catch (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
   }, []);
+  // useEffect(async () => {
+  //   dispatch(refetchUser());
+  // }, [token]);
 
   const status = {
     isLoggedIn,
     setIsLoggedIn,
     inProgress,
-    setInProgress,
   };
   return (
     <Fragment>

@@ -5,6 +5,7 @@ import { url } from "../../config";
 let authHeader;
 
 const initialState = {
+  current: [],
   discover: [],
   feed: [],
   recommandation: [],
@@ -19,32 +20,38 @@ const productListSlice = createSlice({
     refreshProductLists: (state, { payload }) => {
       state.discover = [...payload];
     },
-    refreshCatagory: async (state, { payload }) => {
+    refreshCatagories: (state, { payload }) => {
+      state.catagories = [...payload];
+    },
+    refreshCatagory: (state, { payload }) => {
       try {
-        const { data } = await axios.get(
-          `${url}/products/catagory/${payload}`,
-          authHeader
-        );
-        state.catagory = data ? data : [];
+        // const { data } = await axios.get(
+        //   `${url}/products/catagory/${payload}`,
+        //   authHeader
+        // );
+        state.catagory = [...payload];
+      } catch (error) {
+        console.error(error.message);
+      }
+    },
+    refreshFeed: (state, { payload }) => {
+      try {
+        // const { data } = await axios.get(`${url}/feed`, authHeader);
+        state.feed = [...payload];
       } catch (error) {
         console.log(error.message);
       }
     },
-    refreshFeed: async (state, { payload }) => {
+    refreshRecommandation: (state, { payload }) => {
       try {
-        const { data } = await axios.get(`${url}/feed`, authHeader);
-        state.feed = data ? data : data.feed;
+        // const { data } = axios.get(`${url}/recommanded`, authHeader);
+        state.recommandation = [...payload];
       } catch (error) {
         console.log(error.message);
       }
     },
-    refreshRecommandation: async (state, { payload }) => {
-      try {
-        const { data } = axios.get(`${url}/recommanded`, authHeader);
-        state.recommandation = data ? data : state.recommandation;
-      } catch (error) {
-        console.log(error.message);
-      }
+    setCurrent: (state, { payload }) => {
+      state.current = payload;
     },
     setSpecifiedList: (state, { payload }) => {
       Object.keys(payload).forEach((field) => {
@@ -54,6 +61,15 @@ const productListSlice = createSlice({
   },
 });
 
-export const { refreshProductLists, changeCatagory, refreshSpecifiedList } =
-  productListSlice.actions;
+export const {
+  refreshProductLists,
+  refreshFeed,
+  refreshCatagories,
+  changeCatagory,
+  setCurrent,
+  setSpecifiedList,
+  refreshRecommandation,
+  refreshCatagory,
+  refreshSpecifiedList,
+} = productListSlice.actions;
 export default productListSlice.reducer;

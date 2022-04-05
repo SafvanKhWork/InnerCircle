@@ -17,24 +17,7 @@ const Landing = (props) => {
   const products = useSelector((state) => state.products.discover);
   const token = useSelector(getToken);
   const dispatch = useDispatch();
-  // useEffect(async () => {
-  //   await (async () => {
-  //     const response = await axios.get(`${url}/products`);
-  //     if (response.data) {
-  //       dispatch(refreshProductLists(response.data));
-  //     }
-  //   })();
-  //   await (async () => {
-  //     const response = await axios.get(`${url}/user/me`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
 
-  //     if (response.data) {
-  //       const { data } = response;
-  //       dispatch(refreshUser(data));
-  //     }
-  //   })();
-  // }, []);
   return (
     <Router>
       <Stack>
@@ -42,7 +25,7 @@ const Landing = (props) => {
       </Stack>
       <Box pt={12} m={1}>
         <Routes>
-          <Route path="/" element={<Home products={products} />} />
+          <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/product/post" element={<Post />} />

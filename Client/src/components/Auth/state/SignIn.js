@@ -38,38 +38,73 @@ const SignIn = (props) => {
   const [errorMessage, setErrorMessage] = useState(undefined);
   const [email, setEmail] = useState(temail || "");
   const [password, setPassword] = useState("");
-
   const [validEmail, setValidEmail] = useState(true);
   const [validPassword, setValidPassword] = useState(true);
   const [strongPassword, setStrongPassword] = useState(true);
+  let user;
+
+  const sendLoginRequest = async (payload) => {
+    const { credentials, setErrorMessage, setIsLoggedIn, setInProgress } =
+      payload;
+    try {
+      setInProgress(true);
+      const response = await axios.post(`${url}/user/login`, credentials);
+      const { data } = response;
+      if (data) {
+        window.localStorage.setItem(
+          "inner-circle-token",
+          JSON.stringify(data.token)
+        );
+        setInProgress(false);
+        setIsLoggedIn(true);
+        return data;
+      }
+    } catch (error) {
+      setInProgress(false);
+      setErrorMessage(`Provided Email Address or Password is Invalid`);
+    }
+  };
+
+  const checkErrors = () => {
+    if (email.trim() === "" || password.trim() === "") {
+      let component = email.trim() === "" ? "Email" : "";
+      component = password.trim() === "" ? "Password" : component;
+      component =
+        password.trim() === "" && email === "" ? "Email & Password" : component;
+      setErrorMessage(`Please Enter ${component}`);
+    } else if (!validEmail || !validPassword) {
+      let component = !validEmail ? "Email" : "";
+      component = !validPassword ? "Password" : component;
+      component =
+        !validEmail && !validPassword ? "Email & Password" : component;
+      setErrorMessage(`Please Enter Valid ${component}`);
+    } else if (validEmail && validPassword) {
+      return true;
+    }
+    return false;
+  };
 
   const handleSubmit = async (event) => {
     try {
       event.preventDefault();
-      if (email.trim() === "" || password.trim() === "") {
-        let component = email.trim() === "" ? "Email" : "";
-        component = password.trim() === "" ? "Password" : component;
-        component =
-          password.trim() === "" && email === ""
-            ? "Email & Password"
-            : component;
-        setErrorMessage(`Please Enter ${component}`);
-      } else if (!validEmail || !validPassword) {
-        let component = !validEmail ? "Email" : "";
-        component = !validPassword ? "Password" : component;
-        component =
-          !validEmail && !validPassword ? "Email & Password" : component;
-        setErrorMessage(`Please Enter Valid ${component}`);
-      } else if (validEmail && validPassword) {
+      const isValid = checkErrors();
+      if (isValid) {
         const credentials = { email, password };
-        await dispatch(
-          signIn({
-            credentials,
-            setErrorMessage,
-            setIsLoggedIn,
-            setInProgress,
-          })
-        );
+        // await dispatch(
+        //   signIn({
+        //     credentials,
+        //     setErrorMessage,
+        //     setIsLoggedIn,
+        //     setInProgress,
+        //   })
+        // );
+        const responseData = await sendLoginRequest({
+          credentials,
+          setErrorMessage,
+          setIsLoggedIn,
+          setInProgress,
+        });
+        user = responseData.user;
         dispatch(initUser());
       }
       temail = email;
@@ -79,6 +114,9 @@ const SignIn = (props) => {
       console.log(error);
     }
   };
+  // if (!user) {
+  //   dispatch(refreshUser(!user));
+  // }
   // let user;
   // useEffect(async () => {
   //   const { data } = await axios.get(`${url}/user/me`, {
@@ -92,7 +130,6 @@ const SignIn = (props) => {
   // if (user) {
   //   dispatch(refreshUser(user));
   // }
-
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">

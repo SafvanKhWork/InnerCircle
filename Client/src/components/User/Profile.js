@@ -22,10 +22,9 @@ import { Navigate } from "react-router-dom";
 import Products from "../Product/Products";
 import theme from "../../theme";
 import History from "./History";
-import ResultItem from "../Search/ResultItem";
+import UserMinibar from "./UserMinibar";
 import { useSelector } from "react-redux";
 import { getUser } from "../../store/User/userSlice";
-import SingleFriendRequest from "../Header/HeadItems/SingleFriendRequest";
 
 const active = {
   color: "#fff",
@@ -36,10 +35,11 @@ const inactive = { color: "#4db6ac" };
 
 const Profile = (props) => {
   const user = useSelector(getUser);
+
   const products = useSelector((state) => state.products.discover);
   const [width, setWidth] = useState(window.innerWidth);
   const [rug, setRug] = useState(false);
-  const [value, setValue] = useState("1");
+  const [value, setValue] = useState(1);
   const onClick = (BId) => setValue(BId);
   window.addEventListener("resize", () => {
     setWidth(window.innerWidth);
@@ -101,21 +101,33 @@ const Profile = (props) => {
             autoHideDuration={1000}
           >
             <Box p={1}>
-              <Stack spacing={1}>
-                {history.map((el) => (
-                  <History item={el} />
-                ))}
-              </Stack>
-              <Stack spacing={1}>
-                {friendRequest.map((el) => (
-                  <SingleFriendRequest user={el} />
-                ))}
-              </Stack>
-              <Stack spacing={1}>
-                {circle.map((el) => (
-                  <ResultItem user={el} />
-                ))}
-              </Stack>
+              {value === 1 ? (
+                <Stack spacing={1}>
+                  {history.map((el) => (
+                    <History item={el} />
+                  ))}
+                </Stack>
+              ) : (
+                ""
+              )}
+              {value === 2 ? (
+                <Stack spacing={1}>
+                  {friendRequest.map((el) => (
+                    <UserMinibar request user={el} />
+                  ))}
+                </Stack>
+              ) : (
+                ""
+              )}
+              {value === 0 ? (
+                <Stack spacing={1}>
+                  {circle.map((el) => (
+                    <UserMinibar user={el} />
+                  ))}
+                </Stack>
+              ) : (
+                ""
+              )}
             </Box>
           </Scrollbars>
         </Grid>

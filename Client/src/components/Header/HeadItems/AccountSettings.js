@@ -112,7 +112,7 @@ const AccountSettings = (props) => {
                       Profile
                     </Link>
                   </MenuItem>
-                  <MenuItem key={"profile"} onClick={handleClose}>
+                  <MenuItem key={"new-post"} onClick={handleClose}>
                     <Link
                       style={{ color: "inherit", textDecoration: "none" }}
                       to="/product/post"

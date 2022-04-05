@@ -17,6 +17,7 @@ const ResultItem = (props) => {
   const [isSent, setIsSent] = useState(false);
   const [user, setUser] = useState(props.user || {});
   const token = useSelector(getToken);
+  const recommand = props.recommand;
   // console.log(user);
   useEffect(async () => {
     async function getUser(uname) {

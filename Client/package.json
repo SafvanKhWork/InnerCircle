@@ -16,6 +16,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.1",
     "date-fns": "^2.28.0",
+    "gatsby-plugin-image": "^2.11.1",
     "gravatar": "^1.8.2",
     "is-mobile": "^3.0.0",
     "mobile-detect": "^1.4.5",

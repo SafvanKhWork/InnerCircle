@@ -84,7 +84,6 @@ export default function SearchBox(props) {
   }
   useEffect(async () => {
     const value = await getMatchedUsers(searchQuery);
-    console.log(value);
     setUsers(value);
   }, [searchQuery]);
   if (!isEmpty) {

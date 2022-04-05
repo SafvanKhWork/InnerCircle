@@ -10,10 +10,11 @@ import {
   Avatar,
   Typography,
   ButtonGroup,
+  Alert,
 } from "@mui/material";
 import { Done, Add } from "@mui/icons-material";
-import { useSelector } from "react-redux";
-import { getToken } from "../../../store/User/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { getToken, refreshUserField } from "../../../store/User/userSlice";
 import { url } from "../../../config";
 
 // const acceptRequest = async (uname, authHeader) => {
@@ -27,20 +28,37 @@ import { url } from "../../../config";
 
 const SingleFriendRequest = (props) => {
   const [user, setUser] = useState("");
+  const dispatch = useDispatch();
+  const [status, setStatus] = useState("pending");
+  const [friendRequest, setFriendRequest] = useState("");
+  const [clicked, setClicked] = useState(false);
   const token = useSelector(getToken);
   let authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
   const acceptRequest = async (uname, authHeader) => {
-    await axios.patch(
+    const data = await axios.patch(
       `${url}/accept-friend-request/${uname}`,
       undefined,
       authHeader
     );
+    return data;
   };
   const rejectRequest = async (uname, authHeader) => {
-    await axios.delete(`${url}/reject-friend-request/${uname}`, authHeader);
+    const data = await axios.delete(
+      `${url}/reject-friend-request/${uname}`,
+      authHeader
+    );
+    return data;
   };
+
+  // useEffect(() => {
+  //   if (friendRequest) {
+  //     dispatch(refreshUserField({ friendRequest }));
+  //   }
+  //   setUser(false);
+  // }, [friendRequest]);
+
   useEffect(async () => {
     async function getUser(uname) {
       try {
@@ -57,7 +75,20 @@ const SingleFriendRequest = (props) => {
     }
     setUser(await getUser(props.user));
   }, []);
-
+  if (status === "Accepted") {
+    return (
+      <Stack minWidth={350}>
+        <Alert severity="success">{status}</Alert>
+      </Stack>
+    );
+  }
+  if (status === "Rejected") {
+    return (
+      <Stack minWidth={350}>
+        <Alert severity="error">{status}</Alert>
+      </Stack>
+    );
+  }
   return (
     <Stack
       py={1}
@@ -84,7 +115,8 @@ const SingleFriendRequest = (props) => {
       <Stack direction={"row"}>
         <Button
           onClick={async (event) => {
-            await acceptRequest(user?.username, authHeader);
+            setFriendRequest(await acceptRequest(user?.username, authHeader));
+            setStatus("Accepted");
           }}
           variant="text"
           sx={{ color: "green" }}
@@ -93,7 +125,8 @@ const SingleFriendRequest = (props) => {
         </Button>
         <Button
           onClick={async (event) => {
-            await rejectRequest(props.user, authHeader);
+            setFriendRequest(await rejectRequest(props.user, authHeader));
+            setStatus("Rejected");
           }}
           variant="text"
           sx={{ color: "red" }}

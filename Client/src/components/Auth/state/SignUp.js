@@ -115,7 +115,6 @@ export default function SignUp(props) {
     // eslint-disable-next-line no-console
   };
   if (!user) {
-    console.table(user);
     dispatch(refreshUser(user));
   }
   const userInfo = {

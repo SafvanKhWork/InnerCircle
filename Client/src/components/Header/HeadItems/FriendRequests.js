@@ -38,6 +38,7 @@ import Scrollbars from "react-custom-scrollbars";
 
 const FriendRequests = (props) => {
   const dispatch = useDispatch();
+
   const [open, setOpen] = React.useState(false);
   const drawerWidth = 240;
   const anchorRef = React.useRef(null);
@@ -121,9 +122,10 @@ const FriendRequests = (props) => {
                   {user.friendRequest?.slice(-3).map((request, i) => (
                     <Box px={1} key={i + "request"}>
                       <SingleFriendRequest user={request} />
-                      {i !== 2 ? (
+                      {i !== 2 && user.friendRequest.length - 1 !== i ? (
                         <Divider />
-                      ) : user.friendRequest.length - 1 !== 2 ? (
+                      ) : user.friendRequest.length - 1 !== 2 &&
+                        user.friendRequest.length > 2 ? (
                         <React.Fragment>
                           <Divider />
                           <Button variant="contained" fullWidth>

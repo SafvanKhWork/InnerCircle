@@ -10,36 +10,31 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchBar from "../../Search/UniversalSearch";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { url } from "../../../config";
+import {
+  refreshCatagory,
+  setCurrent,
+} from "../../../store/Products/productListSlice";
 import { getToken } from "../../../store/User/userSlice";
 
 const drawerWidth = 240;
 
 const NavMenu = (props) => {
   const token = useSelector(getToken);
+  const dispatch = useDispatch();
+  const { discover, recommandation, feed } = useSelector(
+    (state) => state.products
+  );
+  const catagory = useSelector((state) => state.products.catagory);
   const { pages } = props;
   const [search, setSearch] = React.useState(false);
-  const [menu, setMenu] = React.useState(pages);
+  const [menu, setMenu] = React.useState("pages");
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [results, setResults] = React.useState([]);
-  const [catagories, setCatagories] = React.useState([]);
-  React.useEffect(async () => {
-    async function getCatagories() {
-      const { data, status: responseStatus } = await axios.get(
-        `${url}/catagories`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      let catagories = data.map((catagory) => catagory.name);
-      console.log(catagories);
-      return catagories;
-    }
-    setCatagories(await getCatagories());
-  }, []);
+  const catagories = useSelector((state) => state.products.catagories);
   const changeResult = (value) => {
     if (search) {
       setResults(value);
@@ -105,17 +100,65 @@ const NavMenu = (props) => {
           </Box>
           {!search ? (
             <React.Fragment>
-              <MenuItem key={"Discover"}>
-                <Typography>Discover</Typography>
-              </MenuItem>
-              {/* <Divider /> */}
-              <MenuItem key={"Catagory"}>
-                <Typography>Catagory</Typography>
-              </MenuItem>
-              {/* <Divider /> */}
-              <MenuItem key={"Recommanded"}>
-                <Typography>Recommanded</Typography>
-              </MenuItem>
+              {menu !== "catagories" ? (
+                <React.Fragment>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      dispatch(setCurrent([...feed]));
+                    }}
+                    key={"Home"}
+                  >
+                    <Typography>Home</Typography>
+                  </MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      dispatch(setCurrent([...discover]));
+                    }}
+                    key={"Discover"}
+                  >
+                    <Typography>Discover</Typography>
+                  </MenuItem>
+                  {/* <Divider /> */}
+                  <MenuItem
+                    key={"Catagory"}
+                    onClick={() => {
+                      dispatch(setCurrent([...catagory]));
+                      setMenu("catagories");
+                    }}
+                  >
+                    <Typography>Catagory</Typography>
+                  </MenuItem>
+                  {/* <Divider /> */}
+                  <MenuItem
+                    onClick={() => {
+                      handleCloseNavMenu();
+                      dispatch(setCurrent([...recommandation]));
+                    }}
+                    key={"Recommanded"}
+                  >
+                    <Typography>Recommanded</Typography>
+                  </MenuItem>
+                </React.Fragment>
+              ) : (
+                catagories.map((catagory, i) => (
+                  <MenuItem
+                    key={catagory._id}
+                    onClick={async (event) => {
+                      const tempCatagory = discover.filter(
+                        (product) => product.catagory === catagory.name
+                      );
+
+                      handleCloseNavMenu();
+                      dispatch(refreshCatagory([...tempCatagory]));
+                      dispatch(setCurrent([...tempCatagory]));
+                    }}
+                  >
+                    {catagory.name}
+                  </MenuItem>
+                ))
+              )}
             </React.Fragment>
           ) : // menu.map((page, i) => (
           //   <MenuItem
