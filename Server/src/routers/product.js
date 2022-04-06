@@ -139,7 +139,6 @@ router.patch("/recommand", auth, async (req, res) => {
     const user = await User.findById(req.body.user);
 
     if (!product || !user) {
-      console.log(product, user);
       throw new Error("Some Thing Went Wrong!");
     }
     const recommandation = user.recommandation;
