@@ -36,6 +36,7 @@ import Carousel from "react-material-ui-carousel";
 import Image from "../../../../img/img.jpg";
 import Vmag from "../../../../img/vimg.jpg";
 import CardHead from "../CardElements/CardHead";
+import { url } from "../../../../config";
 
 function Item(props) {
   return (
@@ -62,7 +63,8 @@ const ActiveBox = (props) => {
     isFocused,
     setIsFocused,
   } = props.status;
-  const images = [Image, Vmag];
+  const images = props.product.images;
+  console.log(images);
   return (
     <Paper elevation={4}>
       <Card>
@@ -85,7 +87,7 @@ const ActiveBox = (props) => {
                 indicators={false}
               >
                 {images.map((img, i) => (
-                  <Item key={img + "" + i}>{img}</Item>
+                  <Item key={img + "" + i}>{url + img}</Item>
                 ))}
               </Carousel>
             </div>

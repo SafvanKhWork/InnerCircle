@@ -12,6 +12,7 @@ import { url } from "../../config";
 import { useSelector } from "react-redux";
 import { getToken } from "../../store/User/userSlice";
 import axios from "axios";
+import { refreshRecommandation } from "../../store/Products/productListSlice";
 
 const ResultItem = (props) => {
   const [isSent, setIsSent] = useState(false);
@@ -39,6 +40,15 @@ const ResultItem = (props) => {
       setUser(await getUser(props.username));
     }
   }, [props.username]);
+  const recommandTo = async (user, product) => {
+    axios.patch(
+      `${url}/recommand`,
+      { user, product },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+  };
 
   return (
     <Stack
@@ -63,8 +73,10 @@ const ResultItem = (props) => {
         </Grid>
       </Grid>
       <IconButton
-        onClick={() => {
-          setIsSent(!isSent);
+        disabled={isSent}
+        onClick={async () => {
+          await recommandTo(user._id, props.product._id);
+          setIsSent(true);
         }}
         variant="text"
       >

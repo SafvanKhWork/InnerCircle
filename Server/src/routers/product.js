@@ -1,5 +1,6 @@
 const express = require("express");
 const router = new express.Router();
+const { cloudinary } = require("../utils/cloudinary");
 const path = require("path");
 const { ObjectID } = require("mongodb");
 const multer = require("multer");
@@ -7,7 +8,8 @@ const Product = require("../models/product");
 const Catagory = require("../models/catagory");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
-const uploadDestination = path.join(__dirname + "/uploads/");
+const { Console } = require("console");
+const uploadDestination = "../uploads/";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, uploadDestination);
@@ -38,25 +40,51 @@ router.post(
     // req.params.id
     // req.file.path
     try {
+      console.log(req.file.path);
       const product = await Product.findById(req.params.id);
-      if (String(req.user._id) === String(product.owner)) {
-        await product.images.push(req.file.path);
+      if (
+        String(req.user._id) === String(product?.owner) &&
+        req.file.path != null
+      ) {
+        await product.images.push(req.file.path.slice(2));
         await product.save();
       }
-
+      product.images = product.images.filter(
+        (image) => image !== null || image !== undefined
+      );
+      await product.save();
       res.status(201).send(product);
     } catch (e) {
+      console.log(e.message);
       res.status(400).send(e);
     }
   }
 );
 
+//upload image on cloudanary
+// router.post("/product-image", auth, async (req, res) => {
+//   try {
+//     const fileStr = req.body.data;
+//     const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+//       upload_preset: "ml_default",
+//     });
+//     res.status(200).send(fileStr);
+//   } catch (error) {
+//     console.log("Error Uploading Image on Cloudinary", error.message);
+//     res.status(400).send(error.message);
+//   }
+// });
+
 //add new product (Test: Passed)
 router.post("/product/new", auth, upload.single("image"), async (req, res) => {
   const product = new Product({
     ...req.body,
+    product_name: `at${Date.now()}by${req.user.username}`.split(" ").join(""),
     owner: req.user._id,
-    images: [req.file?.path],
+    images:
+      req.file?.path && req.file?.path !== null && req.file?.path === undefined
+        ? [req.file?.path.slice(2)]
+        : [],
   });
   try {
     Catagory.exists({ name: req.body.name }, function (e) {

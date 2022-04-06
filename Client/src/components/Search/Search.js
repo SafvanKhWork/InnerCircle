@@ -48,7 +48,7 @@ export default function SearchBox(props) {
   // console.log(matches);
   const results = matches.map((user) => {
     // console.log(user);
-    return <ResultItem recommand username={user} />;
+    return <ResultItem product={props.product} recommand username={user} />;
   });
   return (
     <Stack spacing={1}>

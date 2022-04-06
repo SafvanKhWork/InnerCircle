@@ -24,7 +24,13 @@ import { useSelector } from "react-redux";
 import Products from "../../Products";
 
 const Alternatives = (props) => {
-  const products = useSelector((state) => state.products.discover);
+  const currentProduct = props.product;
+  const tempProducts = useSelector((state) => state.products.discover);
+  const products = tempProducts.filter(
+    (product) =>
+      product.model.toLowerCase() === currentProduct.model.toLowerCase() &&
+      product._id !== currentProduct._id
+  );
   return (
     <Fragment>
       <Paper elevation={4}>

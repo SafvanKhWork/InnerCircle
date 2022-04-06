@@ -23,7 +23,7 @@ const ProductPage = (props) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inProgress, setInProgress] = useState(true);
 
-//Relocate
+  //Relocate
   async function updateProduct(id) {
     const { data, status: responseStatus } = await axios.get(
       `${url}/products/id/${id}`
@@ -32,7 +32,7 @@ const ProductPage = (props) => {
   }
 
   //
-  
+
   useEffect(() => {
     updateProduct(productID);
     const validat = setTimeout(() => {
@@ -98,7 +98,7 @@ const ProductPage = (props) => {
               <ActiveBox product={product} status={status} />
             </Grid>
             <Grid item lg={3} xs={3}>
-              <Alternatives model={product.model} />
+              <Alternatives product={product} />
             </Grid>
           </Grid>
         </ThemeProvider>

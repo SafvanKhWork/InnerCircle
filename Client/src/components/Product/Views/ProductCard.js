@@ -35,8 +35,16 @@ export default function ProductCard(props) {
 
             {props.isPotrait ? (
               <Fragment>
-                <CardImage images={product.images} />
-                <CardInfo expandedDesc={expandedDesc} product={props.product} />
+                <Link
+                  style={{ color: "inherit", textDecoration: "none" }}
+                  to={`/product/${product._id}`}
+                >
+                  <CardImage images={product.images} />
+                  <CardInfo
+                    expandedDesc={expandedDesc}
+                    product={props.product}
+                  />
+                </Link>
                 <CardButtons
                   thrower={{
                     setExpandedDesc,

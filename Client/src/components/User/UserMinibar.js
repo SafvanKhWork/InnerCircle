@@ -34,6 +34,7 @@ const UserMinibar = (props) => {
   let authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
+
   const acceptRequest = async (uname, authHeader) => {
     await axios.patch(
       `${url}/accept-friend-request/${uname}`,
@@ -51,7 +52,6 @@ const UserMinibar = (props) => {
           `${url}/user/${uname}`,
           authHeader
         );
-        console.log(data);
         return data;
       } catch (error) {
         const status = await rejectRequest(props.user, token);

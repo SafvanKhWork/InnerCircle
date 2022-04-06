@@ -36,7 +36,7 @@ import Carousel from "react-material-ui-carousel";
 import { styled } from "@mui/material/styles";
 import { red, green, blue, yellow } from "@mui/material/colors";
 // import { StaticImage } from "gatsby-plugin-image";
-import { myUrl } from "../../../../config";
+import { myUrl, url } from "../../../../config";
 import Image from "../../../../img/img.jpg";
 import Vmag from "../../../../img/vimg.jpg";
 
@@ -60,10 +60,8 @@ function Item(props) {
 
 const CardImage = (props) => {
   const [isFocused, setIsFocused] = useState(false);
-  const productImages = props.images?.map((image) => {
-    const tempImage = `${myUrl}/` + image?.split("/").slice(-2).join("/");
-  });
-  const images = [Image, Vmag, Image];
+  const images = props.images;
+
   return (
     <Box maxHeight={200} minHeight={200}>
       <div
@@ -81,7 +79,7 @@ const CardImage = (props) => {
           animation="fade"
         >
           {images.map((img, i) => (
-            <Item key={i}>{img}</Item>
+            <Item key={i}>{url + img}</Item>
           ))}
         </Carousel>
       </div>

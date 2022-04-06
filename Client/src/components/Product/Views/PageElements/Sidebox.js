@@ -102,7 +102,7 @@ const SideBox = (props) => {
             </Collapse>
             <Collapse in={recc}>
               <Box pt={2}>
-                <Search users={user.circle} show={true} />
+                <Search product={product} users={user.circle} show={true} />
               </Box>
             </Collapse>
           </Box>
