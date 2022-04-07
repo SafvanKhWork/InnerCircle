@@ -23,7 +23,15 @@ const SideBox = (props) => {
   const product = props.product;
   const bids = product.bids;
   const user = useSelector(getUser);
+  let maxBid, yourBid;
   const { recc, comm, expandedBids } = props.status;
+  if (bids.length !== 0) {
+    maxBid = [...bids]?.sort((a, b) => b.bid - a.bid)[0]["bid"];
+    yourBid = [...bids]?.filter(
+      (bid) => String(bid.user) === String(user._id)
+    )[0]["bid"];
+  }
+
   return (
     <Paper elevation={4}>
       <Card>
@@ -62,11 +70,20 @@ const SideBox = (props) => {
               <Stack px={2} pt={8}>
                 <Stack justifyContent="space-between" direction={"row"}>
                   <Typography sx={{ fontWeight: "bold" }} variant="body2">
+                    Starting Price:
+                  </Typography>
+
+                  <Typography fontFamily={"monospace"} variant="subtitle2">
+                    {"₹" + (product.price || 0)}
+                  </Typography>
+                </Stack>
+                <Stack justifyContent="space-between" direction={"row"}>
+                  <Typography sx={{ fontWeight: "bold" }} variant="body2">
                     Highest Bid:
                   </Typography>
 
                   <Typography fontFamily={"monospace"} variant="subtitle2">
-                    {"1230$"}
+                    {"₹" + (maxBid || 0)}
                   </Typography>
                 </Stack>
 
@@ -76,12 +93,16 @@ const SideBox = (props) => {
                   </Typography>
 
                   <Typography fontFamily={"monospace"} variant="subtitle2">
-                    {"1190$"}
+                    {"₹" + (yourBid || 0)}
                   </Typography>
                 </Stack>
               </Stack>
-              <Box pt={5}>
-                <NewBid product={product} update={props.updateProduct} />
+              <Box pt={2}>
+                <NewBid
+                  product={product}
+                  maxBid={maxBid}
+                  update={props.updateProduct}
+                />
               </Box>
             </Collapse>
             <Collapse in={expandedBids}>
@@ -94,7 +115,11 @@ const SideBox = (props) => {
                 <Bids product={product} desk={true} bids={bids} />
               </Scrollbars>
               <Box pt={1}>
-                <NewBid product={product} update={props.updateProduct} />
+                <NewBid
+                  product={product}
+                  maxBid={maxBid}
+                  update={props.updateProduct}
+                />
               </Box>
             </Collapse>
             <Collapse in={comm}>

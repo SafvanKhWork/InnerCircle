@@ -26,6 +26,7 @@ const userInViewSlice = createSlice({
       state.posts = payload.posts;
       state.sold = payload.sold;
       state.bought = payload.bought;
+      state.history = payload.history;
     },
     refreshUserInViewField: (state, { payload }) => {
       Object.keys(payload).forEach((field) => {

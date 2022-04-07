@@ -26,6 +26,7 @@ const productInViewSlice = createSlice({
   reducers: {
     refreshProduct: (state, { payload }) => {
       state._id = payload._id;
+      state.createdAt = payload.createdAt;
       state.name = payload.name;
       state.product_name = payload.product_name;
       state.model = payload.model;
@@ -47,7 +48,22 @@ const productInViewSlice = createSlice({
       });
     },
     exitProduct: (state, action) => {
-      state = initialState;
+      state._id = "";
+      state.createdAt = "";
+      state.name = "";
+      state.product_name = "";
+      state.model = "";
+      state.description = "";
+      state.price = 0;
+      state.catagory = "";
+      state.owner = "";
+      state.bids = [];
+      state.comments = [];
+      state.images = [];
+      state.quantity = 0;
+      state.like = [];
+      state.likes = 0;
+      state.alternatives = [];
     },
   },
 });

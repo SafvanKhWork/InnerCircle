@@ -23,7 +23,6 @@ import { getToken } from "../../../../store/User/userSlice";
 
 const Comment = (props) => {
   const token = useSelector(getToken);
-  const i = props.key;
   const comment = props.comment;
   const [user, setUser] = useState({});
   const [opt, setOpt] = useState(false);

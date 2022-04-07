@@ -19,6 +19,7 @@ const ResultItem = (props) => {
   const [user, setUser] = useState(props.user || {});
   const token = useSelector(getToken);
   const recommand = props.recommand;
+  const product = useSelector((state) => state.productInView);
   // console.log(user);
   useEffect(async () => {
     async function getUser(uname) {
@@ -75,7 +76,7 @@ const ResultItem = (props) => {
       <IconButton
         disabled={isSent}
         onClick={async () => {
-          await recommandTo(user._id, props.product._id);
+          await recommandTo(user?._id, product?._id);
           setIsSent(true);
         }}
         variant="text"

@@ -135,7 +135,6 @@ const NewPost = (props) => {
 
   const productInfo = {
     name: productTitle,
-
     model,
     description,
     price,

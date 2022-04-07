@@ -15,11 +15,12 @@ import ProductResultItem from "./ProductResultItem";
 //   { name: "test4", username: "4tester" },
 // ];
 let value;
+let prev = "";
 const SearchBar = ({ setLoading, setSearchQuery, search }) => (
   <TextField
     id="universal-search-bar"
     fullWidth
-    value={search ? value : ""}
+    value={value}
     className="text"
     onChange={(e) => {
       if (prev !== e.target.value) {
@@ -37,7 +38,6 @@ const SearchBar = ({ setLoading, setSearchQuery, search }) => (
     }}
     label="Search"
     variant="outlined"
-    placeholder=""
     size="small"
   />
 );
@@ -72,8 +72,6 @@ const productFinder = (isubstring, data) => {
   return matches;
 };
 
-let prev = "";
-
 export default function SearchBox(props) {
   let results;
   const [searchQuery, setSearchQuery] = useState("");
@@ -89,22 +87,29 @@ export default function SearchBox(props) {
   if (!isEmpty) {
     const prodResults = productFinder(searchQuery, props.products).map(
       (user, i) => {
-        return <ProductResultItem key={"resultProduct" + i} user={user} />;
+        return (
+          <ProductResultItem
+            handleCloseNavMenu={props.handleCloseNavMenu}
+            key={"resultProduct" + i}
+            user={user}
+          />
+        );
       }
     );
     const userResults = users.map((user, i) => {
-      return <UserResultItem key={"resultUser" + i} user={user} />;
+      return (
+        <UserResultItem
+          handleCloseNavMenu={props.handleCloseNavMenu}
+          key={"resultUser" + i}
+          user={user}
+        />
+      );
     });
     results = [...userResults, ...prodResults];
   }
   useEffect(() => {
-    const validat = setTimeout(() => {
-      props.changeResult(results);
-      return () => {
-        clearTimeout(validat);
-      };
-    }, 1000);
-  }, [results]);
+    props.changeResult(results);
+  }, [searchQuery]);
 
   return (
     <SearchBar

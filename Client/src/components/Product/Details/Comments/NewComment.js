@@ -36,7 +36,6 @@ const NewComment = (props) => {
           }}
           id="comment"
           label="comment"
-          defaultValue=""
           value={comment}
           size="small"
         />

@@ -10,10 +10,14 @@ import theme from "../../../theme";
 import SideBox from "./PageElements/Sidebox";
 import ActiveBox from "./PageElements/ActiveBox";
 import Alternatives from "./PageElements/Alternatives";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  exitProduct,
+  refreshProduct,
+} from "../../../store/Products/productInViewSlice";
 
 const ProductPage = (props) => {
   const { id: productID } = useParams();
-  const [product, setProduct] = useState([]);
   const [recc, setRecc] = useState(false);
   const [comm, setComm] = useState(false);
   const [value, setValue] = useState(0);
@@ -22,25 +26,25 @@ const ProductPage = (props) => {
   const [liked, setLiked] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [inProgress, setInProgress] = useState(true);
-
+  const dispatch = useDispatch();
   //Relocate
   async function updateProduct(id) {
     const { data, status: responseStatus } = await axios.get(
       `${url}/products/id/${id}`
     );
-    setProduct(data);
+    dispatch(refreshProduct(data));
   }
 
+  const product = useSelector((state) => state.productInView);
   //
 
-  useEffect(() => {
-    updateProduct(productID);
-    const validat = setTimeout(() => {
-      setInProgress(false);
-      return () => {
-        clearTimeout(validat);
-      };
-    }, 1000);
+  useEffect(async () => {
+    await updateProduct(productID);
+    setInProgress(false);
+
+    return () => {
+      dispatch(exitProduct());
+    };
   }, []);
 
   const status = {

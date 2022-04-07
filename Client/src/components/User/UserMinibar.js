@@ -11,6 +11,7 @@ import {
   Typography,
   ButtonGroup,
   Paper,
+  LinearProgress,
 } from "@mui/material";
 import { Done, Add } from "@mui/icons-material";
 import { useSelector } from "react-redux";
@@ -30,6 +31,7 @@ import { getToken } from "../../store/User/userSlice";
 
 const UserMinibar = (props) => {
   const [user, setUser] = useState("");
+  const [loading, setLoading] = useState(true);
   const token = useSelector(getToken);
   let authHeader = {
     headers: { Authorization: `Bearer ${token}` },
@@ -52,9 +54,11 @@ const UserMinibar = (props) => {
           `${url}/user/${uname}`,
           authHeader
         );
+        setLoading(false);
         return data;
       } catch (error) {
         const status = await rejectRequest(props.user, token);
+        setLoading(false);
         console.log(error.message);
       }
     }
@@ -63,53 +67,59 @@ const UserMinibar = (props) => {
 
   return (
     <Paper elevation={4}>
-      <Stack
-        py={1}
-        spacing={1}
-        display="flex"
-        justifyContent="space-between"
-        alignItems="stretch"
-        direction="row"
-        minWidth={300}
-      >
-        <Grid container justifyContent="center" alignItems="center">
-          <Grid item key={`${user?.username}3`} pl={1} pr={1}>
-            {<Avatar src={user?.avatar} sx={{ width: 34, height: 34 }} />}
-          </Grid>
-          <Grid key={`${user?.username}4`} item xs={true}>
-            <Typography fontFamily={"sans-serif"} variant="title">
-              {user?.name}
-            </Typography>
-            <Typography color="text.secondary" variant="body2">
-              {user?.username}
-            </Typography>
-          </Grid>
-        </Grid>
-        {props.request ? (
-          <Stack direction={"row"}>
-            <Button
-              onClick={async (event) => {
-                await acceptRequest(user?.username, authHeader);
-              }}
-              variant="text"
-              sx={{ color: "green" }}
-            >
-              Accept
-            </Button>
-            <Button
-              onClick={async (event) => {
-                await rejectRequest(props.user, authHeader);
-              }}
-              variant="text"
-              sx={{ color: "red" }}
-            >
-              Reject
-            </Button>
-          </Stack>
+      <Box minHeight={50}>
+        {loading ? (
+          <LinearProgress />
         ) : (
-          ""
+          <Stack
+            py={1}
+            spacing={1}
+            display="flex"
+            justifyContent="space-between"
+            alignItems="stretch"
+            direction="row"
+            minWidth={300}
+          >
+            <Grid container justifyContent="center" alignItems="center">
+              <Grid item key={`${user?.username}3`} pl={1} pr={1}>
+                {<Avatar src={user?.avatar} sx={{ width: 34, height: 34 }} />}
+              </Grid>
+              <Grid key={`${user?.username}4`} item xs={true}>
+                <Typography fontFamily={"sans-serif"} variant="title">
+                  {user?.name}
+                </Typography>
+                <Typography color="text.secondary" variant="body2">
+                  {user?.username}
+                </Typography>
+              </Grid>
+            </Grid>
+            {props.request ? (
+              <Stack direction={"row"}>
+                <Button
+                  onClick={async (event) => {
+                    await acceptRequest(user?.username, authHeader);
+                  }}
+                  variant="text"
+                  sx={{ color: "green" }}
+                >
+                  Accept
+                </Button>
+                <Button
+                  onClick={async (event) => {
+                    await rejectRequest(props.user, authHeader);
+                  }}
+                  variant="text"
+                  sx={{ color: "red" }}
+                >
+                  Reject
+                </Button>
+              </Stack>
+            ) : (
+              ""
+            )}
+          </Stack>
         )}
-      </Stack>
+      </Box>
     </Paper>
   );
 };

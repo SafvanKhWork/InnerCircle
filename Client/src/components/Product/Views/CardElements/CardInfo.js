@@ -40,9 +40,14 @@ const CardInfo = (props) => {
   const { expandedDesc, product } = props;
   return (
     <CardContent>
-      <Typography variant="h5" component="div">
-        {product.name}
-      </Typography>
+      <Stack direction={"row"} display="flex" justifyContent={"space-between"}>
+        <Typography variant="h5" component="div">
+          {product.name}
+        </Typography>{" "}
+        <Typography variant="h5" component="div">
+          {"₹" + product.price}
+        </Typography>
+      </Stack>
       <Typography sx={{ mb: 1.5 }} color="text.secondary">
         {product.model}
       </Typography>

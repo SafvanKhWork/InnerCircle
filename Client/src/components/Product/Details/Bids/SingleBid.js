@@ -75,7 +75,7 @@ const Bid = (props) => {
             color="h4"
             variant="body2"
           >
-            {bid.bid}$
+            {"₹" + bid.bid}
           </Typography>
         </Box>
       </Stack>

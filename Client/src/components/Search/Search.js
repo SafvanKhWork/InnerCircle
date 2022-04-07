@@ -18,7 +18,6 @@ const SearchBar = ({ setSearchQuery }) => (
       }}
       label="Recommend To"
       variant="outlined"
-      placeholder=""
       size="small"
     />
   </form>
@@ -48,7 +47,14 @@ export default function SearchBox(props) {
   // console.log(matches);
   const results = matches.map((user) => {
     // console.log(user);
-    return <ResultItem product={props.product} recommand username={user} />;
+    return (
+      <ResultItem
+        key={user}
+        product={props.product}
+        recommand
+        username={user}
+      />
+    );
   });
   return (
     <Stack spacing={1}>

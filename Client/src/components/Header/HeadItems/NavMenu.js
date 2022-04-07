@@ -8,6 +8,7 @@ import {
   MenuItem,
   Divider,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
 import SearchBar from "../../Search/UniversalSearch";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,13 +75,13 @@ const NavMenu = (props) => {
         }}
         anchor="left"
         id="menu-appbar"
-        anchorEl={anchorElNav}
-        anchorOrigin={{
+        anchorel={anchorElNav}
+        anchororigin={{
           vertical: "bottom",
           horizontal: "left",
         }}
         keepMounted
-        transformOrigin={{
+        transformorigin={{
           vertical: "top",
           horizontal: "left",
         }}
@@ -92,14 +93,14 @@ const NavMenu = (props) => {
             <div onClick={() => (!search ? setSearch(true) : "")}>
               <SearchBar
                 products={props.products}
-                search={search}
+                handleCloseNavMenu={handleCloseNavMenu}
                 setLoading={setLoading}
                 changeResult={changeResult}
               />
             </div>
           </Box>
           {!search ? (
-            <React.Fragment>
+            <Link style={{ color: "inherit", textDecoration: "none" }} to="/">
               {menu !== "catagories" ? (
                 <React.Fragment>
                   <MenuItem
@@ -159,7 +160,7 @@ const NavMenu = (props) => {
                   </MenuItem>
                 ))
               )}
-            </React.Fragment>
+            </Link>
           ) : // menu.map((page, i) => (
           //   <MenuItem
           //     key={"menuitem" + i}

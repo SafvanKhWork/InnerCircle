@@ -35,7 +35,7 @@ const Bids = (props) => {
   let start = -size - page;
   let end = page > 0 ? 0 - page : undefined;
 
-  let bids = props.bids
+  let bids = [...props.bids]
     .sort(function (a, b) {
       return a.bid - b.bid;
     })
@@ -45,7 +45,7 @@ const Bids = (props) => {
     });
 
   if (props.desk) {
-    bids = props.bids.sort(function (a, b) {
+    bids = [...props.bids].sort(function (a, b) {
       return b.bid - a.bid;
     });
   }
@@ -73,7 +73,7 @@ const Bids = (props) => {
       <Stack spacing={1}>
         {bids.map((bid) => {
           return (
-            <Box key={bids._id} p={1}>
+            <Box key={bid._id} p={1}>
               <Bid
                 bid={bid}
                 isOwner={account.username === props.product.owner.username}

@@ -44,6 +44,7 @@ const Products = (props) => {
           return (
             <ProductCard
               key={product._id}
+              infiScroll
               index={i}
               status={status}
               isPotrait={!isLandscape}

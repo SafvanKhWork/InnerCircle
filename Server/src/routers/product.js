@@ -9,6 +9,7 @@ const Catagory = require("../models/catagory");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
 const { Console } = require("console");
+const { findById } = require("../models/user");
 const uploadDestination = "../uploads/";
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
     cb(null, new Date().toISOString() + file.originalname);
   },
 });
-console.log(uploadDestination);
+
 const fileFilter = (req, file, cb) => {
   cb(null, file.mimetype === "image/jpeg" || file.mimetype === "image/png");
 };
@@ -40,7 +41,6 @@ router.post(
     // req.params.id
     // req.file.path
     try {
-      console.log(req.file.path);
       const product = await Product.findById(req.params.id);
       if (
         String(req.user._id) === String(product?.owner) &&
@@ -55,7 +55,6 @@ router.post(
       await product.save();
       res.status(201).send(product);
     } catch (e) {
-      console.log(e.message);
       res.status(400).send(e);
     }
   }
@@ -96,7 +95,6 @@ router.post("/product/new", auth, upload.single("image"), async (req, res) => {
 
     res.status(201).send(product);
   } catch (e) {
-    console.log(e.message);
     res.status(400).send(e);
   }
 });
@@ -160,7 +158,7 @@ router.patch("/recommand", auth, async (req, res) => {
       recommandation.push(obj);
     }
     user.save();
-    console.log(user);
+
     res.status(201).send(user);
   } catch (e) {
     res.status(400).send(e.message);
@@ -209,23 +207,24 @@ router.get("/feed", auth, async (req, res) => {
       }
     });
   } catch (error) {
-    console.log(error.message);
     res.status(400).send(error.message);
   }
 });
 
-//Get Recommanded product (Test: Passed)
+//Get Recommanded product (Test: Passed)~~~~
 router.get("/recommanded", auth, async (req, res) => {
   try {
     const user = req.user;
-    const recc = user.recommandation.map((item) => {
-      const ob1 = {
-        product: item.product,
+    const recc = await user.recommandation.map(async (item) => {
+      const prod = await Product.findOne({ product_name: item.product });
+      const obj = {
+        ...prod,
         recommandedby: item.recommandedby,
       };
-      return ob1;
+      console.log(obj);
+      return obj;
     });
-
+    console.log(await recc);
     res.status(200).send(recc);
   } catch (e) {
     res.status(500).send(e.message);
@@ -261,7 +260,7 @@ router.get("/products/id/:id", async (req, res) => {
 });
 
 //Get product by given product_name (Test: Passed)
-router.get("/products/:product", async (req, res) => {
+router.get("/product/:product", async (req, res) => {
   const product_name = req.params.product;
 
   try {
@@ -322,11 +321,14 @@ router.patch("/like/:id", auth, async (req, res) => {
 
     const ur = req.user;
     if (lk.includes(req.user._id)) {
-      throw new Error("Already Liked!");
+      const present = lk.findIndex((like) => String(like) == String(ur._id));
+      if (present !== -1) {
+        lk.splice(present, 1);
+      }
+    } else {
+      lk.push({ _id: ur._id });
     }
-    lk.push({ _id: ur._id });
     product.like = lk;
-
     product.likes = lk.length;
     await product.save();
     res.send(product);
@@ -364,7 +366,6 @@ router.patch("/bid/:id", auth, async (req, res) => {
     if (!exists) {
       product.bids.push(bid);
     }
-    console.log(product);
     await product.save();
 
     res.send(product);
@@ -415,7 +416,7 @@ router.get("/comments/:id", async (req, res) => {
 //Item sold (Test: Passed )
 router.patch("/products/sold/:id", auth, async (req, res) => {
   const _id = req.params.id;
-  console.log(req.user);
+
   try {
     const product = await Product.findOne({
       _id,
@@ -466,7 +467,7 @@ router.patch("/products/sold/:id", auth, async (req, res) => {
 //Item rented (Test: Passed )
 router.patch("/products/rented/:id", auth, async (req, res) => {
   const _id = req.params.id;
-  console.log(req.user);
+
   try {
     const product = await Product.findOne({
       _id,

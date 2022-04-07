@@ -15,7 +15,9 @@ const CommentScroll = (props) => {
       autoHideDuration={200}
     >
       {comments.map((comment, i) => {
-        return <Comment key={i} comment={comment} />;
+        return (
+          <Comment i={i} key={i + " " + Math.random()} comment={comment} />
+        );
       })}
     </Scrollbars>
   );

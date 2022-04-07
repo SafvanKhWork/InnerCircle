@@ -96,7 +96,7 @@ const History = (props) => {
               justifyContent={"space-between"}
             >
               <Typography variant="body2">
-                {user2}: {item.user2 || "kal_el"}
+                {user2}: {item.user2}
               </Typography>
               <Typography align="right" variant="body2">
                 {item.createdAt}

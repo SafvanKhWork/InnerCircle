@@ -64,7 +64,6 @@ const ActiveBox = (props) => {
     setIsFocused,
   } = props.status;
   const images = props.product.images;
-  console.log(images);
   return (
     <Paper elevation={4}>
       <Card>
@@ -87,7 +86,7 @@ const ActiveBox = (props) => {
                 indicators={false}
               >
                 {images.map((img, i) => (
-                  <Item key={img + "" + i}>{url + img}</Item>
+                  <Item key={img + `${i}`}>{url + img}</Item>
                 ))}
               </Carousel>
             </div>
