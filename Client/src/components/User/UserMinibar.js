@@ -16,7 +16,7 @@ import {
 import { Done, Add } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { url } from "../../config";
-import { getToken } from "../../store/User/userSlice";
+import { getToken, getUser } from "../../store/User/userSlice";
 // import { getToken } from "../../../store/User/userSlice";
 // import { url } from "../../../config";
 
@@ -36,7 +36,7 @@ const UserMinibar = (props) => {
   let authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
-
+  const account = useSelector(getUser);
   const acceptRequest = async (uname, authHeader) => {
     await axios.patch(
       `${url}/accept-friend-request/${uname}`,
@@ -48,7 +48,7 @@ const UserMinibar = (props) => {
     await axios.delete(`${url}/reject-friend-request/${uname}`, authHeader);
   };
   useEffect(async () => {
-    async function getUser(uname) {
+    async function getUserOn(uname) {
       try {
         const { data, status: responseStatus } = await axios.get(
           `${url}/user/${uname}`,
@@ -57,13 +57,19 @@ const UserMinibar = (props) => {
         setLoading(false);
         return data;
       } catch (error) {
-        const status = await rejectRequest(props.user, token);
         setLoading(false);
         console.log(error.message);
       }
     }
-    setUser(await getUser(props.user));
+    setUser(await getUserOn(props.user));
   }, []);
+  const [inFriend, setInFriend] = useState(false);
+  const [hasSentRequestTo, setHasSentRequestTo] = useState(false);
+  useEffect(() => {
+    setInFriend(account.circle.includes(user?.username));
+    setHasSentRequestTo(account.sentFriendRequest.includes(user?.username));
+  }, [user]);
+  console.log({ inFriend, hasSentRequestTo });
 
   return (
     <Paper elevation={4}>
@@ -93,6 +99,7 @@ const UserMinibar = (props) => {
                 </Typography>
               </Grid>
             </Grid>
+
             {props.request ? (
               <Stack direction={"row"}>
                 <Button
@@ -115,7 +122,32 @@ const UserMinibar = (props) => {
                 </Button>
               </Stack>
             ) : (
-              ""
+              <Button
+                disabled={hasSentRequestTo}
+                onClick={async (event) => {
+                  if (event.target.value === "Add Friend") {
+                    await axios.post(
+                      `${url}/add-friend/${props.user}`,
+                      undefined,
+                      authHeader
+                    );
+                    event.target.value = "Sent Request";
+                  }
+                  if (event.target.value === "Unfriend") {
+                    await axios.delete(
+                      `${url}/unfriend/${props.user}`,
+                      undefined,
+                      authHeader
+                    );
+                    event.target.value = "Add Friend";
+                  }
+                }}
+                variant="text"
+                sx={{ color: "green" }}
+              >
+                {inFriend ? "Unfriend" : " Add Friend"}
+                {hasSentRequestTo ? "Sent Request" : " Add Friend"}
+              </Button>
             )}
           </Stack>
         )}

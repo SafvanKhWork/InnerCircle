@@ -70,7 +70,9 @@ function App() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const { data: recommanded } = await axios.get(`${url}/recommanded`, {
+      const {
+        data: [recommanded, recommandors],
+      } = await axios.get(`${url}/recommanded`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -78,6 +80,7 @@ function App() {
 
       dispatch(
         setSpecifiedList({
+          recommandors,
           discover,
           feed,
           catagories,

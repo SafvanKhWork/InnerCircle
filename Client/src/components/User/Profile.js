@@ -44,7 +44,7 @@ const Profile = (props) => {
   const userInView = useSelector((state) => state.userInView);
   const user = props.profile ? { ...account } : userInView;
   const [posts, setPosts] = useState([]);
-  console.log(posts);
+
   useEffect(async () => {
     if (user._id) {
       const response = await axios.get(`${url}/products/owner/${user._id}`);

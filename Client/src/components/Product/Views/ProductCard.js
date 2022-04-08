@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useRef, useLayoutEffect, useEffect } from "react";
 import { Box, Card, ThemeProvider, Paper } from "@mui/material";
 import { Link } from "react-router-dom";
 
@@ -10,13 +10,20 @@ import CardImage from "./CardElements/CardImage";
 import CardInfo from "./CardElements/CardInfo";
 import CardButtons from "./CardElements/CardButtons";
 import CardActivity from "./CardElements/CardActivity";
+import { useDispatch, useSelector } from "react-redux";
+import applicationStateSlice, {
+  setCardHeight,
+} from "../../../store/ApplicationStates/applicationStateSlice";
 
 export default function ProductCard(props) {
+  const targetRef = useRef();
+  const dispatch = useDispatch();
   const [expandedDesc, setExpandedDesc] = useState(false);
   const [expandedBid, setExpandedBid] = useState(false);
   const [expandedRecc, setExpandedRecc] = useState(false);
   const [expandedComment, setExpandedComment] = useState(false);
   const [liked, setLiked] = useState(false);
+  const [height, setHeight] = useState(0);
   const { product } = props;
   const values = {
     expandedDesc,
@@ -25,11 +32,22 @@ export default function ProductCard(props) {
     expandedComment,
     liked,
   };
-
+  // const minHeight = useSelector((state) => state.applicationState.cardHeight);
+  // useLayoutEffect(() => {
+  //   if (targetRef.current) {
+  //     setHeight(targetRef.current.offsetHeight);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   if (height > minHeight) {
+  //     dispatch(setCardHeight(height));
+  //   }
+  // }, [height]);
+  // console.log(height, minHeight);
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ minWidth: 2 }}>
-        <Paper elevation={4}>
+        <Paper ref={targetRef} elevation={4}>
           <Card variant="text">
             <CardHead product={product} />
 

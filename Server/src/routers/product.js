@@ -215,17 +215,23 @@ router.get("/feed", auth, async (req, res) => {
 router.get("/recommanded", auth, async (req, res) => {
   try {
     const user = req.user;
-    const recc = await user.recommandation.map(async (item) => {
-      const prod = await Product.findOne({ product_name: item.product });
-      const obj = {
-        ...prod,
-        recommandedby: item.recommandedby,
-      };
-      console.log(obj);
-      return obj;
+    const recommanders = {};
+    // const recommanded = .map((item) => {
+    //  const ob1 = {
+    //     product: item.product,
+    //     recommandedby: item.recommandedby,
+    //   };
+    //   return ob1;
+    // });
+    const promises = await user.recommandation.map(async (item) => {
+      const product = await Product.findOne({
+        product_name: item.product,
+      }).populate("owner");
+      recommanders[item.product] = item.recommandedby;
+      return product;
     });
-    console.log(await recc);
-    res.status(200).send(recc);
+    const resolved = await Promise.all(promises);
+    res.status(200).send([resolved.filter((item) => item), recommanders]);
   } catch (e) {
     res.status(500).send(e.message);
   }
