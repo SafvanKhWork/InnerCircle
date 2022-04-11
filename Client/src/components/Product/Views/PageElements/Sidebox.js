@@ -29,7 +29,7 @@ const SideBox = (props) => {
     maxBid = [...bids]?.sort((a, b) => b.bid - a.bid)[0]["bid"];
     yourBid = [...bids]?.filter(
       (bid) => String(bid.user) === String(user._id)
-    )[0]["bid"];
+    )[0]?.bid;
   }
 
   return (

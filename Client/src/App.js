@@ -34,9 +34,6 @@ function App() {
     if (token && token !== "") {
       const refreshInterval = setInterval(async () => {
         const { data } = await axios.get(`${url}/user/me`, authHeader);
-        if (data.circle.length === 0) {
-          dispatch(setCurrent(discover));
-        }
         if (data) {
           dispatch(refreshUser(data));
         }

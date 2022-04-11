@@ -195,6 +195,7 @@ router.get("/feed", auth, async (req, res) => {
   try {
     await req.user.circle.forEach(async (friend, i) => {
       const products = await Product.find({}).populate("owner");
+
       const posts = await products.filter(
         (product) => product.owner.username === friend
       );
