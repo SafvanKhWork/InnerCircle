@@ -192,7 +192,6 @@ router.get("/products/owner/:user", async (req, res) => {
 //fetch Posts from friends (Work in Progress)
 router.get("/feed", auth, async (req, res) => {
   let feed = [];
-
   try {
     await req.user.circle.forEach(async (friend, i) => {
       const products = await Product.find({}).populate("owner");
@@ -206,7 +205,9 @@ router.get("/feed", auth, async (req, res) => {
           .send([...feed].sort((a, b) => b.createdAt - a.createdAt));
       }
     });
+    res.status(200).send([]);
   } catch (error) {
+    console.log(error.message);
     res.status(400).send(error.message);
   }
 });

@@ -26,6 +26,22 @@ function App() {
   const [inProgress, setInProgress] = useState(true);
   const dispatch = useDispatch();
   const token = useSelector(getToken);
+  let authHeader = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  useEffect(async () => {
+    if (token && token !== "") {
+      const refreshInterval = setInterval(async () => {
+        const { data } = await axios.get(`${url}/user/me`, authHeader);
+        if (data) {
+          dispatch(refreshUser(data));
+        }
+        return () => {
+          clearInterval(refreshInterval);
+        };
+      }, 10000);
+    }
+  }, []);
   useEffect(async () => {
     try {
       setInProgress(false);
@@ -55,21 +71,27 @@ function App() {
   }, [token]);
   useEffect(async () => {
     try {
+      if (token === "") {
+        return;
+      }
       const { data: discover } = await axios.get(`${url}/products`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const { data: feed } = await axios.get(`${url}/feed`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const { data: catagories } = await axios.get(`${url}/catagories`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const {
         data: [recommanded, recommandors],
       } = await axios.get(`${url}/recommanded`, {
@@ -102,9 +124,9 @@ function App() {
       //   dispatch(refreshRecommandation(recommandation));
       // }
     } catch (error) {
-      console.error(error.message);
+      console.log({ ...error });
     }
-  }, []);
+  }, [token]);
   // useEffect(async () => {
   //   dispatch(refetchUser());
   // }, [token]);

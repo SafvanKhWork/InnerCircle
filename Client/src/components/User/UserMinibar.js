@@ -14,9 +14,15 @@ import {
   LinearProgress,
 } from "@mui/material";
 import { Done, Add } from "@mui/icons-material";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { url } from "../../config";
-import { getToken, getUser } from "../../store/User/userSlice";
+import {
+  getToken,
+  getUser,
+  refetchUser,
+  refreshUser,
+} from "../../store/User/userSlice";
+import { Link } from "react-router-dom";
 // import { getToken } from "../../../store/User/userSlice";
 // import { url } from "../../../config";
 
@@ -33,6 +39,8 @@ const UserMinibar = (props) => {
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
   const token = useSelector(getToken);
+  const dispatch = useDispatch();
+
   let authHeader = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -63,13 +71,15 @@ const UserMinibar = (props) => {
     }
     setUser(await getUserOn(props.user));
   }, []);
+  const isYou = String(user._id) === String(account._id);
   const [inFriend, setInFriend] = useState(false);
   const [hasSentRequestTo, setHasSentRequestTo] = useState(false);
   useEffect(() => {
     setInFriend(account.circle.includes(user?.username));
     setHasSentRequestTo(account.sentFriendRequest.includes(user?.username));
+
+    return () => {};
   }, [user]);
-  console.log({ inFriend, hasSentRequestTo });
 
   return (
     <Paper elevation={4}>
@@ -86,69 +96,145 @@ const UserMinibar = (props) => {
             direction="row"
             minWidth={300}
           >
-            <Grid container justifyContent="center" alignItems="center">
-              <Grid item key={`${user?.username}3`} pl={1} pr={1}>
-                {<Avatar src={user?.avatar} sx={{ width: 34, height: 34 }} />}
+            <Link
+              style={{ color: "inherit", textDecoration: "none" }}
+              to={`/profile/${user?.username}`}
+            >
+              <Grid container justifyContent="center" alignItems="center">
+                <Grid item key={`${user?.username}3`} pl={1} pr={1}>
+                  {<Avatar src={user?.avatar} sx={{ width: 34, height: 34 }} />}
+                </Grid>
+                <Grid key={`${user?.username}4`} item xs={true}>
+                  <Typography fontFamily={"sans-serif"} variant="title">
+                    {isYou ? "you" : user?.name}
+                  </Typography>
+                  <Typography color="text.secondary" variant="body2">
+                    {isYou ? "you" : user?.username}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid key={`${user?.username}4`} item xs={true}>
-                <Typography fontFamily={"sans-serif"} variant="title">
-                  {user?.name}
-                </Typography>
-                <Typography color="text.secondary" variant="body2">
-                  {user?.username}
-                </Typography>
-              </Grid>
-            </Grid>
-
-            {props.request ? (
-              <Stack direction={"row"}>
-                <Button
-                  onClick={async (event) => {
-                    await acceptRequest(user?.username, authHeader);
-                  }}
-                  variant="text"
-                  sx={{ color: "green" }}
-                >
-                  Accept
-                </Button>
-                <Button
-                  onClick={async (event) => {
-                    await rejectRequest(props.user, authHeader);
-                  }}
-                  variant="text"
-                  sx={{ color: "red" }}
-                >
-                  Reject
-                </Button>
-              </Stack>
-            ) : (
-              <Button
-                disabled={hasSentRequestTo}
-                onClick={async (event) => {
-                  if (event.target.value === "Add Friend") {
-                    await axios.post(
-                      `${url}/add-friend/${props.user}`,
-                      undefined,
-                      authHeader
-                    );
-                    event.target.value = "Sent Request";
-                  }
-                  if (event.target.value === "Unfriend") {
-                    await axios.delete(
-                      `${url}/unfriend/${props.user}`,
-                      undefined,
-                      authHeader
-                    );
-                    event.target.value = "Add Friend";
-                  }
-                }}
-                variant="text"
-                sx={{ color: "green" }}
-              >
-                {inFriend ? "Unfriend" : " Add Friend"}
-                {hasSentRequestTo ? "Sent Request" : " Add Friend"}
-              </Button>
-            )}
+            </Link>
+            {
+              isYou ? (
+                ""
+              ) : props.request ? (
+                <Stack direction={"row"}>
+                  <Button
+                    onClick={async (event) => {
+                      await acceptRequest(user?.username, authHeader);
+                      const { data } = await axios.get(
+                        `${url}/user/me`,
+                        authHeader
+                      );
+                      if (data) {
+                        dispatch(refreshUser(data));
+                      }
+                    }}
+                    variant="text"
+                    sx={{ color: "green" }}
+                  >
+                    Accept
+                  </Button>
+                  <Button
+                    onClick={async (event) => {
+                      await rejectRequest(props.user, authHeader);
+                      const { data } = await axios.get(
+                        `${url}/user/me`,
+                        authHeader
+                      );
+                      if (data) {
+                        dispatch(refreshUser(data));
+                      }
+                    }}
+                    variant="text"
+                    sx={{ color: "red" }}
+                  >
+                    Reject
+                  </Button>
+                </Stack>
+              ) : (
+                <Box p={1}>
+                  {inFriend ? (
+                    <Button
+                      onClick={async (event) => {
+                        const { status } = await axios.delete(
+                          `${url}/unfriend/${props.user}`,
+                          authHeader
+                        );
+                        const { data } = await axios.get(
+                          `${url}/user/me`,
+                          authHeader
+                        );
+                        if (data) {
+                          dispatch(refreshUser(data));
+                        }
+                        setInFriend(false);
+                      }}
+                      variant="text"
+                      sx={{ color: "red" }}
+                    >
+                      Unfriend
+                    </Button>
+                  ) : hasSentRequestTo ? (
+                    <Button
+                      disabled={true}
+                      variant="text"
+                      sx={{ color: "grey" }}
+                    >
+                      Sent Request
+                    </Button>
+                  ) : (
+                    <Button
+                      onClick={async (event) => {
+                        const { status } = await axios.post(
+                          `${url}/add-friend/${props.user}`,
+                          undefined,
+                          authHeader
+                        );
+                        const { data } = await axios.get(
+                          `${url}/user/me`,
+                          authHeader
+                        );
+                        if (data) {
+                          dispatch(refreshUser(data));
+                        }
+                        setHasSentRequestTo(true);
+                      }}
+                      variant="text"
+                      sx={{ color: "green" }}
+                    >
+                      Add Friend
+                    </Button>
+                  )}
+                </Box>
+              )
+              // <Button
+              //   disabled={hasSentRequestTo}
+              //   onClick={async (event) => {
+              //     if (event.target.value === "Add Friend") {
+              //       await axios.post(
+              //         `${url}/add-friend/${props.user}`,
+              //         undefined,
+              //         authHeader
+              //       );
+              //       event.target.value = "Sent Request";
+              //     }
+              //     if (event.target.value === "Unfriend") {
+              //       await axios.delete(
+              //         `${url}/unfriend/${props.user}`,
+              //         undefined,
+              //         authHeader
+              //       );
+              //       event.target.value = "Add Friend";
+              //     }
+              //   }}
+              //   variant="text"
+              //   sx={{ color: "green" }}
+              // >
+              //   {inFriend ? "Unfriend" : " Add Friend"}
+              //   {hasSentRequestTo ? "Sent Request" : " Add Friend"}
+              // </Button>
+            }
           </Stack>
         )}
       </Box>

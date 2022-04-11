@@ -14,7 +14,11 @@ import {
 } from "@mui/material";
 import { Done, Add } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
-import { getToken, refreshUserField } from "../../../store/User/userSlice";
+import {
+  getToken,
+  refreshUser,
+  refreshUserField,
+} from "../../../store/User/userSlice";
 import { url } from "../../../config";
 
 // const acceptRequest = async (uname, authHeader) => {
@@ -116,6 +120,10 @@ const SingleFriendRequest = (props) => {
         <Button
           onClick={async (event) => {
             setFriendRequest(await acceptRequest(user?.username, authHeader));
+            const { data } = await axios.get(`${url}/user/me`, authHeader);
+            if (data) {
+              dispatch(refreshUser(data));
+            }
             setStatus("Accepted");
           }}
           variant="text"
@@ -126,7 +134,13 @@ const SingleFriendRequest = (props) => {
         <Button
           onClick={async (event) => {
             setFriendRequest(await rejectRequest(props.user, authHeader));
-            setStatus("Rejected");
+
+            const { data } = await axios.get(`${url}/user/me`, authHeader);
+            if (data) {
+              dispatch(refreshUser(data));
+            }
+
+            setStatus("Accepted");
           }}
           variant="text"
           sx={{ color: "red" }}

@@ -168,7 +168,11 @@ router.get("/me/current", auth, async (req, res) => {
 
 //Get User Profile (Test: Passed )
 router.get("/user/me", auth, async (req, res) => {
-  res.send(req.user);
+  try {
+    res.send(req.user);
+  } catch (error) {
+    console.log(error.message);
+  }
 });
 
 //Get User History (Test: Passed )
@@ -201,10 +205,18 @@ router.patch("/users/me", auth, async (req, res) => {
 router.delete("/unfriend/:uname", auth, async (req, res) => {
   try {
     const username = req.params.uname;
+    const friend = await User.findOne({ username });
     const present = req.user.circle.findIndex((friend) => friend == username);
+    const presentFriend = friend.circle.findIndex(
+      (friend) => friend == req.user.username
+    );
     if (present !== -1) {
       req.user.circle.splice(present, 1);
       req.user.save();
+    }
+    if (presentFriend !== -1) {
+      friend.circle.splice(presentFriend, 1);
+      friend.save();
     }
     res.send(req.user.circle);
   } catch (e) {
@@ -410,6 +422,7 @@ router.get("/search/user/:query", async (req, res) => {
         return true;
       }
     });
+    users = users.map((user) => user.username);
     res.status(200).send(users);
   } catch (e) {
     res.status(400).send(e);

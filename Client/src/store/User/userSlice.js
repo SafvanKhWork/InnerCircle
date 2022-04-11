@@ -16,7 +16,11 @@ export const refetchUser = createAsyncThunk(
         Authorization: `Bearer ${state.user.token}`,
       },
     });
+    console.log(state.user.token);
     thunkAPI.dispatch(setLoading(false));
+    if (response.data) {
+      thunkAPI.dispatch(refreshUser(response.data));
+    }
     return response.data;
   }
 );
@@ -196,7 +200,6 @@ const userSlice = createSlice({
       state.status = "loading";
     },
     [refetchUser.fulfilled]: (state, { payload }) => {
-      state.user = payload;
       state.status = "success";
     },
     [refetchUser.rejected]: (state, action) => {

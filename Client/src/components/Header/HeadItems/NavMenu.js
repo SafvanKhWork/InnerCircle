@@ -7,6 +7,7 @@ import {
   Drawer,
   MenuItem,
   Divider,
+  Stack,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -20,7 +21,7 @@ import {
 } from "../../../store/Products/productListSlice";
 import { getToken } from "../../../store/User/userSlice";
 
-const drawerWidth = 240;
+const drawerWidth = 400;
 
 const NavMenu = (props) => {
   const token = useSelector(getToken);
@@ -188,7 +189,7 @@ const NavMenu = (props) => {
               />
             </Box>
           ) : (
-            results
+            <Stack spacing={1}>{results}</Stack>
           )}
         </Box>
       </Drawer>

@@ -3,8 +3,9 @@ import { TextField } from "@mui/material";
 import axios from "axios";
 import { url } from "../../config";
 
-import UserResultItem from "./ResultItem";
+import UserResultItem from "../User/UserMinibar";
 import ProductResultItem from "./ProductResultItem";
+import { useSelector } from "react-redux";
 
 // const users = [
 //   { name: "safvan khalifa", username: "khsafvan" },
@@ -69,11 +70,13 @@ const productFinder = (isubstring, data) => {
       return false;
     }
   });
+  console.log(matches, data);
   return matches;
 };
 
 export default function SearchBox(props) {
   let results;
+  const products = useSelector((state) => state.products.discover);
   const [searchQuery, setSearchQuery] = useState("");
   const [users, setUsers] = useState([]);
   const isEmpty = searchQuery.trim() === "";
@@ -85,17 +88,15 @@ export default function SearchBox(props) {
     setUsers(value);
   }, [searchQuery]);
   if (!isEmpty) {
-    const prodResults = productFinder(searchQuery, props.products).map(
-      (user, i) => {
-        return (
-          <ProductResultItem
-            handleCloseNavMenu={props.handleCloseNavMenu}
-            key={"resultProduct" + i}
-            user={user}
-          />
-        );
-      }
-    );
+    const prodResults = productFinder(searchQuery, products).map((user, i) => {
+      return (
+        <ProductResultItem
+          handleCloseNavMenu={props.handleCloseNavMenu}
+          key={"resultProduct" + i}
+          user={user}
+        />
+      );
+    });
     const userResults = users.map((user, i) => {
       return (
         <UserResultItem
