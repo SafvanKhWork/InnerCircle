@@ -36,7 +36,7 @@ const initialState = {
   circle: [],
   history: [],
   recommandation: [],
-  token: window.localStorage.getItem("inner-circle-token").split('"')[1] || "",
+  token: window.localStorage.getItem("inner-circle-token")?.split('"')[1] || "",
 };
 
 let authHeader;
