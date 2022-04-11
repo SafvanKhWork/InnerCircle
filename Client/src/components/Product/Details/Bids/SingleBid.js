@@ -19,8 +19,12 @@ import { useSelector } from "react-redux";
 
 const Bid = (props) => {
   const [opt, setOpt] = useState(false);
+
   const [user, setUser] = useState(false);
   const token = useSelector(getToken);
+  let authHeader = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     async function getUser(id) {
       const { data, status: responseStatus } = await axios.get(
@@ -84,6 +88,13 @@ const Bid = (props) => {
           <Stack spacing={1} direction="row">
             <Button
               color="inherit"
+              onClick={async () => {
+                const { state } = await axios.patch(
+                  `${url}/products/sold/${props.product._id}`,
+                  { soldTo: user._id },
+                  authHeader
+                );
+              }}
               variant="outlined"
               fullWidth
               sx={{ color: green[500] }}

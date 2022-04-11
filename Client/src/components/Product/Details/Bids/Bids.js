@@ -76,6 +76,7 @@ const Bids = (props) => {
             <Box key={bid._id} p={1}>
               <Bid
                 bid={bid}
+                product={props.product}
                 isOwner={account.username === props.product.owner.username}
               />
             </Box>

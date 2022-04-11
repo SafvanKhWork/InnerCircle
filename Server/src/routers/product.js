@@ -193,20 +193,25 @@ router.get("/products/owner/:user", async (req, res) => {
 router.get("/feed", auth, async (req, res) => {
   let feed = [];
   try {
-    await req.user.circle.forEach(async (friend, i) => {
-      const products = await Product.find({}).populate("owner");
+    if (req.user.circle.length !== 0) {
+      await req.user.circle.forEach(async (friend, i) => {
+        const products = await Product.find({}).populate("owner");
 
-      const posts = await products.filter(
-        (product) => product.owner.username === friend
-      );
-      feed.push(...posts);
-      if (req.user.circle.length === i + 1) {
-        res
-          .status(200)
-          .send([...feed].sort((a, b) => b.createdAt - a.createdAt));
-      }
-    });
-    res.status(200).send([]);
+        const posts = await products.filter(
+          (product) => product.owner.username === friend
+        );
+        feed.push(...posts);
+        if (req.user.circle.length === i + 1) {
+          res
+            .status(200)
+            .send([...feed].sort((a, b) => b.createdAt - a.createdAt));
+        } else {
+          res.status(200).send([]);
+        }
+      });
+    } else {
+      res.status(200).send([]);
+    }
   } catch (error) {
     console.log(error.message);
     res.status(400).send(error.message);
@@ -218,13 +223,6 @@ router.get("/recommanded", auth, async (req, res) => {
   try {
     const user = req.user;
     const recommanders = {};
-    // const recommanded = .map((item) => {
-    //  const ob1 = {
-    //     product: item.product,
-    //     recommandedby: item.recommandedby,
-    //   };
-    //   return ob1;
-    // });
     const promises = await user.recommandation.map(async (item) => {
       const product = await Product.findOne({
         product_name: item.product,

@@ -37,6 +37,7 @@ import Image from "../../../../img/img.jpg";
 import Vmag from "../../../../img/vimg.jpg";
 import CardHead from "../CardElements/CardHead";
 import { url } from "../../../../config";
+import { Link } from "react-router-dom";
 
 function Item(props) {
   return (
@@ -63,13 +64,18 @@ const ActiveBox = (props) => {
     isFocused,
     setIsFocused,
   } = props.status;
+
   const images = props.product.images;
   return (
     <Paper elevation={4}>
       <Card>
         <Box minHeight={510} maxHeight={510}>
-          <CardHead product={props.product} />
-
+          <Link
+            style={{ color: "inherit", textDecoration: "none" }}
+            to={`/profile/${props.product.owner?.username}`}
+          >
+            <CardHead product={props.product} />
+          </Link>
           <Box maxHeight={388} minHeight={388}>
             <div
               onMouseEnter={() => setIsFocused(true)}

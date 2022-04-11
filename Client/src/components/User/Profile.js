@@ -184,7 +184,7 @@ const Profile = (props) => {
               {value === 0 ? (
                 <Stack spacing={1}>
                   {circle.map((el) => (
-                    <UserMinibar key={el} user={el} />
+                    <UserMinibar other={props.other} key={el} user={el} />
                   ))}
                 </Stack>
               ) : (

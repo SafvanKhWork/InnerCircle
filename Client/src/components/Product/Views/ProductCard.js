@@ -32,6 +32,7 @@ export default function ProductCard(props) {
     expandedComment,
     liked,
   };
+
   // const minHeight = useSelector((state) => state.applicationState.cardHeight);
   // useLayoutEffect(() => {
   //   if (targetRef.current) {
@@ -49,8 +50,12 @@ export default function ProductCard(props) {
       <Box sx={{ minWidth: 2 }}>
         <Paper ref={targetRef} elevation={4}>
           <Card variant="text">
-            <CardHead product={product} />
-
+            <Link
+              style={{ color: "inherit", textDecoration: "none" }}
+              to={`/profile/${props.product.owner?.username}`}
+            >
+              <CardHead product={product} />
+            </Link>
             {props.isPotrait ? (
               <Fragment>
                 <Link

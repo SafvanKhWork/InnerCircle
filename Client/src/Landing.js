@@ -27,7 +27,7 @@ const Landing = (props) => {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile profile />} />
-          <Route path="/profile/:uname" element={<Profile />} />
+          <Route path="/profile/:uname" element={<Profile other />} />
           <Route path="/product/:id" element={<Product />} />
           <Route path="/product/post" element={<Post />} />
           <Route path="*" element={<div></div>} />
