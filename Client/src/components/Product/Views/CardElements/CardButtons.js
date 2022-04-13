@@ -97,6 +97,10 @@ const CardButtons = (props) => {
         <IconButton aria-label="like" onClick={handleLike}>
           {liked ? <Favorite sx={{ color: red[500] }} /> : <Favorite />}
         </IconButton>
+        <Typography sx={{ color: red[500] }}>
+          {props.product.likes || 0}
+        </Typography>
+
         <IconButton p={1} aria-label="like">
           <ExpandMoreFun
             expand={expandedComment}
@@ -135,7 +139,6 @@ const CardButtons = (props) => {
             {expandedRecc ? <Share sx={{ color: yellow[700] }} /> : <Share />}
           </ExpandMoreFun>
         </IconButton>
-
         <ExpandMoreFun
           expand={expandedDesc}
           onClick={handleExpandDesc}

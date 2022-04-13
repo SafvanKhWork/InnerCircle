@@ -260,7 +260,7 @@ export default function SignUp(props) {
                       onChange={(event) => setRePassword(event.target.value)}
                       name="repassword"
                       label="Re-Password"
-                      type="repassword"
+                      type="password"
                       id="repassword"
                       autoComplete="new-password"
                     />

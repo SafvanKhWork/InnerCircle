@@ -106,8 +106,8 @@ const CardInfo = (props) => {
               fontSize={"medium"}
               sx={{ color: "" }}
             >
-              {`${suggesters[0]?.username} and +${
-                suggesters.length - 1
+              {`${suggesters[0]?.username}${
+                suggesters.length > 1 ? " and +" + (suggesters.length - 1) : ""
               } recommanded
               ${product?.name} to you.`}
             </Typography>

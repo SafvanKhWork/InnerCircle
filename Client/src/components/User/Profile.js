@@ -166,7 +166,7 @@ const Profile = (props) => {
               {value === 1 ? (
                 <Stack spacing={1}>
                   {history.map((el) => (
-                    <History item={el} />
+                    <History key={el.product_name} item={el} />
                   ))}
                 </Stack>
               ) : (

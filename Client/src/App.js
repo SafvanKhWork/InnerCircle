@@ -26,6 +26,7 @@ function App() {
   const [inProgress, setInProgress] = useState(true);
   const dispatch = useDispatch();
   const token = useSelector(getToken);
+  const user = useSelector(getUser);
   const discover = useSelector((state) => state.products.discover);
   let authHeader = {
     headers: { Authorization: `Bearer ${token}` },
@@ -127,7 +128,7 @@ function App() {
     } catch (error) {
       console.log({ ...error });
     }
-  }, [token]);
+  }, [token, user]);
   // useEffect(async () => {
   //   dispatch(refetchUser());
   // }, [token]);

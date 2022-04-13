@@ -69,6 +69,7 @@ export default function ProductCard(props) {
                   />
                 </Link>
                 <CardButtons
+                  product={props.product}
                   thrower={{
                     setExpandedDesc,
                     setExpandedBid,

@@ -10,16 +10,18 @@ import { green, red } from "@mui/material/colors";
 import { useState, useEffect, Fragment } from "react";
 import axios from "axios";
 import { getToken, getUser } from "../../../../store/User/userSlice";
+import { useDispatch } from "react-redux";
 
 //
 
 import Image from "../../../../img/img.jpg";
 import { url } from "../../../../config";
+import { refetchUser } from "../../../../store/User/userSlice";
 import { useSelector } from "react-redux";
 
 const Bid = (props) => {
   const [opt, setOpt] = useState(false);
-
+  const dispatch = useDispatch();
   const [user, setUser] = useState(false);
   const token = useSelector(getToken);
   let authHeader = {
@@ -91,9 +93,10 @@ const Bid = (props) => {
               onClick={async () => {
                 const { state } = await axios.patch(
                   `${url}/products/sold/${props.product._id}`,
-                  { soldTo: user._id },
+                  { soldTo: user._id, value: bid.bid },
                   authHeader
                 );
+                dispatch(refetchUser());
               }}
               variant="outlined"
               fullWidth

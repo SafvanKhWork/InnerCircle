@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import {
   Grid,
   Box,
@@ -35,21 +35,35 @@ import {
 } from "@mui/icons-material";
 import Image from "../../img/img.jpg";
 import theme from "../../theme";
+import { useSelector } from "react-redux";
+import { getToken } from "../../store/User/userSlice";
+import axios from "axios";
+import { url } from "../../config";
 
 const History = (props) => {
   let color;
+  const token = useSelector(getToken);
+  const [toUser, setToUser] = useState({});
   const borrowed = true;
   let user2;
   const { item } = props;
-  if (item.status === "sold") {
+  if (item.act === "sold") {
     color = "#A00101";
     user2 = "To";
   }
-  if (item.status === "bought") {
+  useEffect(async () => {
+    const { data } = await axios.get(`${url}/user/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (data) {
+      setToUser(data);
+    }
+  }, []);
+  if (item.act === "bought") {
     color = "#03870E";
     user2 = "From";
   }
-  if (item.status === "rented") {
+  if (item.act === "rented") {
     color = "#034287";
     user2 = borrowed ? "From" : "To";
   }
@@ -73,7 +87,7 @@ const History = (props) => {
                   {item.name}
                 </Typography>
                 <Typography variant="caption">
-                  {item.product_name || "KW7120"}
+                  {item.model || "NULL"}
                 </Typography>
               </Stack>
 
@@ -86,7 +100,7 @@ const History = (props) => {
                     color: color,
                   }}
                 >
-                  {item.status}
+                  {item.act}
                 </Typography>
               </Stack>
             </Stack>
@@ -96,7 +110,7 @@ const History = (props) => {
               justifyContent={"space-between"}
             >
               <Typography variant="body2">
-                {user2}: {item.user2}
+                {user2}: {toUser.username}
               </Typography>
               <Typography align="right" variant="body2">
                 {item.createdAt}
