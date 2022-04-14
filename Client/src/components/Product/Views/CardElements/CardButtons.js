@@ -69,7 +69,7 @@ const CardButtons = (props) => {
   } = props.thrower;
   console.log(props.thrower);
 
-  const handleLike = () => {
+  const handleLike = async () => {
     setLiked(!liked);
   };
 
@@ -97,48 +97,49 @@ const CardButtons = (props) => {
         <IconButton aria-label="like" onClick={handleLike}>
           {liked ? <Favorite sx={{ color: red[500] }} /> : <Favorite />}
         </IconButton>
-        <Typography sx={{ color: red[500] }}>
-          {props.product.likes || 0}
-        </Typography>
+        {liked ? (
+          <Typography sx={{ color: red[500] }}>{props.product || 1}</Typography>
+        ) : (
+          <Typography sx={{ color: "gray" }}>
+            {props.product.likes || 0}
+          </Typography>
+        )}
 
-        <IconButton p={1} aria-label="like">
-          <ExpandMoreFun
-            expand={expandedComment}
-            onClick={handleExpandComment}
-            aria-expandedComment={expandedComment}
-            aria-label="show more"
-          >
-            {expandedComment ? (
-              <Comment sx={{ color: blue[500] }} />
-            ) : (
-              <Comment />
-            )}
-          </ExpandMoreFun>
-        </IconButton>
-        <IconButton p={1} aria-label="bid">
-          <ExpandMoreFun
-            expand={expandedBid}
-            onClick={handleExpandBid}
-            aria-expandedBid={expandedBid}
-            aria-label="show more"
-          >
-            {expandedBid ? (
-              <MonetizationOn sx={{ color: green[500] }} />
-            ) : (
-              <MonetizationOn />
-            )}
-          </ExpandMoreFun>
-        </IconButton>
-        <IconButton p={1} id="recc">
-          <ExpandMoreFun
-            expand={expandedRecc}
-            onClick={handleExpandRecc}
-            aria-expandedComment={expandedRecc}
-            aria-label="show more"
-          >
-            {expandedRecc ? <Share sx={{ color: yellow[700] }} /> : <Share />}
-          </ExpandMoreFun>
-        </IconButton>
+        <ExpandMoreFun
+          expand={expandedComment}
+          onClick={handleExpandComment}
+          aria-expandedComment={expandedComment}
+          aria-label="show more"
+        >
+          {expandedComment ? (
+            <Comment sx={{ color: blue[500] }} />
+          ) : (
+            <Comment />
+          )}
+        </ExpandMoreFun>
+
+        <ExpandMoreFun
+          expand={expandedBid}
+          onClick={handleExpandBid}
+          aria-expandedBid={expandedBid}
+          aria-label="show more"
+        >
+          {expandedBid ? (
+            <MonetizationOn sx={{ color: green[500] }} />
+          ) : (
+            <MonetizationOn />
+          )}
+        </ExpandMoreFun>
+
+        <ExpandMoreFun
+          expand={expandedRecc}
+          onClick={handleExpandRecc}
+          aria-expandedComment={expandedRecc}
+          aria-label="show more"
+        >
+          {expandedRecc ? <Share sx={{ color: yellow[700] }} /> : <Share />}
+        </ExpandMoreFun>
+
         <ExpandMoreFun
           expand={expandedDesc}
           onClick={handleExpandDesc}

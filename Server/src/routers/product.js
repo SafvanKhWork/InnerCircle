@@ -103,7 +103,7 @@ router.post("/product/new", auth, upload.single("image"), async (req, res) => {
 router.get("/products", async (req, res) => {
   try {
     const product = await Product.find({}).populate("owner");
-    res.send(product);
+    res.send(product.sort((a, b) => b.createdAt - a.createdAt));
   } catch (e) {
     res.status(500).send();
   }
@@ -337,7 +337,7 @@ router.patch("/like/:id", auth, async (req, res) => {
     product.like = lk;
     product.likes = lk.length;
     await product.save();
-    res.send(product);
+    res.send(product.like);
   } catch (e) {
     res.status(400).send(e);
   }

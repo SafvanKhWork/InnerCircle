@@ -278,9 +278,9 @@ const Profile = (props) => {
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Button fullWidth variant="outlined">
+                          {/* <Button fullWidth variant="outlined">
                             Edit Profile
-                          </Button>
+                          </Button> */}
                         </Grid>
                       </Grid>
                     </Box>

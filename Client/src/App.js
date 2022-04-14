@@ -41,7 +41,7 @@ function App() {
         return () => {
           clearInterval(refreshInterval);
         };
-      }, 10000);
+      }, 30000);
     }
   }, []);
   useEffect(async () => {

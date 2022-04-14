@@ -6,6 +6,28 @@ const router = new express.Router();
 const nodemailer = require("nodemailer");
 const _ = require("lodash");
 require("dotenv").config();
+const multer = require("multer");
+const uploadDestination = "../uploads/";
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDestination);
+  },
+  filename: function (req, file, cb) {
+    cb(null, new Date().toISOString() + file.originalname);
+  },
+});
+
+const fileFilter = (req, file, cb) => {
+  cb(null, file.mimetype === "image/jpeg" || file.mimetype === "image/png");
+};
+
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 1024 * 1024 * 10,
+  },
+  fileFilter,
+});
 
 let code = undefined;
 let un_email = null;

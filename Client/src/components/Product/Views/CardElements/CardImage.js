@@ -75,7 +75,7 @@ const CardImage = (props) => {
           stopAutoPlayOnHover={false}
           navButtonsAlwaysInvisible
           cycleNavigation={true}
-          duration={1000}
+          duration={500}
           animation="fade"
         >
           {images.map((img, i) => (

@@ -172,7 +172,7 @@ export default function SignUp(props) {
               >
                 <Grid container spacing={1}>
                   <Grid item align={"center"} xs={12}>
-                    <label htmlFor="icon-button-file">
+                    {/* <label htmlFor="icon-button-file">
                       <Input
                         accept="image/*"
                         id="icon-button-file"
@@ -185,7 +185,7 @@ export default function SignUp(props) {
                       >
                         <Avatar {...stringAvatar("Un Known")} />
                       </IconButton>
-                    </label>
+                    </label> */}
                     {/* <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" /> */}
                   </Grid>
 

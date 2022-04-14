@@ -135,10 +135,10 @@ const NewPost = (props) => {
 
   const productInfo = {
     name: productTitle,
-    model,
+    model, //depricated
     description,
     price,
-    quantity,
+    quantity, //depricated
     catagory,
     image: sampleImg,
   };
@@ -264,7 +264,7 @@ const NewPost = (props) => {
                       id="product-image-button-file"
                       type="file"
                     />
-                    <IconButton
+                    {/* <IconButton
                       color="primary"
                       onClick={async (event) => {
                         if (!previewSource) return;
@@ -274,7 +274,7 @@ const NewPost = (props) => {
                       component="span"
                     >
                       <FileUpload />
-                    </IconButton>
+                    </IconButton> */}
 
                     {previewSource.length !== 0 && (
                       <Carousel

@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema(
     },
     model: {
       type: String,
-      required: true,
+
       trim: true,
     },
     catagory: {
@@ -41,7 +41,6 @@ const productSchema = new mongoose.Schema(
     quantity: {
       type: Number,
       default: 1,
-      required: true,
     },
     like: [
       {
