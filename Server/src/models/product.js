@@ -15,7 +15,7 @@ const productSchema = new mongoose.Schema(
     },
     model: {
       type: String,
-
+      default: "MTY",
       trim: true,
     },
     catagory: {

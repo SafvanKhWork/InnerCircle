@@ -26,6 +26,13 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    notifications: [
+      {
+        seen: { type: Boolean, default: false },
+        message: String,
+      },
+    ],
+
     username: {
       type: String,
       unique: true,

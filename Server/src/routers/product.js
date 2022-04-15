@@ -1,4 +1,5 @@
 const express = require("express");
+const { removeAllMatching } = require("array-of-objects-functions");
 const router = new express.Router();
 const { cloudinary } = require("../utils/cloudinary");
 const path = require("path");
@@ -318,11 +319,10 @@ router.patch("/like/:id", auth, async (req, res) => {
     const product = await Product.findOne({
       _id,
     });
-
     if (!product) {
       return res.status(404).send();
     }
-
+    const owner = await User.findById(product.owner);
     const lk = product.like;
 
     const ur = req.user;
@@ -331,11 +331,25 @@ router.patch("/like/:id", auth, async (req, res) => {
       if (present !== -1) {
         lk.splice(present, 1);
       }
+      if (owner) {
+        owner.notifications = await removeAllMatching(
+          owner.notifications,
+          "message",
+          `@${req.user.username} liked your post with title '${product.name}'.`
+        );
+      }
     } else {
       lk.push({ _id: ur._id });
+      if (owner) {
+        owner.notifications.push({
+          message: `@${req.user.username} liked your post with title '${product.name}'.`,
+        });
+      }
     }
+
     product.like = lk;
     product.likes = lk.length;
+    await owner.save();
     await product.save();
     res.send(product.like);
   } catch (e) {
@@ -355,7 +369,7 @@ router.patch("/bid/:id", auth, async (req, res) => {
     if (!product) {
       return res.status(404).send();
     }
-
+    const owner = await User.findById(product.owner);
     const bids = product.bids;
     const bid = {
       user: req.user._id,
@@ -364,6 +378,11 @@ router.patch("/bid/:id", auth, async (req, res) => {
 
     bids.forEach((el, index) => {
       if (String(el.user) === String(bid.user)) {
+        if (owner) {
+          owner.notifications.push({
+            message: `@${req.user.username} changed their offer of Rs.${el.bid} to Rs.${bid.bid} for product you posted with title '${product.name}'. `,
+          });
+        }
         el.bid = bid.bid;
         exists = true;
       }
@@ -371,10 +390,15 @@ router.patch("/bid/:id", auth, async (req, res) => {
 
     if (!exists) {
       product.bids.push(bid);
+      if (owner) {
+        owner.notifications.push({
+          message: `@${req.user.username} offered Rs.${bid.bid} for product you posted with title '${product.name}'. `,
+        });
+      }
     }
     await product.save();
-
-    res.send(product);
+    await owner.save();
+    res.send(product.bids);
   } catch (e) {
     res.status(400).send(e.message);
   }
@@ -396,8 +420,15 @@ router.patch("/comment/:product", auth, async (req, res) => {
       user: ur.username,
       value: req.body.value,
     });
+    const owner = await User.findById(product.owner);
+    if (owner) {
+      owner.notifications.push({
+        message: `@${req.user.username} commented '${req.body.value}' on your post with title '${product.name}'. `,
+      });
+    }
     product.comments = cm;
     await product.save();
+    await owner.save();
     res.send(product);
   } catch (e) {
     res.status(400).send(e);
