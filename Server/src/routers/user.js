@@ -188,6 +188,18 @@ router.get("/me/current", auth, async (req, res) => {
   }
 });
 
+//Notifications & FriendRequests
+
+router.get("/user/notifications", auth, async (req, res) => {
+  try {
+    const notifications = req.user.notifications;
+    const friendRequest = req.user.friendRequest;
+    res.send({ notifications, friendRequest });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 //Get User Profile (Test: Passed )
 router.get("/user/me", auth, async (req, res) => {
   try {
@@ -269,7 +281,7 @@ router.delete("/users/me", auth, async (req, res) => {
     req.user.friendRequest.forEach(async (username) => {
       const user = await User.findOne({ username });
       const present = user.friendRequest.findIndex(
-        (friend) => friend == req.user.username
+        (friend) => friend === req.user.username
       );
       if (present !== -1) {
         user.friendRequest.splice(present, 1);

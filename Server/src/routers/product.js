@@ -76,24 +76,43 @@ router.post(
 // });
 
 //add new product (Test: Passed)
+
+// router.post("/product/new", auth, upload.single("image"), async (req, res) => {
+//   try {
+//     const product = new Product({
+//       ...req.body,
+//       product_name: `at${Date.now()}by${req.user.username}`.split(" ").join(""),
+//       owner: req.user._id,
+//       images:
+//         req.file?.path &&
+//         req.file?.path !== null &&
+//         req.file?.path === undefined
+//           ? [req.file?.path.slice(2)]
+//           : [],
+//     });
+
+//     await product.save();
+//     res.status(201).send(product);
+//   } catch (e) {
+//     res.status(401).send(e);
+//   }
+// });
+
 router.post("/product/new", auth, upload.single("image"), async (req, res) => {
-  const product = new Product({
-    ...req.body,
-    product_name: `at${Date.now()}by${req.user.username}`.split(" ").join(""),
-    owner: req.user._id,
-    images:
-      req.file?.path && req.file?.path !== null && req.file?.path === undefined
-        ? [req.file?.path.slice(2)]
-        : [],
-  });
   try {
+    const product = new Product({
+      ...req.body,
+      product_name: `at${Date.now()}by${req.user.username}`.split(" ").join(""),
+      owner: req.user._id,
+      images: req.file?.path ? [req.file?.path.slice(2)] : [],
+    });
+
     Catagory.exists({ name: req.body.name }, function (e) {
       if (e) {
         throw new Error(e);
       }
     });
-    await product.save();
-
+    product.save();
     res.status(201).send(product);
   } catch (e) {
     res.status(400).send(e);
@@ -197,24 +216,22 @@ router.get("/feed", auth, async (req, res) => {
     if (req.user.circle.length !== 0) {
       await req.user.circle.forEach(async (friend, i) => {
         const products = await Product.find({}).populate("owner");
-
         const posts = await products.filter(
           (product) => product.owner.username === friend
         );
         feed.push(...posts);
         if (req.user.circle.length === i + 1) {
-          res
-            .status(200)
-            .send([...feed].sort((a, b) => b.createdAt - a.createdAt));
-        } else {
-          res.status(200).send([]);
+          const postFeed = [...feed].sort((a, b) => b.createdAt - a.createdAt);
+          res.status(200).send(postFeed);
         }
+        // else {
+        //   res.status(200).send([]);
+        // }
       });
     } else {
       res.status(200).send([]);
     }
   } catch (error) {
-    console.log(error.message);
     res.status(400).send(error.message);
   }
 });

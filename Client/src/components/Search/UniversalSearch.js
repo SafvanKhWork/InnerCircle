@@ -70,7 +70,6 @@ const productFinder = (isubstring, data) => {
       return false;
     }
   });
-  console.log(matches, data);
   return matches;
 };
 

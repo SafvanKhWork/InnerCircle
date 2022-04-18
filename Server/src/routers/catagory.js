@@ -9,9 +9,10 @@ router.post("/catagory/new", async (req, res) => {
 
   try {
     await catagory.save();
-
-    res.status(201).send(catagory);
+    const catagories = await Catagory.find({});
+    res.status(201).send(catagories);
   } catch (e) {
+    console.log(e.message);
     res.status(400).send(e);
   }
 });
