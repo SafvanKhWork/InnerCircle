@@ -188,13 +188,16 @@ router.get("/me/current", auth, async (req, res) => {
   }
 });
 
-//Notifications & FriendRequests
-
-router.get("/user/notifications", auth, async (req, res) => {
+//Mark All Notifications as Seen
+router.patch("/user/notifications/seen", auth, async (req, res) => {
   try {
-    const notifications = req.user.notifications;
-    const friendRequest = req.user.friendRequest;
-    res.send({ notifications, friendRequest });
+    req.user.notifications = req.user.notifications.map((notification) => {
+      notification.seen = true;
+      return notification;
+    });
+
+    req.user.save();
+    res.send(req.user.notifications);
   } catch (error) {
     console.log(error.message);
   }
