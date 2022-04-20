@@ -220,7 +220,7 @@ router.get("/user/history", auth, async (req, res) => {
 //Update User Profile (Test: Passed )
 router.patch("/users/me", auth, async (req, res) => {
   const updates = Object.keys(req.body);
-  const allowedUpdates = ["name", "email", "age", "avatar"];
+  const allowedUpdates = ["name", "email", "avatar", "password"];
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
